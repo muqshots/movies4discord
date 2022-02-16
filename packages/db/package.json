@@ -1,0 +1,36 @@
+{
+  "name": "@movies4discord/db",
+  "version": "1.0.0",
+  "private": true,
+  "sideEffects": false,
+  "main": "./src/index.ts",
+  "scripts": {
+    "withenv": "env-cmd --silent -f ../../.env -- ",
+    "generate": "prisma generate",
+    "migrate:dev": "yarn withenv prisma migrate dev",
+    "migrate:deploy": "yarn withenv prisma migrate deploy",
+    "migrate:reset": "yarn withenv prisma migrate reset",
+    "db:push": "yarn withenv prisma db push",
+    "db:pull": "yarn withenv prisma db pull",
+    "studio": "yarn withenv prisma studio",
+    "clean": "rimraf --no-glob ./tsconfig.tsbuildinfo ./.eslintcache",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "typecheck": "tsc --project ./tsconfig.json --noEmit",
+    "fix:all-files": "eslint . --ext .ts,.tsx,.js,.jsx --fix"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.17",
+    "@typescript-eslint/eslint-plugin": "5.11.0",
+    "@typescript-eslint/parser": "5.11.0",
+    "env-cmd": "10.1.0",
+    "eslint": "8.9.0",
+    "eslint-config-prettier": "8.3.0",
+    "prettier": "2.5.1",
+    "prisma": "3.9.2",
+    "rimraf": "3.0.2",
+    "typescript": "4.5.5"
+  },
+  "dependencies": {
+    "@prisma/client": "3.9.2"
+  }
+}

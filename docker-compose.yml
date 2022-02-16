@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  web-app:
+    container_name: web-app
+    build:
+      context: .
+      dockerfile: ./apps/web-app/Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+
+  stream_app:
+    container_name: stream-app
+    build:
+      context: .
+      dockerfile: ./apps/stream-app/Dockerfile
+    ports:
+      - "6969:6969"
+    env_file:
+      - .env

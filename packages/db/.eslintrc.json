@@ -1,0 +1,5 @@
+{
+  "root": true,
+  "ignorePatterns": ["dist", "build", "src/generated"],
+  "extends": ["../../.eslintrc.json"]
+}

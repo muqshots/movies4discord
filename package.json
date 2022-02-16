@@ -1,0 +1,38 @@
+{
+  "name": "nextjs-monorepo-example",
+  "private": true,
+  "homepage": "https://github.com/belgattitude/nextjs-monorepo-example",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/belgattitude/nextjs-monorepo-example"
+  },
+  "author": {
+    "name": "Vanvelthem Sébastien",
+    "url": "https://github.com/belgattitude"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "yarn workspaces foreach -piv run dev",
+    "build": "yarn workspaces foreach -ptiv run build",
+    "start": "yarn workspaces foreach -piv run start",
+    "lint": "yarn workspaces foreach -ptv run lint",
+    "db": "yarn workspace @movies4discord/db run",
+    "clean": "rimraf '.cache/*' && yarn workspaces foreach -ptv run clean",
+    "fix:all-files": "yarn workspaces foreach -ptv run fix:all-files",
+    "typecheck": "yarn workspaces foreach -ptv run typecheck",
+    "nuke:node_modules": "rimraf '**/node_modules'"
+  },
+  "devDependencies": {
+    "prettier": "2.5.1",
+    "rimraf": "3.0.2"
+  },
+  "engines": {
+    "node": "^14.13.1 || >=16.0.0",
+    "yarn": ">=1.22.0",
+    "npm": "please-use-yarn"
+  },
+  "packageManager": "yarn@3.2.0-rc.15"
+}
