@@ -6,14 +6,14 @@
   "scripts": {
     "withenv": "env-cmd --silent -f ../../.env -- ",
     "dev": "yarn withenv nodemon --watch ./src/ -e ts --exec \"node --loader ts-node/esm ./src/index.ts\"",
-    "start": "yarn withenv node --loader ts-node/esm/transpile-only ./src/index.ts"
+    "build": "tsc",
+    "start": "yarn withenv node ./dist/index.js"
   },
   "dependencies": {
     "cors": "2.8.5",
     "env-cmd": "10.1.0",
-    "express": "4.17.2",
-    "got": "12.0.1",
-    "ts-node": "10.5.0"
+    "express": "4.17.3",
+    "got": "12.0.1"
   },
   "devDependencies": {
     "@types/cors": "2.8.12",
@@ -22,6 +22,7 @@
     "eslint": "8.9.0",
     "eslint-config-prettier": "8.3.0",
     "nodemon": "2.0.15",
+    "ts-node": "10.5.0",
     "typescript": "4.5.5"
   }
 }

@@ -32,7 +32,10 @@ app.get("/", async (req, res) => {
   const apiData = await api
     .get("key", { searchParams: { viewkey } })
     .json<{ name: string; path: string; err: false }>()
-    .catch((err) => ({ err: true as const, message: err.response.body }));
+    .catch((err) => ({
+      err: true as const,
+      message: err?.response?.body || "API reach error",
+    }));
 
   if (apiData.err) {
     res.status(500).json(apiData.message);
