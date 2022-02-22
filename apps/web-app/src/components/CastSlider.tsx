@@ -2,7 +2,7 @@ import PortraitPlaceholder from "@/public/PortraitPlaceholder.png";
 import Image from "next/image";
 import Link from "next/link";
 
-interface CastSliderProps {
+export interface CastSliderProps {
   cast: { name: string; id: number; image: string | null; character: string }[];
 }
 

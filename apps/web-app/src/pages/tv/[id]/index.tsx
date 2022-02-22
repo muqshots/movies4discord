@@ -1,51 +1,32 @@
 import MediaPage from "@/components/MediaPage";
-import { fetcher } from "@/lib/fetcher";
-import { formatMovieForThumbnail } from "@/lib/formatMediaForThumbnail";
+import { formatTVForThumbnail } from "@/lib/formatMediaForThumbnail";
 import { getImageUrl } from "@/lib/getImageUrl";
 import { tmdb } from "@/lib/got";
-import { CheckMovieAvailability } from "@/pages/api/available/movie";
 import type {
   Credits,
   Images,
-  Movie,
-  MovieDetails,
   Recommendations,
   TMDBListWrapper,
+  TV,
+  TVDetails,
   Videos,
 } from "@movies4discord/interfaces";
 import InferNextPropsType from "infer-next-props-type";
-import ky from "ky";
 import { GetStaticPaths, GetStaticPropsContext } from "next";
 import { useRouter } from "next/router";
 import { getPlaiceholder } from "plaiceholder";
-import useSWR from "swr";
 
-const MoviePage = (props: InferNextPropsType<typeof getStaticProps>) => {
-  const { data: available } = useSWR<CheckMovieAvailability>(
-    `/api/available/movie?tmdbId=${props.id}`,
-    fetcher
-  );
-  const isAvailable = available?.available;
-
+const TVPage = (props: InferNextPropsType<typeof getStaticProps>) => {
   const router = useRouter();
 
-  const onStreamClick = isAvailable
-    ? async () => {
-        const key = (
-          await ky
-            .post("/api/key", {
-              searchParams: { media_type: "movie", tmdbId: props.id },
-            })
-            .json<{ key: string }>()
-        ).key;
-        router.push(`/movie/${props.id}/${key}`);
-      }
-    : undefined;
+  const onStreamClick = () => {
+    router.push(`/tv/${props.id}/stream`);
+  };
 
   return (
     <MediaPage
-      media_type="movie"
-      isAvailable={isAvailable}
+      media_type="tv"
+      isAvailable={true}
       onStreamClick={onStreamClick}
       {...props}
     />
@@ -54,13 +35,11 @@ const MoviePage = (props: InferNextPropsType<typeof getStaticProps>) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   // pre-generate popular movies
-  const popularMoviesW = await tmdb
-    .get("movie/popular")
-    .json<TMDBListWrapper<Movie>>();
+  const popularTVW = await tmdb.get("tv/popular").json<TMDBListWrapper<TV>>();
 
   return {
-    paths: popularMoviesW.results.map((movie) => {
-      return { params: { id: movie.id.toString() } };
+    paths: popularTVW.results.map((tv) => {
+      return { params: { id: tv.id.toString() } };
     }),
     fallback: "blocking",
   };
@@ -74,19 +53,17 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
 
   const id = params?.id as string;
 
-  let movieData;
+  let TVData;
   try {
-    movieData = await tmdb
-      .get(`movie/${id}`, {
+    TVData = await tmdb
+      .get(`tv/${id}`, {
         searchParams: {
           append_to_response: "images,videos,credits,recommendations",
           include_image_language: okLanguages.join(","),
           include_video_language: okLanguages.join(","),
         },
       })
-      .json<
-        MovieDetails & Images & Videos & Credits & Recommendations<Movie>
-      >();
+      .json<TVDetails & Images & Videos & Credits & Recommendations<TV>>();
   } catch (e) {
     return {
       notFound: true,
@@ -94,16 +71,19 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
     };
   }
 
-  const backdropPath = movieData.backdrop_path;
+  const backdropPath = TVData.backdrop_path;
   const posterPath =
-    (movieData.images.posters[1] ?? movieData.images.posters[0])?.file_path ??
-    null;
-  const logoPath = movieData.images.logos[0]?.file_path ?? null;
+    (TVData.images.posters[1] ?? TVData.images.posters[0])?.file_path ?? null;
+  const logoPath = TVData.images.logos[0]?.file_path ?? null;
   const ytKey =
-    movieData.videos.results.filter(
+    TVData.videos.results.filter(
       (video) =>
         video.site === "YouTube" && video.official && video.type === "Trailer"
-    )[0]?.key ?? null;
+    )[0]?.key ??
+    TVData.videos.results.filter(
+      (video) => video.site === "YouTube" && video.official
+    )[0]?.key ??
+    null;
 
   const backdropUrl = getImageUrl(backdropPath);
   const posterUrl = getImageUrl(posterPath);
@@ -121,9 +101,9 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
 
   return {
     props: {
-      id: movieData.id,
-      title: movieData.title,
-      overview: movieData.overview,
+      id: TVData.id,
+      title: TVData.name,
+      overview: TVData.overview,
       poster: {
         url: posterUrl,
         b64: posterB64,
@@ -131,24 +111,25 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
       backdrop: { url: backdropUrl, b64: backdropB64 },
       logoUrl,
       ytKey,
-      genres: movieData.genres.slice(0, 4),
-      rating: movieData.vote_average,
-      runtime: movieData.runtime ?? 0,
-      releaseDate: movieData.release_date || null,
-      cast: movieData.credits.cast.slice(0, 15).map((p) => ({
+      genres: TVData.genres.slice(0, 4),
+      rating: TVData.vote_average,
+      runtime: TVData.episode_run_time[0] ?? 0,
+      numberOfEpisodes: TVData.number_of_episodes,
+      releaseDate: TVData.first_air_date || null,
+      cast: TVData.credits.cast.slice(0, 15).map((p) => ({
         name: p.name,
         id: p.id,
         image: getImageUrl(p.profile_path),
         character: p.character,
       })),
       recommendations: await Promise.all(
-        movieData.recommendations.results
+        TVData.recommendations.results
           .slice(0, 15)
-          .map(async (m) => formatMovieForThumbnail(m, false, true))
+          .map(async (t) => formatTVForThumbnail(t, false, true))
       ),
     },
     revalidate: 604800, // Revalidate every week
   };
 };
 
-export default MoviePage;
+export default TVPage;

@@ -1,5 +1,5 @@
-import { Movie, TMDBListWrapper } from ".";
+import { TMDBListWrapper } from ".";
 
-export interface Recommendations {
-  recommendations: TMDBListWrapper<Movie>;
+export interface Recommendations<T> {
+  recommendations: TMDBListWrapper<T>;
 }
