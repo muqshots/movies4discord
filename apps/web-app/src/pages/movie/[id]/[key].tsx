@@ -16,6 +16,7 @@ const StreamMovie = ({
   viewKey,
   title,
   backdropUrl,
+  year,
 }: InferNextProps<typeof getServerSideProps>) => {
   const getStreamUrl = (server: string = defaultServer) => {
     return (
@@ -109,7 +110,9 @@ const StreamMovie = ({
               {
                 kind: "subtitles",
                 srcLang: "en",
-                src: `/api/subtitles?t=movie&q=${title}&language=en`,
+                src: `/api/subtitles?t=movie&q=${title}&language=en${
+                  year ? `&year=${year}` : ""
+                }`,
                 label: "English",
               },
             ],
@@ -158,6 +161,7 @@ export const getServerSideProps = async ({
       defaultServer: user.server,
       viewKey: key,
       title: movieData.title,
+      year: movieData.release_date?.slice(0, 4),
       backdropUrl: getImageUrl(movieData.backdrop_path),
     },
   };
