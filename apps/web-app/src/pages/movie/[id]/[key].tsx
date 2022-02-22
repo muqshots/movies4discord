@@ -68,7 +68,7 @@ const StreamMovie = ({
   const [streamUrl, setStreamUrl] = useState(
     isProd
       ? getStreamUrl()
-      : "https://stream.movies4discord.xyz/movie/MZp2JTUJ3aEXUbTLTzmLuTRpw5Dhhzr1jnYuNGDFMNexPKBMoCJaWTmvSCdN"
+      : "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4"
   );
 
   return (
