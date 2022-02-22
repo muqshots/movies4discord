@@ -1,15 +1,16 @@
+import { getImageUrl } from "@/lib/getImageUrl";
+import { getMovie } from "@/lib/getTmdbData";
+import { isProd } from "@/lib/isProd";
+import { prisma } from "@movies4discord/db";
 import InferNextProps from "infer-next-props-type";
+import ky from "ky";
 import { GetServerSidePropsContext } from "next";
 import { getToken } from "next-auth/jwt";
-import { prisma } from "@movies4discord/db";
-import { isProd } from "@/lib/isProd";
-import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
 import Plyr from "plyr-react";
 import "plyr-react/dist/plyr.css";
+import { useEffect, useRef, useState } from "react";
 import { throttle } from "throttle-debounce";
-import { getMovie } from "@/lib/getTmdbData";
-import { getImageUrl } from "@/lib/getImageUrl";
-import ky from "ky";
 
 const StreamMovie = ({
   defaultServer,
@@ -27,10 +28,18 @@ const StreamMovie = ({
     );
   };
 
+  const [streamUrl, setStreamUrl] = useState(
+    isProd
+      ? getStreamUrl()
+      : "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080pd.mp4"
+  );
+
+  const router = useRouter();
   const ref = useRef<{ plyr: Plyr }>(null);
 
   useEffect(() => {
-    const handleError = () => alert("ERROR");
+    const handleError = () =>
+      router.push(`/videoerror?source=${encodeURIComponent(streamUrl)}`);
 
     const video = document.getElementsByTagName("source")[0]!;
     video.addEventListener("error", handleError);
@@ -38,7 +47,7 @@ const StreamMovie = ({
     return () => {
       video.removeEventListener("error", handleError);
     };
-  }, []);
+  }, [router, streamUrl]);
 
   useEffect(() => {
     let active = true;
@@ -66,15 +75,9 @@ const StreamMovie = ({
     };
   });
 
-  const [streamUrl, setStreamUrl] = useState(
-    isProd
-      ? getStreamUrl()
-      : "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4"
-  );
-
   return (
     <div className="flex flex-row items-center justify-center">
-      <div className="aspect-square w-4/5">
+      <div className="w-4/5">
         <Plyr
           ref={ref}
           options={{

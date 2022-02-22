@@ -8,6 +8,8 @@ import { getImageData } from "@/lib/getImageData";
 import { getImageUrl } from "@/lib/getImageUrl";
 import { tmdb } from "@/lib/got";
 import { CheckMovieAvailability } from "@/pages/api/available/movie";
+import LandscapePlaceholder from "@/public/LandscapePlaceholder.jpg";
+import PortraitPlaceholder from "@/public/PortraitPlaceholder.png";
 import type {
   Credits,
   Images,
@@ -17,14 +19,13 @@ import type {
   TMDBListWrapper,
   Videos,
 } from "@movies4discord/interfaces";
-import LandscapePlaceholder from "@/public/LandscapePlaceholder.jpg";
-import PortraitPlaceholder from "@/public/PortraitPlaceholder.png";
 import InferNextPropsType from "infer-next-props-type";
 import ky from "ky";
 import { GetStaticPaths, GetStaticPropsContext } from "next";
 import { signIn, useSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { getPlaiceholder } from "plaiceholder";
 import { useState } from "react";
 import {
@@ -35,7 +36,6 @@ import {
 } from "react-icons/bs";
 import { HiStar } from "react-icons/hi";
 import useSWR from "swr";
-import { useRouter } from "next/router";
 
 const MoviePage = ({
   id,
