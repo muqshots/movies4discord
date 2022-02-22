@@ -19,9 +19,10 @@ const StreamMovie = ({
 }: InferNextProps<typeof getServerSideProps>) => {
   const getStreamUrl = (server: string = defaultServer) => {
     return (
-      (isProd
-        ? `https://${server.toLowerCase()}.movies4discord.xyz`
-        : `http://localhost:6969`) + `?viewkey=${viewKey}`
+      (!isProd || process.env.NEXT_PUBLIC_TESTING === "yes"
+        ? `http://localhost:6969`
+        : `https://${server.toLowerCase()}.movies4discord.xyz`) +
+      `?viewkey=${viewKey}`
     );
   };
 
