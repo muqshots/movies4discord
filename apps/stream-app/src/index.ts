@@ -46,7 +46,7 @@ app.get("/", async (req, res) => {
     if (err) {
       if (err.code === "ENOENT") {
         // 404 Error if file not found
-        res.end("File not found, wait 10m or then contact admins.");
+        res.status(404).end("File not found, wait 10m or then contact admins.");
         return;
       }
       res.end("500");

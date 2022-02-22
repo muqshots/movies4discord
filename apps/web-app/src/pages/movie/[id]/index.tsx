@@ -35,6 +35,7 @@ import {
 } from "react-icons/bs";
 import { HiStar } from "react-icons/hi";
 import useSWR from "swr";
+import { useRouter } from "next/router";
 
 const MoviePage = ({
   id,
@@ -51,6 +52,8 @@ const MoviePage = ({
   cast,
   recommendations,
 }: InferNextPropsType<typeof getStaticProps>) => {
+  const router = useRouter();
+
   const [trailerShown, setTrailerShown] = useState(false);
   const { status } = useSession();
 
@@ -169,23 +172,32 @@ const MoviePage = ({
 
             <div className="flex flex-row gap-1.5">
               <button
-                disabled={!isAvailable}
+                disabled={!(isAvailable && status === "authenticated")}
                 className={`${
-                  isAvailable
+                  isAvailable && status === "authenticated"
                     ? "hover:bg-white hover:text-black"
                     : "cursor-not-allowed"
                 } bg-graything flex flex-row items-center gap-1 rounded-md py-2 px-4 transition duration-200`}
                 onClick={
-                  isAvailable
-                    ? () => console.log("Streaming")
-                    : () => {
-                        console.log("Not available");
+                  isAvailable && status === "authenticated"
+                    ? async () => {
+                        const key = (
+                          await ky
+                            .post("/api/key", {
+                              searchParams: { media_type: "movie", tmdbId: id },
+                            })
+                            .json<{ key: string }>()
+                        ).key;
+                        router.push(`/movie/${id}/${key}`);
                       }
+                    : undefined
                 }
               >
                 <BsFillPlayFill className="h-5 w-5" />
                 <div className="text-sm">
-                  {isAvailable === true
+                  {status !== "authenticated"
+                    ? "Login"
+                    : isAvailable === true
                     ? "Stream"
                     : isAvailable === false
                     ? "Request on discord"

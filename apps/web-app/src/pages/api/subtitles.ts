@@ -81,7 +81,15 @@ const handler = async (
 
   const downloadUrl = subThing.download.slice(1); // remove leading slash
 
-  const zipBuffer = await podnapisi.get(downloadUrl).buffer();
+  const zipBuffer = await podnapisi
+    .get(downloadUrl)
+    .buffer()
+    .catch((e) => ({ error: true, message: e.response.body as string }));
+
+  if (!Buffer.isBuffer(zipBuffer)) {
+    return res.status(500).json({ error: zipBuffer.message });
+  }
+
   const zip = new AdmZip(zipBuffer);
   const file = zip.getEntries()[0];
 

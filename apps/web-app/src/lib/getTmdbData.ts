@@ -25,11 +25,11 @@ export const getPopularTV = async () => {
   return (await tmdbFetcher<TMDBListWrapper<TV>>(`tv/popular`)).results;
 };
 
-export const getMovie = async (id: number) => {
+export const getMovie = async (id: string | number) => {
   return await tmdbFetcher<MovieDetails>(`movie/${id}`);
 };
 
-export const getTV = async (id: number) => {
+export const getTV = async (id: string | number) => {
   return await tmdbFetcher<TVDetails>(`tv/${id}`);
 };
 

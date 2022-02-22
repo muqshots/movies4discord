@@ -1512,6 +1512,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"core-js@npm:^3.20.0":
+  version: 3.21.1
+  resolution: "core-js@npm:3.21.1"
+  checksum: d68eddd831340ad5b24ac29c72fda022a43b17f194c4278b6b875a843283d316502cb4abd07f28631d6ebc4387f66aa06e2b1b3c8fd7e08096a751b5c63f6889
+  languageName: node
+  linkType: hard
+
 "core-util-is@npm:~1.0.0":
   version: 1.0.3
   resolution: "core-util-is@npm:1.0.3"
@@ -1580,6 +1587,13 @@ __metadata:
   version: 3.0.10
   resolution: "csstype@npm:3.0.10"
   checksum: 20a8fa324f2b33ddf94aa7507d1b6ab3daa6f3cc308888dc50126585d7952f2471de69b2dbe0635d1fdc31223fef8e070842691877e725caf456e2378685a631
+  languageName: node
+  linkType: hard
+
+"custom-event-polyfill@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "custom-event-polyfill@npm:1.0.7"
+  checksum: f9ff2cf13e482a75b3cf83dce9e2c6e3063c5ac1b9c23ac440e4f27e875b0873445b11811237f3f30aeb1216e9ad20f9f9d30ccf5b1b658a4e50dd0b3e67b629
   languageName: node
   linkType: hard
 
@@ -3370,6 +3384,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"loadjs@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "loadjs@npm:4.2.0"
+  checksum: 2144723f55c75260ce6781b36009c40d098d96fe06e3ec5c85ba250cf96c3a0aa37169b829e818c40bcba7c5141a8e52736fec193333bb6260ab95f9a493a2ef
+  languageName: node
+  linkType: hard
+
 "locate-path@npm:^2.0.0":
   version: 2.0.0
   resolution: "locate-path@npm:2.0.0"
@@ -4281,6 +4302,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"plyr-react@npm:3.2.1":
+  version: 3.2.1
+  resolution: "plyr-react@npm:3.2.1"
+  dependencies:
+    plyr: ^3.6.8
+  peerDependencies:
+    react: ^16.13.0  || ^17.0.0
+    react-dom: ^16.13.0  || ^17.0.0
+  checksum: 3217d3f6753a60f41dbfd4925d711598069787e57a1103c65689cc975b58a67b45d644e828cb0b3fa209a46f81a5961e856cea1222cfea73da1f3a29b088e7e9
+  languageName: node
+  linkType: hard
+
+"plyr@npm:^3.6.8":
+  version: 3.6.12
+  resolution: "plyr@npm:3.6.12"
+  dependencies:
+    core-js: ^3.20.0
+    custom-event-polyfill: ^1.0.7
+    loadjs: ^4.2.0
+    rangetouch: ^2.0.1
+    url-polyfill: ^1.1.12
+  checksum: b111124d72c6526a41177da462239434d5a814c9f9178d70b550430b44408bacf88e10ba89e2dbac9b950970c6d4d1147f1d4cb43ecbf4389cff61409081f792
+  languageName: node
+  linkType: hard
+
 "postcss-js@npm:^4.0.0":
   version: 4.0.0
   resolution: "postcss-js@npm:4.0.0"
@@ -4561,6 +4607,13 @@ __metadata:
   version: 1.2.1
   resolution: "range-parser@npm:1.2.1"
   checksum: 0a268d4fea508661cf5743dfe3d5f47ce214fd6b7dec1de0da4d669dd4ef3d2144468ebe4179049eff253d9d27e719c88dae55be64f954e80135a0cada804ec9
+  languageName: node
+  linkType: hard
+
+"rangetouch@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "rangetouch@npm:2.0.1"
+  checksum: 2aa7c0901d28356ef0c02021656ed7d11fc6652f01ffe92806862fc4593e75f7a5d52d4455fa1b0ab2123d438e03dc091315949dbfad9562a680440ac0dfeb7d
   languageName: node
   linkType: hard
 
@@ -5628,6 +5681,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"url-polyfill@npm:^1.1.12":
+  version: 1.1.12
+  resolution: "url-polyfill@npm:1.1.12"
+  checksum: 3214cc82424c215e921dacadac56b4b099f995d24e14078369bea9ff8aa74d1a4c803ab03021e61e0a275bee7979d212d046092dba3aab73cf232ee6739ddee4
+  languageName: node
+  linkType: hard
+
 "use-subscription@npm:1.5.1":
   version: 1.5.1
   resolution: "use-subscription@npm:1.5.1"
@@ -5712,6 +5772,7 @@ __metadata:
     next-auth: 4.2.1
     next-seo: 5.1.0
     plaiceholder: 2.3.0
+    plyr-react: 3.2.1
     postcss: 8.4.6
     prettier: 2.5.1
     prettier-plugin-tailwindcss: 0.1.7
