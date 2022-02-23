@@ -20,3 +20,7 @@ export const radarr = got.extend({
     apikey: process.env.RADARR_API_KEY!,
   },
 });
+
+export const skyhook = got.extend({
+  prefixUrl: `https://skyhook.sonarr.tv/v1/tvdb`,
+});

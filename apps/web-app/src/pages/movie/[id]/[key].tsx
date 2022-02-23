@@ -16,6 +16,7 @@ import { throttle } from "throttle-debounce";
 const StreamMovie = ({
   defaultServer,
   viewKey,
+  id,
   title,
   overview,
   year,
@@ -61,9 +62,13 @@ const StreamMovie = ({
       plyr.on(
         "progress",
         throttle(5000, () => {
-          if (active)
-            ky("https://flash.siwalik.in/delay/5000", {
-              searchParams: { timeStamp: plyr.currentTime },
+          if (active && plyr.currentTime > 0)
+            ky.post("/api/history", {
+              searchParams: {
+                tmdbId: id,
+                media_type: "movie",
+                percentage: (plyr.currentTime / plyr.duration) * 100,
+              },
             });
         })
       );
@@ -181,6 +186,7 @@ export const getServerSideProps = async ({
     props: {
       defaultServer: user.server,
       viewKey: key,
+      id: movieData.id,
       title: movieData.title,
       overview: movieData.overview,
       year: movieData.release_date?.slice(0, 4),

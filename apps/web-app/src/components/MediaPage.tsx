@@ -7,7 +7,6 @@ import ky from "ky";
 import { signIn, useSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import {
   BsFillBookmarkCheckFill,
@@ -65,8 +64,6 @@ const MediaPage = ({
   cast,
   recommendations,
 }: MediaPageProps) => {
-  const router = useRouter();
-
   const [trailerShown, setTrailerShown] = useState(false);
   const { status } = useSession();
 

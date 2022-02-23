@@ -1,9 +1,9 @@
-import { prisma } from "@movies4discord/db";
 import {
   formatMovieForThumbnail,
   formatTVForThumbnail,
 } from "@/lib/formatMediaForThumbnail";
 import { getMovie, getTV } from "@/lib/getTmdbData";
+import { prisma } from "@movies4discord/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
 

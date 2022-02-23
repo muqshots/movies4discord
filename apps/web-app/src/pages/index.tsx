@@ -1,4 +1,5 @@
 import MediaSlider from "@/components/MediaSlider";
+import { fetcher } from "@/lib/fetcher";
 import {
   formatMovieForThumbnail,
   formatTVForThumbnail,
@@ -6,11 +7,50 @@ import {
 import { getPopularMovies, getPopularTV } from "@/lib/getTmdbData";
 import { isProd } from "@/lib/isProd";
 import InferNextPropsType from "infer-next-props-type";
+import ky from "ky";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import useSWR from "swr";
+import { GetHistory } from "./api/history";
 
 const Index = ({ sliders }: InferNextPropsType<typeof getStaticProps>) => {
+  const { status } = useSession();
+  const { data: historyJson } = useSWR<GetHistory>(
+    `/api/history?take=20`,
+    fetcher,
+    {}
+  );
+
+  const router = useRouter();
+
   return (
     <>
       <div className="mx-3 flex flex-col gap-8">
+        {status !== "unauthenticated" && historyJson?.history.length !== 0 ? (
+          <MediaSlider
+            text="Continue watching"
+            media={historyJson?.history.map((item) => ({
+              ...item,
+              onClick: async () => {
+                const key = (
+                  await ky
+                    .post("/api/key", {
+                      searchParams: {
+                        media_type: item.media_type,
+                        tmdbId: item.id,
+                        tvdbId: item.tvdbId,
+                        season: item.season,
+                        episode: item.episode,
+                      },
+                    })
+                    .json<{ key: string }>()
+                ).key;
+                router.push(`/${item.media_type}/${item.id}/${key}`);
+              },
+            }))}
+          />
+        ) : null}
+
         {sliders.map((slider) => (
           <MediaSlider key={slider.text} {...slider} />
         ))}

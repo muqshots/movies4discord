@@ -1,7 +1,7 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { RadarrMovie } from "@movies4discord/interfaces";
-import { prisma } from "@movies4discord/db";
 import { radarr } from "@/lib/got";
+import { prisma } from "@movies4discord/db";
+import { RadarrMovie } from "@movies4discord/interfaces";
+import { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
 
 const handler = async (_req: NextApiRequest, res: NextApiResponse) => {

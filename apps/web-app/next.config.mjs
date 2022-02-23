@@ -13,7 +13,7 @@ const config = withPlaiceholder({
     ],
     // deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840], // default
 
-    domains: ["cdn.discordapp.com", "image.tmdb.org"],
+    domains: ["cdn.discordapp.com", "image.tmdb.org", "artworks.thetvdb.com"],
   },
 });
 

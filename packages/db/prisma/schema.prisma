@@ -46,6 +46,7 @@ model User {
 
   Watchlist Watchlist[]
   Viewkeys  Viewkey[]
+  History   History[]
 }
 
 model Watchlist {
@@ -72,4 +73,20 @@ model Viewkey {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, tmvdbId, isShow, season, episode])
+}
+
+model History {
+  id         String   @id @default(cuid())
+  userId     String
+  tmdbId     Int
+  tvdbId     Int
+  isShow     Boolean
+  season     Int
+  episode    Int
+  percentage Int
+  updatedAt  DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tmdbId, tvdbId, isShow, season, episode])
 }
