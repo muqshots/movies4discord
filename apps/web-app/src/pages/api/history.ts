@@ -35,7 +35,13 @@ const handler = async (
   switch (_req.method) {
     case "GET": {
       const history = await prisma.history.findMany({
-        where: { userId: jwt.userID, percentage: { gte: 5, lte: 95 } },
+        where: {
+          userId: jwt.userID,
+          percentage: {
+            gte: parseInt(_req.query.gte as string) || 5,
+            lte: parseInt(_req.query.lte as string) || 95,
+          },
+        },
         orderBy: { updatedAt: "desc" },
         take: parseInt(_req.query.take as string) || undefined,
       });
