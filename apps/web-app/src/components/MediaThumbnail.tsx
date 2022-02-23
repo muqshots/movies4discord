@@ -48,7 +48,7 @@ const MediaThumbnail = ({
     );
 
   return (
-    <div className="snap-x">
+    <div className="snap-start">
       <Wrapper>
         <div className="flex flex-col gap-2">
           <div
