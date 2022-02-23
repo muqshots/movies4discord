@@ -64,38 +64,20 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
         return;
       }
 
+      let dbParams: {
+        tmvdbId: number;
+        season: number;
+        episode: number;
+        isShow: boolean;
+      };
+
       if (media_type === "movie") {
         const tmdbId = parseInt(_req.query.tmdbId as string);
         if (Number.isNaN(tmdbId)) {
           res.status(422).json({ error: "No tmdbId given" });
           return;
         }
-
-        const key = await prisma.viewkey.upsert({
-          where: {
-            userId_tmvdbId_isShow_season_episode: {
-              userId: jwt.userID,
-              tmvdbId: tmdbId,
-              isShow: false,
-              season: 0,
-              episode: 0,
-            },
-          },
-          update: {
-            createdAt: new Date(),
-          },
-          create: {
-            userId: jwt.userID,
-            tmvdbId: tmdbId,
-            isShow: false,
-            season: 0,
-            episode: 0,
-          },
-          select: { key: true },
-        });
-
-        res.status(200).json(key);
-        return;
+        dbParams = { tmvdbId: tmdbId, season: 0, episode: 0, isShow: false };
       } else {
         const tvdbId = parseInt(_req.query.tvdbId as string);
         if (Number.isNaN(tvdbId)) {
@@ -110,32 +92,43 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
           return;
         }
 
-        const key = await prisma.viewkey.upsert({
-          where: {
-            userId_tmvdbId_isShow_season_episode: {
-              userId: jwt.userID,
-              tmvdbId: tvdbId,
-              isShow: true,
-              season: season,
-              episode: episode,
-            },
-          },
-          update: {
-            createdAt: new Date(),
-          },
-          create: {
-            userId: jwt.userID,
-            tmvdbId: tvdbId,
-            isShow: true,
-            season: season,
-            episode: episode,
-          },
-          select: { key: true },
-        });
-
-        res.status(200).json(key);
-        return;
+        dbParams = { tmvdbId: tvdbId, season, episode, isShow: true };
       }
+
+      const exists = await prisma.viewkey.findUnique({
+        where: {
+          userId_tmvdbId_isShow_season_episode: {
+            userId: jwt.userID,
+            ...dbParams,
+          },
+        },
+        select: { key: true, createdAt: true },
+      });
+
+      if (exists) {
+        if (
+          !(
+            new Date().getTime() - exists.createdAt.getTime() >
+            1000 * 60 * 60 * 4
+          )
+        ) {
+          res.status(200).json({ key: exists.key });
+          return;
+        } else {
+          await prisma.viewkey.delete({
+            where: { key: exists.key },
+            select: { key: true },
+          });
+        }
+      }
+
+      const key = await prisma.viewkey.create({
+        data: { userId: jwt.userID, ...dbParams },
+        select: { key: true },
+      });
+
+      res.status(200).json(key);
+      return;
     }
   }
 };
