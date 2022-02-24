@@ -5,7 +5,7 @@ import { skyhook } from "@/lib/got";
 import { prisma } from "@movies4discord/db";
 import { SkyhookShow } from "@movies4discord/interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getToken } from "next-auth/jwt";
+import { getSession } from "next-auth/react";
 
 interface HistoryItem extends MediaThumbnailProps {
   tvdbId: number;
@@ -23,11 +23,8 @@ const handler = async (
   _req: NextApiRequest,
   res: NextApiResponse<GetHistory | { error: string } | { success: true }>
 ) => {
-  const jwt = await getToken({
-    req: _req,
-    secret: process.env.AUTH_SECRET!,
-  });
-  if (!jwt) {
+  const session = await getSession({ req: _req });
+  if (!session) {
     res.status(401).json({ error: "get da fuc out of here" });
     return;
   }
@@ -36,7 +33,7 @@ const handler = async (
     case "GET": {
       const history = await prisma.history.findMany({
         where: {
-          userId: jwt.userID,
+          userId: session.userID,
           percentage: {
             gte: parseInt(_req.query.gte as string) || 5,
             lte: parseInt(_req.query.lte as string) || 95,
@@ -171,7 +168,7 @@ const handler = async (
       await prisma.history.upsert({
         where: {
           userId_tmdbId_tvdbId_isShow_season_episode: {
-            userId: jwt.userID,
+            userId: session.userID,
             isShow: dbParams.isShow,
             season: dbParams.season,
             episode: dbParams.episode,
@@ -181,7 +178,7 @@ const handler = async (
         },
         update: { percentage: dbParams.percentage },
         create: {
-          userId: jwt.userID,
+          userId: session.userID,
           ...dbParams,
         },
       });

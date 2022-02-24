@@ -33,7 +33,7 @@ const MediaSlider = ({ text, media_type, media }: MediaSliderProps) => {
                 {...item}
               />
             ))
-          : [...Array(8)].map((_, i) => <ShimmerThumbnail key={i} />)}
+          : [...Array(10)].map((_, i) => <ShimmerThumbnail key={i} />)}
       </div>
     </div>
   );

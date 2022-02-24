@@ -2,7 +2,7 @@ import { radarr } from "@/lib/got";
 import { prisma } from "@movies4discord/db";
 import { RadarrMovie } from "@movies4discord/interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getToken } from "next-auth/jwt";
+import { getSession } from "next-auth/react";
 
 const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
   switch (_req.method) {
@@ -48,11 +48,8 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
     }
 
     case "POST": {
-      const jwt = await getToken({
-        req: _req,
-        secret: process.env.AUTH_SECRET!,
-      });
-      if (!jwt) {
+      const session = await getSession({ req: _req });
+      if (!session) {
         res.status(401).json({ error: "get da fuc out of here" });
         return;
       }
@@ -98,7 +95,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
       const exists = await prisma.viewkey.findUnique({
         where: {
           userId_tmvdbId_isShow_season_episode: {
-            userId: jwt.userID,
+            userId: session.userID,
             ...dbParams,
           },
         },
@@ -123,7 +120,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
       }
 
       const key = await prisma.viewkey.create({
-        data: { userId: jwt.userID, ...dbParams },
+        data: { userId: session.userID, ...dbParams },
         select: { key: true },
       });
 

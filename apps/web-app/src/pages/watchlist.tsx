@@ -23,7 +23,7 @@ const Watchlist = () => {
         {status === "unauthenticated" ? (
           <div className="text-center">Please login to view your watchlist</div>
         ) : !watchlist ? (
-          [...Array(8)].map((_, i) => <ShimmerThumbnail key={i} />)
+          [...Array(10)].map((_, i) => <ShimmerThumbnail key={i} />)
         ) : watchlist.length > 0 ? (
           watchlist.map((r) => (
             <MediaThumbnail key={r.media_type + r.id} {...r} />

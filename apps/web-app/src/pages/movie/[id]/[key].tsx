@@ -5,7 +5,7 @@ import { prisma } from "@movies4discord/db";
 import InferNextProps from "infer-next-props-type";
 import ky from "ky";
 import { GetServerSidePropsContext } from "next";
-import { getToken } from "next-auth/jwt";
+import { getSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import Plyr from "plyr-react";
@@ -153,12 +153,9 @@ export const getServerSideProps = async ({
   req,
   params,
 }: GetServerSidePropsContext<{ id: string; key: string }>) => {
-  const jwt = await getToken({
-    req: req,
-    secret: process.env.AUTH_SECRET!,
-  });
+  const session = await getSession({ req: req });
 
-  if (!jwt) {
+  if (!session) {
     return {
       redirect: {
         destination: "/",
@@ -169,7 +166,7 @@ export const getServerSideProps = async ({
 
   const { id, key } = params!;
 
-  const user = await prisma.user.findUnique({ where: { id: jwt.userID } });
+  const user = await prisma.user.findUnique({ where: { id: session.userID } });
 
   if (!user) {
     return {

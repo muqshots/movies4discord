@@ -1,5 +1,4 @@
 import "next-auth";
-import "next-auth/jwt";
 
 declare module "next-auth" {
   /**
@@ -12,7 +11,7 @@ declare module "next-auth" {
       image: string;
     };
     expires: string;
-    discordID: string;
+
     userID: string;
   }
 
@@ -24,19 +23,4 @@ declare module "next-auth" {
 
   /** The OAuth profile returned from your provider */
   // interface Profile {}
-}
-
-declare module "next-auth/jwt" {
-  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
-  interface JWT {
-    name: string;
-    email?: string;
-    picture: string;
-    sub: string;
-    discordID: string;
-    userID: string;
-    iat: number;
-    exp: number;
-    jti: string;
-  }
 }

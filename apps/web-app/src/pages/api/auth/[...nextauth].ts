@@ -6,7 +6,6 @@ import DiscordProvider from "next-auth/providers/discord";
 
 export default NextAuth({
   secret: process.env.AUTH_SECRET!,
-  session: { strategy: "jwt" },
   providers: [
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID!,
@@ -41,17 +40,8 @@ export default NextAuth({
 
       return true;
     },
-    async jwt({ token, account, user }) {
-      if (account) {
-        token.discordID = account.providerAccountId;
-        token.userID = user!.id;
-      }
-
-      return token;
-    },
-    async session({ session, token }) {
-      session.discordID = token.discordID;
-      session.userID = token.userID;
+    async session({ session, user }) {
+      session.userID = user.id;
       return session;
     },
   },

@@ -50,7 +50,7 @@ const MediaThumbnail = ({
   return (
     <div className="snap-start">
       <Wrapper>
-        <div className="flex flex-col gap-2">
+        <div className="flex cursor-pointer flex-col gap-2">
           <div
             className="shadow-darktheme relative aspect-video w-[244px] shrink-0 rounded-lg border-2 border-transparent shadow-md transition duration-200 hover:scale-105 hover:border-white hover:shadow-white md:w-[324px]" // Add 4px to 16:9 w:h for borders
           >
@@ -77,6 +77,7 @@ const MediaThumbnail = ({
               <div className="w-10/12 truncate">{title}</div>
               <IconTag className="h-5 w-5 text-gray-400" />
             </div>
+
             <div className="flex flex-row justify-between text-sm text-gray-400">
               <div>{release_date?.slice(0, 4) ?? "Unknown year"}</div>
               <div className="flex flex-row gap-1">

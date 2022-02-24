@@ -14,13 +14,13 @@ import useSWR from "swr";
 import { GetHistory } from "./api/history";
 
 const Index = ({ sliders }: InferNextPropsType<typeof getStaticProps>) => {
-  const { status } = useSession();
   const { data: historyJson } = useSWR<GetHistory>(
     `/api/history?take=20`,
     fetcher,
     {}
   );
 
+  const { status } = useSession();
   const router = useRouter();
 
   return (

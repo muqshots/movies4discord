@@ -25,7 +25,7 @@ const Search = () => {
       <hr className="md:mr-8" />
       <div className="flex flex-row flex-wrap justify-center gap-5 md:justify-start">
         {!searchResults ? (
-          [...Array(8)].map((_, i) => <ShimmerThumbnail key={i} />)
+          [...Array(10)].map((_, i) => <ShimmerThumbnail key={i} />)
         ) : searchResults.length > 0 ? (
           searchResults.map((r) => (
             <MediaThumbnail key={r.media_type + r.id} {...r} />

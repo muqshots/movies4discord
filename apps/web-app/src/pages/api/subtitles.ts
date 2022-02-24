@@ -4,7 +4,7 @@ import { srtToVtt } from "@/lib/srtToVtt";
 import { PodnapisiResults } from "@movies4discord/interfaces";
 import AdmZip from "adm-zip";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getToken } from "next-auth/jwt";
+import { getSession } from "next-auth/react";
 
 const subsCache = {} as Record<string, string>;
 // params
@@ -18,9 +18,8 @@ const handler = async (
   _req: NextApiRequest,
   res: NextApiResponse<string | { error: string }>
 ) => {
-  const jwt = await getToken({ req: _req, secret: process.env.AUTH_SECRET! });
-
-  if (!jwt) {
+  const session = await getSession({ req: _req });
+  if (!session) {
     res.status(401).json({ error: "Unauthorized..." });
     return;
   }

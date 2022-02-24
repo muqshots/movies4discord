@@ -5,15 +5,12 @@ import {
 import { getMovie, getTV } from "@/lib/getTmdbData";
 import { prisma } from "@movies4discord/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getToken } from "next-auth/jwt";
+import { getSession } from "next-auth/react";
 
 const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
-  const jwt = await getToken({
-    req: _req,
-    secret: process.env.AUTH_SECRET!,
-  });
+  const session = await getSession({ req: _req });
 
-  if (!jwt) {
+  if (!session) {
     res.status(401).json({ error: "Unauthorized..." });
     return;
   }
@@ -28,7 +25,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
       if (Number.isNaN(tmdbId)) {
         const watchlist = await prisma.watchlist.findMany({
           select: { tmdbId: true, isShow: true },
-          where: { userId: jwt.userID },
+          where: { userId: session.userID },
           orderBy: { createdAt: "desc" },
         });
 
@@ -64,7 +61,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
           select: { id: true },
           where: {
             userId_tmdbId_isShow: {
-              userId: jwt.userID,
+              userId: session.userID,
               tmdbId: tmdbId,
               isShow: isShow,
             },
@@ -76,14 +73,16 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
     }
     case "POST": {
       const createdItem = await prisma.watchlist.create({
-        data: { tmdbId, isShow, userId: jwt.userID },
+        data: { tmdbId, isShow, userId: session.userID },
       });
       res.status(200).json(createdItem);
       break;
     }
     case "DELETE": {
       await prisma.watchlist.delete({
-        where: { userId_tmdbId_isShow: { userId: jwt.userID, tmdbId, isShow } },
+        where: {
+          userId_tmdbId_isShow: { userId: session.userID, tmdbId, isShow },
+        },
       });
       res.status(200).json({});
       break;
