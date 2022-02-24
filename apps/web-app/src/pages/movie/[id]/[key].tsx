@@ -23,19 +23,15 @@ const StreamMovie = ({
   backdropUrl,
 }: InferNextProps<typeof getServerSideProps>) => {
   const getStreamUrl = (server: string = defaultServer) => {
-    return (
-      (!isProd || process.env.NEXT_PUBLIC_TESTING === "yes"
-        ? `http://localhost:6969`
-        : `https://${server.toLowerCase()}.movies4discord.xyz`) +
-      `?viewkey=${viewKey}`
-    );
+    return isProd
+      ? process.env.NEXT_PUBLIC_STREAM_BASE
+        ? process.env.NEXT_PUBLIC_STREAM_BASE
+        : `https://${server.toLowerCase()}.movies4discord.xyz` +
+          `?viewkey=${viewKey}`
+      : "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4";
   };
 
-  const [streamUrl, setStreamUrl] = useState(
-    isProd
-      ? getStreamUrl()
-      : "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4"
-  );
+  const [streamUrl, setStreamUrl] = useState(getStreamUrl());
 
   const router = useRouter();
   const ref = useRef<{ plyr: Plyr }>(null);
