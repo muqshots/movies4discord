@@ -85,13 +85,18 @@ const Header = () => {
               {session.user.name}
             </div>
           </div>
-        ) : (
+        ) : status === "unauthenticated" ? (
           <button
             className="rounded-md border-2 py-1.5 px-4 transition duration-150 hover:bg-white hover:text-black"
-            onClick={() => status === "unauthenticated" && signIn("discord")}
+            onClick={() => signIn("discord")}
           >
-            {status === "loading" ? "loading..." : "Login"}
+            Login
           </button>
+        ) : (
+          <div className="flex animate-pulse flex-row items-center gap-2">
+            <div className="h-[54px] w-[54px] rounded-full bg-slate-600" />
+            <div className="hidden h-6 w-20 justify-center rounded-lg bg-slate-600 lg:flex" />
+          </div>
         )}
       </div>
     </div>
