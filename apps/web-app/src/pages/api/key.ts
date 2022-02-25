@@ -1,6 +1,11 @@
-import { radarr } from "@/lib/got";
+import { radarr, sonarr } from "@/lib/got";
 import { prisma } from "@movies4discord/db";
-import { RadarrMovie } from "@movies4discord/interfaces";
+import {
+  RadarrMovie,
+  SonarrEpisode,
+  SonarrEpisodeFile,
+  SonarrTV,
+} from "@movies4discord/interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
@@ -26,7 +31,30 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
       }
 
       if (vk.isShow) {
-        res.status(404).json({ error: "bruhw" });
+        // res.status(404).json({ error: "bruhw" });
+        vk.tmvdbId;
+
+        const sonarrSeries = await sonarr
+          .get(`series`, { searchParams: { tvdbId: vk.tmvdbId } })
+          .json<SonarrTV[]>();
+
+        const sonarrEpisodes = await sonarr
+          .get(`episode`, { searchParams: { seriesId: sonarrSeries[0]!.id } })
+          .json<SonarrEpisode[]>();
+
+        const sonarrEpisode = sonarrEpisodes.find(
+          (e) => e.seasonNumber === vk.season && e.episodeNumber === vk.episode
+        );
+
+        const sonarrEpisodeFile = await sonarr
+          .get(`episodefile/${sonarrEpisode!.episodeFileId}`)
+          .json<SonarrEpisodeFile>();
+
+        res.status(200).json({
+          name: `${sonarrSeries[0]!.title} (S${vk.season}E${vk.episode})`,
+          path: sonarrEpisodeFile.path,
+          err: false,
+        });
         return;
       } else {
         const radarrData = await radarr
