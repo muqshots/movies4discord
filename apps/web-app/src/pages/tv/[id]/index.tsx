@@ -16,8 +16,10 @@ import type {
   Videos,
 } from "@movies4discord/interfaces";
 import InferNextPropsType from "infer-next-props-type";
+import ky from "ky";
 import { GetStaticPaths, GetStaticPropsContext } from "next";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { getPlaiceholder } from "plaiceholder";
 import { useState } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
@@ -28,13 +30,15 @@ const TVPage = ({
   tvdbId,
   ...props
 }: InferNextPropsType<typeof getStaticProps>) => {
+  const router = useRouter();
+
   const [seasonsShown, setSeasonsShown] = useState(false);
   const [selectedSeason, setSelectedSeason] = useState<number>();
 
   const { data: showData } = useSWR<GetShow>(
-    `/api/show?tvdbId=${tvdbId}`,
+    tvdbId ? `/api/show?tvdbId=${tvdbId}` : null,
     fetcher,
-    { onSuccess: (d) => setSelectedSeason(d.seasons[0]) }
+    { onSuccess: (d) => !selectedSeason && setSelectedSeason(d.seasons[0]) }
   );
 
   return (
@@ -97,7 +101,7 @@ const TVPage = ({
                       return (
                         <div key={e.id} className="">
                           <div className="flex flex-row flex-wrap gap-4 md:flex-nowrap">
-                            <div className="relative aspect-video h-44 rounded-lg">
+                            <div className="group relative aspect-video h-44 rounded-lg">
                               <Image
                                 src={e.image || LandscapePlaceholder}
                                 layout="responsive"
@@ -107,9 +111,27 @@ const TVPage = ({
                                 className="rounded-lg"
                               />
                               <div
-                                className="absolute inset-0 flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg bg-black/60 opacity-60"
-                                onClick={() => {
-                                  null;
+                                className={`${
+                                  e.available
+                                    ? "cursor-pointer"
+                                    : "cursor-not-allowed"
+                                } absolute inset-0 flex h-full w-full flex-col items-center justify-center rounded-lg bg-black/60 opacity-60 group-hover:opacity-100`}
+                                onClick={async () => {
+                                  if (e.available) {
+                                    const key = (
+                                      await ky
+                                        .post(`/api/key`, {
+                                          searchParams: {
+                                            tvdbId: tvdbId!,
+                                            media_type: "tv",
+                                            season: e.seasonNumber,
+                                            episode: e.episodeNumber,
+                                          },
+                                        })
+                                        .json<{ key: string }>()
+                                    ).key;
+                                    router.push(`/tv/${props.id}/${key}`);
+                                  }
                                 }}
                               >
                                 <div className="flex flex-col items-center justify-center">
