@@ -1,9 +1,8 @@
 import { MediaThumbnailProps } from "@/components/MediaThumbnail";
 import { formatMovieForThumbnail } from "@/lib/formatMediaForThumbnail";
+import { getSkyhookTV } from "@/lib/getSkyhookData";
 import { getMovie } from "@/lib/getTmdbData";
-import { skyhook } from "@/lib/got";
 import { prisma } from "@movies4discord/db";
-import { SkyhookShow } from "@movies4discord/interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
@@ -64,10 +63,7 @@ const handler = async (
               ...formattedMovie,
             } as HistoryItem;
           } else {
-            const tvDetails = await skyhook
-              .get(`shows/en/${item.tvdbId}`)
-              .json<SkyhookShow>()
-              .catch(() => null);
+            const tvDetails = await getSkyhookTV(item.tvdbId).catch(() => null);
             if (tvDetails === null) return null;
 
             const episode = tvDetails.episodes.find(

@@ -9,7 +9,7 @@ const Trailer = ({ onClose, ytKey }: TrailerProps) => {
       <div
         className={`fixed h-screen w-screen bg-black/75`}
         onClick={onClose}
-      ></div>
+      />
 
       <div className="flex h-screen items-center justify-center">
         <div className="flex w-4/5 flex-col">
@@ -24,7 +24,7 @@ const Trailer = ({ onClose, ytKey }: TrailerProps) => {
             allowFullScreen
             className="z-[100] aspect-video w-full rounded-xl"
             allow="autoplay"
-          ></iframe>
+          />
         </div>
       </div>
     </div>

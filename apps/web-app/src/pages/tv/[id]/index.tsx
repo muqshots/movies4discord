@@ -1,7 +1,10 @@
 import MediaPage from "@/components/MediaPage";
+import { fetcher } from "@/lib/fetcher";
 import { formatTVForThumbnail } from "@/lib/formatMediaForThumbnail";
 import { getImageUrl } from "@/lib/getImageUrl";
 import { tmdb } from "@/lib/got";
+import { GetShow } from "@/pages/api/show";
+import LandscapePlaceholder from "@/public/LandscapePlaceholder.jpg";
 import type {
   Credits,
   Images,
@@ -9,27 +12,144 @@ import type {
   TMDBListWrapper,
   TV,
   TVDetails,
+  TVExternalIds,
   Videos,
 } from "@movies4discord/interfaces";
 import InferNextPropsType from "infer-next-props-type";
 import { GetStaticPaths, GetStaticPropsContext } from "next";
-import { useRouter } from "next/router";
+import Image from "next/image";
 import { getPlaiceholder } from "plaiceholder";
+import { useState } from "react";
+import { BsFillPlayFill } from "react-icons/bs";
+import { HiBan, HiStar, HiX } from "react-icons/hi";
+import useSWR from "swr";
 
-const TVPage = (props: InferNextPropsType<typeof getStaticProps>) => {
-  const router = useRouter();
+const TVPage = ({
+  tvdbId,
+  ...props
+}: InferNextPropsType<typeof getStaticProps>) => {
+  const [seasonsShown, setSeasonsShown] = useState(false);
+  const [selectedSeason, setSelectedSeason] = useState<number>();
 
-  const onStreamClick = () => {
-    router.push(`/tv/${props.id}/stream`);
-  };
+  const { data: showData } = useSWR<GetShow>(
+    `/api/show?tvdbId=${tvdbId}`,
+    fetcher,
+    { onSuccess: (d) => setSelectedSeason(d.seasons[0]) }
+  );
 
   return (
-    <MediaPage
-      media_type="tv"
-      isAvailable={true}
-      onStreamClick={onStreamClick}
-      {...props}
-    />
+    <>
+      <MediaPage
+        media_type="tv"
+        isAvailable={true}
+        onStreamClick={() => setSeasonsShown(true)}
+        {...props}
+      />
+
+      <div
+        className={`${
+          !seasonsShown ? "mt-[100vh]" : "mt-0"
+        }  fixed inset-0 z-50 transition-all duration-200`}
+      >
+        <div
+          className={`fixed z-[50] h-screen w-screen bg-black/50`}
+          onClick={() => setSeasonsShown(false)}
+        />
+
+        <div className={`flex h-screen items-end justify-center`}>
+          <div
+            className={`relative z-50 h-[90%] w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl`}
+          >
+            <div className="scrollbar-hide relative h-full w-full overflow-y-auto overscroll-y-none rounded-t-3xl bg-[#20233d]">
+              <div
+                className="inset-0 mt-3 ml-auto mr-[10px] flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-gray-500"
+                onClick={() => setSeasonsShown(false)}
+              >
+                <HiX className="h-5 w-5" />
+              </div>
+              <div className="mx-10 flex flex-col gap-5">
+                <div className="text-4xl font-bold">Seasons</div>
+                <div className="-mt-1 flex flex-row flex-wrap gap-1">
+                  {showData?.seasons.map((s) => (
+                    <div
+                      key={s}
+                      onClick={() => setSelectedSeason(s)}
+                      className={`${
+                        s === selectedSeason
+                          ? "bg-white text-black"
+                          : "bg-graything"
+                      } w-max cursor-pointer rounded-md p-2 px-3 text-xs transition duration-200 hover:bg-white hover:text-black`}
+                    >
+                      {s}
+                    </div>
+                  ))}
+                </div>
+                <hr className="border-gray-500" />
+                <div className="text-3xl">Episodes</div>
+                <div className="mb-10 flex flex-col">
+                  {showData?.episodes
+                    .filter((e) => e.seasonNumber === selectedSeason)
+                    .map((e) => {
+                      const [IconTag, availableText] = e.available
+                        ? [BsFillPlayFill, "Play"]
+                        : [HiBan, "Request on discord"];
+
+                      return (
+                        <div key={e.id} className="">
+                          <div className="flex flex-row flex-wrap gap-4 md:flex-nowrap">
+                            <div className="relative aspect-video h-44 rounded-lg">
+                              <Image
+                                src={e.image || LandscapePlaceholder}
+                                layout="responsive"
+                                width={160}
+                                height={90}
+                                alt={`${e.title} still`}
+                                className="rounded-lg"
+                              />
+                              <div
+                                className="absolute inset-0 flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-lg bg-black/60 opacity-60"
+                                onClick={() => {
+                                  null;
+                                }}
+                              >
+                                <div className="flex flex-col items-center justify-center">
+                                  <IconTag className="h-10 w-10" />
+                                  <div className="text-xl">{availableText}</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                              <div>
+                                <div className="text-xl font-light">
+                                  {e.episodeNumber}. {e.title}
+                                </div>
+                                <div className="hidden flex-row gap-2 text-sm text-gray-500 md:flex">
+                                  <div>
+                                    S{e.seasonNumber}E{e.episodeNumber}
+                                  </div>
+                                  <div>|</div>
+                                  <div className="">{e.airDate}</div>
+                                  <div>|</div>
+                                  <div className="flex flex-row gap-1">
+                                    <div>{e.rating || "Unknown"}</div>
+                                    <HiStar className="h-5 w-5" />
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="line-clamp-5">{e.overview}</div>
+                            </div>
+                          </div>
+                          <hr className="my-4 mx-1 border-gray-500" />
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
@@ -58,12 +178,20 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
     TVData = await tmdb
       .get(`tv/${id}`, {
         searchParams: {
-          append_to_response: "images,videos,credits,recommendations",
+          append_to_response:
+            "images,videos,credits,recommendations,external_ids",
           include_image_language: okLanguages.join(","),
           include_video_language: okLanguages.join(","),
         },
       })
-      .json<TVDetails & Images & Videos & Credits & Recommendations<TV>>();
+      .json<
+        TVDetails &
+          Images &
+          Videos &
+          Credits &
+          Recommendations<TV> &
+          TVExternalIds
+      >();
   } catch (e) {
     return {
       notFound: true,
@@ -99,6 +227,8 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
     posterB64 = posterUrl ? (await getPlaiceholder(posterUrl)).base64 : null;
   }
 
+  const tvdbId = TVData.external_ids.tvdb_id ?? null;
+
   return {
     props: {
       id: TVData.id,
@@ -127,6 +257,8 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
           .slice(0, 15)
           .map(async (t) => formatTVForThumbnail(t, false, true))
       ),
+
+      tvdbId,
     },
     revalidate: 604800, // Revalidate every week
   };

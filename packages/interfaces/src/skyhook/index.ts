@@ -1,3 +1,3 @@
 export * from "./SkyhookImage";
 export * from "./SkyhookRating";
-export * from "./SkyhookShow";
+export * from "./SkyhookTV";
