@@ -10,7 +10,7 @@ import { GetHistory } from "./api/history";
 const Watchlist = () => {
   const { status } = useSession();
   const { data: historyJson } = useSWR<GetHistory>(
-    `/api/history?gte=0&lte=100`,
+    status === "authenticated" ? `/api/history?gte=0&lte=100` : null,
     fetcher
   );
   const history = historyJson?.history;

@@ -9,7 +9,7 @@ import useSWR from "swr";
 const Watchlist = () => {
   const { status } = useSession();
   const { data: watchlist } = useSWR<MediaThumbnailProps[]>(
-    `/api/watchlist`,
+    status === "authenticated" ? `/api/watchlist` : null,
     fetcher
   );
 
