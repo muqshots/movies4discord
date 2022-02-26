@@ -44,6 +44,7 @@ const StreamTV = ({
         title={title}
         historyParams={{
           tvdbId,
+          tmdbId: id,
           season,
           episode,
           media_type: "tv",

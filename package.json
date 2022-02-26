@@ -20,7 +20,7 @@
     "start": "yarn workspaces foreach -piv run start",
     "lint": "yarn workspaces foreach -ptv run lint",
     "db": "yarn workspace @movies4discord/db run",
-    "clean": "rimraf '.cache/*' && yarn workspaces foreach -ptv run clean",
+    "clean": "rimraf '.cache/*' && yarn workspaces foreach -ptv run clean && rimraf '**/node_modules'",
     "fix:all-files": "yarn workspaces foreach -ptv run fix:all-files",
     "typecheck": "yarn workspaces foreach -ptv run typecheck",
     "nuke:node_modules": "rimraf '**/node_modules'"

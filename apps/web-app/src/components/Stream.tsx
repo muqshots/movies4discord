@@ -16,6 +16,7 @@ interface StreamProps {
         media_type: "movie";
       }
     | {
+        tmdbId: number;
         media_type: "tv";
         tvdbId: number;
         season: number;

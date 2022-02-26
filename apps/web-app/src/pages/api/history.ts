@@ -136,6 +136,11 @@ const handler = async (
           percentage,
         };
       } else {
+        const tmdbId = parseInt(_req.query.tmdbId as string);
+        if (isNaN(tmdbId)) {
+          res.status(400).json({ error: "invalid tmdbId" });
+          return;
+        }
         const tvdbId = parseInt(_req.query.tvdbId as string);
         if (isNaN(tvdbId)) {
           res.status(400).json({ error: "invalid tvdbId" });
@@ -153,7 +158,7 @@ const handler = async (
         }
         dbParams = {
           isShow: true,
-          tmdbId: 0,
+          tmdbId,
           tvdbId,
           season,
           episode,

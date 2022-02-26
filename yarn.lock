@@ -67,9 +67,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/eslintrc@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@eslint/eslintrc@npm:1.1.0"
+"@eslint/eslintrc@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@eslint/eslintrc@npm:1.2.0"
   dependencies:
     ajv: ^6.12.4
     debug: ^4.3.2
@@ -80,7 +80,7 @@ __metadata:
     js-yaml: ^4.1.0
     minimatch: ^3.0.4
     strip-json-comments: ^3.1.1
-  checksum: 784aa2157e2808b52bbbaf1d1cfca9a6ba0b2faaa3696eb7a1229d4b357400fbd8a6aa09a16e7ae0868ea075d3a8f365cf5928b6d05a1df47f40a1167423a4fa
+  checksum: a5e51dcf02627363567094456d7880b46b6a14a285d7a057f083ca903bdd862483bb6314cbc9fb6fa2d2c4537d50e0d28bd5e39650840241ae4796faaec65d2e
   languageName: node
   linkType: hard
 
@@ -113,15 +113,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@movies4discord/db@workspace:packages/db"
   dependencies:
-    "@prisma/client": 3.9.2
+    "@prisma/client": 3.10.0
     "@types/node": 17.0.21
     "@typescript-eslint/eslint-plugin": 5.12.1
     "@typescript-eslint/parser": 5.12.1
     env-cmd: 10.1.0
-    eslint: 8.9.0
+    eslint: 8.10.0
     eslint-config-prettier: 8.4.0
     prettier: 2.5.1
-    prisma: 3.9.2
+    prisma: 3.10.0
     rimraf: 3.0.2
     typescript: 4.5.5
   languageName: unknown
@@ -300,31 +300,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:3.9.2":
-  version: 3.9.2
-  resolution: "@prisma/client@npm:3.9.2"
+"@prisma/client@npm:3.10.0":
+  version: 3.10.0
+  resolution: "@prisma/client@npm:3.10.0"
   dependencies:
-    "@prisma/engines-version": 3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009
+    "@prisma/engines-version": 3.10.0-50.73e60b76d394f8d37d8ebd1f8918c79029f0db86
   peerDependencies:
     prisma: "*"
   peerDependenciesMeta:
     prisma:
       optional: true
-  checksum: 5b4b8f252624250f609d57ed3939f3dbecb174c297691476050f48d6c24dd41ca2f70f9e5a52729a4e875527e56a2d564a116c0ada8f5fc935c558f09d2759e3
+  checksum: c9fe863abfbcecff6b26c2fc4c93de77fd11c8209e91b8e2cba13ba3f0866d228eb5e92fac43e1f75497b652db54cb5e309320c3d51e603a4ecb4125dbf3a872
   languageName: node
   linkType: hard
 
-"@prisma/engines-version@npm:3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009":
-  version: 3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009
-  resolution: "@prisma/engines-version@npm:3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009"
-  checksum: 413d478fc1980604de1f46a0d53ae6c752965283a7d8c51d8fb3881c371b4a71ab4aa10002dba411d961286caf1141871c3c85d209a316421cdf1e1fdac71b4e
+"@prisma/engines-version@npm:3.10.0-50.73e60b76d394f8d37d8ebd1f8918c79029f0db86":
+  version: 3.10.0-50.73e60b76d394f8d37d8ebd1f8918c79029f0db86
+  resolution: "@prisma/engines-version@npm:3.10.0-50.73e60b76d394f8d37d8ebd1f8918c79029f0db86"
+  checksum: ddcb3bfdab61ac74e2df9e57562ccc7f0eb863955c8cf711f52f45572168f65e030e5070dfc9fc2e37d916b97b236576006b5cd56c813257a96b825c598e79fa
   languageName: node
   linkType: hard
 
-"@prisma/engines@npm:3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009":
-  version: 3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009
-  resolution: "@prisma/engines@npm:3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009"
-  checksum: f934a02f0d12b67a8b878da5b854a2df0b1d5adbedb9d6df552dddcb4f58af9401268c2066180a337daa0fd22d9005eae2197bf8a4cc7b9e1a20764fe93f1244
+"@prisma/engines@npm:3.10.0-50.73e60b76d394f8d37d8ebd1f8918c79029f0db86":
+  version: 3.10.0-50.73e60b76d394f8d37d8ebd1f8918c79029f0db86
+  resolution: "@prisma/engines@npm:3.10.0-50.73e60b76d394f8d37d8ebd1f8918c79029f0db86"
+  checksum: 7faa8659dd72e70f9b24be291e3660d086d5b2ee1b6557bf783100a2efaf4f7087882196191c845f96c3953a55ea8bcb03110af98a18e803b90084c0c2211444
   languageName: node
   linkType: hard
 
@@ -2226,11 +2226,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:8.9.0":
-  version: 8.9.0
-  resolution: "eslint@npm:8.9.0"
+"eslint@npm:8.10.0":
+  version: 8.10.0
+  resolution: "eslint@npm:8.10.0"
   dependencies:
-    "@eslint/eslintrc": ^1.1.0
+    "@eslint/eslintrc": ^1.2.0
     "@humanwhocodes/config-array": ^0.9.2
     ajv: ^6.10.0
     chalk: ^4.0.0
@@ -2267,7 +2267,7 @@ __metadata:
     v8-compile-cache: ^2.0.3
   bin:
     eslint: bin/eslint.js
-  checksum: 8efecdb9752ee6cb4d2787a14e00cbeab29562ed95dd71c6f3f8ac410426a067d5aa659416d2290e46ca44bc5607e6a6e6c62f814694d8639f80666f522022a7
+  checksum: 8b31ab3de5b48b6828bf13c09c9e62ee0045fa0afa017efaa73eedcf4dc33bc204ee4c467d4677e37967d1645f73816ddef4271422e691fded352040f8f83093
   languageName: node
   linkType: hard
 
@@ -3776,6 +3776,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nanoid@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "nanoid@npm:3.3.1"
+  bin:
+    nanoid: bin/nanoid.cjs
+  checksum: 4ef0969e1bbe866fc223eb32276cbccb0961900bfe79104fa5abe34361979dead8d0e061410a5c03bc3d47455685adf32c09d6f27790f4a6898fb51f7df7ec86
+  languageName: node
+  linkType: hard
+
 "napi-build-utils@npm:^1.0.1":
   version: 1.0.2
   resolution: "napi-build-utils@npm:1.0.2"
@@ -4461,7 +4470,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:8.4.6, postcss@npm:^8.4.6":
+"postcss@npm:8.4.7":
+  version: 8.4.7
+  resolution: "postcss@npm:8.4.7"
+  dependencies:
+    nanoid: ^3.3.1
+    picocolors: ^1.0.0
+    source-map-js: ^1.0.2
+  checksum: a515ed36622edbee1d3ba153298d3b62ae9826dfa6de19204c2a6f975c8d3ad36808423b5119a9d82b78efd486de3ce35a1faf882a36ac8aa09492be4fbb7fe1
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^8.4.6":
   version: 8.4.6
   resolution: "postcss@npm:8.4.6"
   dependencies:
@@ -4527,12 +4547,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-tailwindcss@npm:0.1.7":
-  version: 0.1.7
-  resolution: "prettier-plugin-tailwindcss@npm:0.1.7"
+"prettier-plugin-tailwindcss@npm:0.1.8":
+  version: 0.1.8
+  resolution: "prettier-plugin-tailwindcss@npm:0.1.8"
   peerDependencies:
     prettier: ">=2.2.0"
-  checksum: a692a025a1c73bc95b0c1b2d1763ee47023908f95e83f120517e87f82bc4885a202ef5a0819f8b3c12bf71286b9ab6d4d014342983d84ba878bcef0e20a4e0d8
+  checksum: b183f061dfd07dd6faee5244c1d1f9efe39ec58b4b8382bb6de379e2a831484bd9b59baca1cb58b46872de40c63d7958cdb2adc953706019b0929843b3406228
   languageName: node
   linkType: hard
 
@@ -4552,15 +4572,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma@npm:3.9.2":
-  version: 3.9.2
-  resolution: "prisma@npm:3.9.2"
+"prisma@npm:3.10.0":
+  version: 3.10.0
+  resolution: "prisma@npm:3.10.0"
   dependencies:
-    "@prisma/engines": 3.9.0-58.bcc2ff906db47790ee902e7bbc76d7ffb1893009
+    "@prisma/engines": 3.10.0-50.73e60b76d394f8d37d8ebd1f8918c79029f0db86
   bin:
     prisma: build/index.js
     prisma2: build/index.js
-  checksum: 4070b61b09f45229680e1beeb14a95716353493032abaac9f6664bc60eba8279e165d446e8a12457a6d6a0e80d100c09228d00e7e1986e504fc8ceb9a16316f2
+  checksum: da693ebd69ec5f5a8132a86f1c6e300033a5ea869016e19364f514fdda6143f0d6236982a26b431313f06fecfaa2d1bd82eac3ebbf5b58082271f1a65c8a683d
   languageName: node
   linkType: hard
 
@@ -5217,11 +5237,12 @@ __metadata:
     "@types/node": 17.0.21
     cors: 2.8.5
     env-cmd: 10.1.0
-    eslint: 8.9.0
+    eslint: 8.10.0
     eslint-config-prettier: 8.4.0
     express: 4.17.3
     got: 12.0.1
     nodemon: 2.0.15
+    rimraf: 3.0.2
     ts-node: 10.5.0
     typescript: 4.5.5
   languageName: unknown
@@ -5832,7 +5853,7 @@ __metadata:
     adm-zip: 0.5.9
     autoprefixer: 10.4.2
     env-cmd: 10.1.0
-    eslint: 8.9.0
+    eslint: 8.10.0
     eslint-config-next: 12.1.0
     eslint-config-prettier: 8.4.0
     infer-next-props-type: 0.0.4
@@ -5842,9 +5863,9 @@ __metadata:
     next-seo: 5.1.0
     plaiceholder: 2.3.0
     plyr-react: 3.2.1
-    postcss: 8.4.6
+    postcss: 8.4.7
     prettier: 2.5.1
-    prettier-plugin-tailwindcss: 0.1.7
+    prettier-plugin-tailwindcss: 0.1.8
     react: 17.0.2
     react-dom: 17.0.2
     react-icons: 4.3.1
