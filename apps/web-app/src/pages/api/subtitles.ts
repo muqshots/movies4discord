@@ -70,7 +70,10 @@ const handler = async (
     .get("en/subtitles/search", { searchParams: params })
     .json<PodnapisiResults>();
 
-  const subThing = results.data[0];
+  const subThing = results.data.sort(
+    (a, b) => b.stats.downloads - a.stats.downloads
+  )[0];
+
   if (!subThing) {
     res.status(404).json({
       error: "No subtitles found",
