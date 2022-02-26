@@ -9,7 +9,7 @@
     "generate": "prisma generate",
     "migrate:dev": "yarn withenv prisma migrate dev",
     "migrate:deploy": "yarn withenv prisma migrate deploy",
-    "migrate:reset": "yarn withenv prisma migrate reset",
+    "reset": "yarn withenv prisma migrate reset",
     "push": "yarn withenv prisma db push",
     "pull": "yarn withenv prisma db pull",
     "studio": "yarn withenv prisma studio --browser none",
