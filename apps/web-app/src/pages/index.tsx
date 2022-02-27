@@ -57,8 +57,8 @@ const Index = ({ sliders }: InferNextPropsType<typeof getStaticProps>) => {
           />
         }
 
-        {sliders.map((slider) => (
-          <MediaSlider key={slider.text} {...slider} />
+        {sliders.map((slider, i) => (
+          <MediaSlider priority={i === 0} key={slider.text} {...slider} />
         ))}
       </div>
     </>

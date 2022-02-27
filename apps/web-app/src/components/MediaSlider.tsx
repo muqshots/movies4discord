@@ -4,12 +4,16 @@ import MediaThumbnail, {
 import ShimmerThumbnail from "./ShimmerThumbnail";
 
 interface MediaSliderWithItems {
+  priority?: boolean;
+
   text: string;
   media_type: "movie" | "tv";
   media: Omit<MediaThumbnailProps, "media_type">[];
 }
 
 interface ContinueWatchingSlider {
+  priority?: boolean;
+
   text: string;
   media?: MediaThumbnailProps[] | string;
 
@@ -18,7 +22,12 @@ interface ContinueWatchingSlider {
 
 export type MediaSliderProps = ContinueWatchingSlider | MediaSliderWithItems;
 
-const MediaSlider = ({ text, media_type, media }: MediaSliderProps) => {
+const MediaSlider = ({
+  text,
+  media_type,
+  media,
+  priority = false,
+}: MediaSliderProps) => {
   return (
     <div className="mr-2 flex flex-col gap-4">
       <span className="text-2xl font-light md:text-3xl">{text}</span>
@@ -34,6 +43,7 @@ const MediaSlider = ({ text, media_type, media }: MediaSliderProps) => {
           media.map((item) => (
             <MediaThumbnail
               key={item.id}
+              priority={priority}
               // The default movie will be overriden by {...item} on continue watching
               media_type={media_type || "movie"}
               {...item}

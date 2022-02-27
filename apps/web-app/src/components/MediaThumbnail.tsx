@@ -19,6 +19,7 @@ export interface MediaThumbnailProps {
   rating: number;
   onClick?: () => void;
   percentage?: number;
+  priority?: boolean;
 }
 
 const MediaTypeLogos = {
@@ -35,6 +36,7 @@ const MediaThumbnail = ({
   rating,
   onClick,
   percentage,
+  priority = false,
 }: MediaThumbnailProps) => {
   const IconTag = MediaTypeLogos[media_type];
 
@@ -56,6 +58,7 @@ const MediaThumbnail = ({
           >
             <Image
               {...getImageData(image.src || LandscapePlaceholder, image.b64)}
+              priority={priority}
               layout="responsive"
               width={160}
               height={90}
