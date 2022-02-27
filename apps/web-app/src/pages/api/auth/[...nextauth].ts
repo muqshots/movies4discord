@@ -32,12 +32,11 @@ export default NextAuth({
           }[]
         >();
 
-      // TODO: Change this to new server
-      // const allowedToSignIn = list_of_guilds.some((guild) => {
-      // return guild.id === "746993915361624074";
-      // });
+      const allowedToSignIn = list_of_guilds.some(
+        (g) => g.id === "935915138429648997"
+      );
 
-      return true;
+      return allowedToSignIn;
     },
     async session({ session, user }) {
       session.userID = user.id;
