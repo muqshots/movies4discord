@@ -9,7 +9,7 @@ export const getStreamUrl = (server: string, viewKey: string) => {
     ? STREAM_BASE
       ? STREAM_BASE === "false"
         ? placeHolderVideo
-        : `${STREAM_BASE}?viewkey+${viewKey}`
+        : `${STREAM_BASE}?viewkey=${viewKey}`
       : `https://${server.toLowerCase()}.movies4discord.xyz?viewkey=${viewKey}`
     : placeHolderVideo;
 };

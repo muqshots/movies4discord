@@ -92,7 +92,7 @@ model History {
   isShow     Boolean
   season     Int
   episode    Int
-  percentage Int
+  percentage Float
   updatedAt  DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
