@@ -18,7 +18,7 @@ export interface SkyhookTV {
   imdbId: string;
   genres: string[];
   contentRating: string;
-  rating: SkyhookRating;
+  rating?: SkyhookRating;
   actors: { name: string; character: string }[];
   images: SkyhookImage[];
   seasons: { seasonNumber: number; images: SkyhookImage[] }[];

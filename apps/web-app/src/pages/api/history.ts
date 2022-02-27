@@ -95,6 +95,7 @@ const handler = async (
                 e.episodeNumber === item.episode
             );
             if (episode === undefined) return null;
+
             return {
               media_type,
               tvdbId: item.tvdbId,
@@ -110,7 +111,9 @@ const handler = async (
                 b64: null,
               },
               release_date: tvDetails.firstAired,
-              rating: parseFloat(tvDetails.rating.value) || 0,
+              rating: tvDetails.rating?.value
+                ? parseFloat(tvDetails.rating?.value)
+                : 0,
             } as HistoryItem;
           }
         })
