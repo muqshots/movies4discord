@@ -18,6 +18,7 @@ import type {
 import InferNextPropsType from "infer-next-props-type";
 import ky from "ky";
 import { GetStaticPaths, GetStaticPropsContext } from "next";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { getPlaiceholder } from "plaiceholder";
@@ -31,12 +32,13 @@ const TVPage = ({
   ...props
 }: InferNextPropsType<typeof getStaticProps>) => {
   const router = useRouter();
+  const { status } = useSession();
 
   const [seasonsShown, setSeasonsShown] = useState(false);
   const [selectedSeason, setSelectedSeason] = useState<number>();
 
   const { data: showData } = useSWR<GetShow>(
-    tvdbId ? `/api/show?tvdbId=${tvdbId}` : null,
+    tvdbId && status === "authenticated" ? `/api/show?tvdbId=${tvdbId}` : null,
     fetcher,
     { onSuccess: (d) => !selectedSeason && setSelectedSeason(d.seasons[0]) }
   );
@@ -74,97 +76,123 @@ const TVPage = ({
               <div className="mx-10 flex flex-col gap-5">
                 <div className="text-4xl font-bold">Seasons</div>
                 <div className="-mt-1 flex flex-row flex-wrap gap-1">
-                  {showData?.seasons.map((s) => (
-                    <div
-                      key={s}
-                      onClick={() => setSelectedSeason(s)}
-                      className={`${
-                        s === selectedSeason
-                          ? "bg-white text-black"
-                          : "bg-graything"
-                      } w-max cursor-pointer rounded-md p-2 px-3 text-xs transition duration-200 hover:bg-white hover:text-black`}
-                    >
-                      {s}
-                    </div>
-                  ))}
+                  {showData
+                    ? showData?.seasons.map((s) => (
+                        <div
+                          key={s}
+                          onClick={() => setSelectedSeason(s)}
+                          className={`${
+                            s === selectedSeason
+                              ? "bg-white text-black"
+                              : "bg-graything"
+                          } cursor-pointer rounded-md py-2 px-3 text-xs transition duration-200 hover:bg-white hover:text-black`}
+                        >
+                          {s}
+                        </div>
+                      ))
+                    : [...Array(5)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="animate-pulse rounded-md bg-slate-700 py-2 px-3 text-xs"
+                        >
+                          &nbsp;
+                        </div>
+                      ))}
                 </div>
                 <hr className="border-gray-500" />
                 <div className="text-3xl">Episodes</div>
                 <div className="mb-10 flex flex-col">
-                  {showData?.episodes
-                    .filter((e) => e.seasonNumber === selectedSeason)
-                    .map((e) => {
-                      const [IconTag, availableText] = e.available
-                        ? [BsFillPlayFill, "Play"]
-                        : [HiBan, "Request on discord"];
+                  {showData
+                    ? showData?.episodes
+                        .filter((e) => e.seasonNumber === selectedSeason)
+                        .map((e) => {
+                          const [IconTag, availableText] = e.available
+                            ? [BsFillPlayFill, "Play"]
+                            : [HiBan, "Request on discord"];
 
-                      return (
-                        <div key={e.id} className="">
-                          <div className="flex flex-row flex-wrap gap-4 md:flex-nowrap">
-                            <div className="group relative aspect-video h-44 rounded-lg">
-                              <Image
-                                src={e.image || LandscapePlaceholder}
-                                layout="responsive"
-                                width={160}
-                                height={90}
-                                alt={`${e.title} still`}
-                                className="rounded-lg"
-                              />
-                              <div
-                                className={`${
-                                  e.available
-                                    ? "cursor-pointer"
-                                    : "cursor-not-allowed"
-                                } absolute inset-0 flex h-full w-full flex-col items-center justify-center rounded-lg bg-black/60 opacity-60 group-hover:opacity-100`}
-                                onClick={async () => {
-                                  if (e.available) {
-                                    const key = (
-                                      await ky
-                                        .post(`/api/key`, {
-                                          searchParams: {
-                                            tvdbId: tvdbId!,
-                                            media_type: "tv",
-                                            season: e.seasonNumber,
-                                            episode: e.episodeNumber,
-                                          },
-                                        })
-                                        .json<{ key: string }>()
-                                    ).key;
-                                    router.push(`/tv/${props.id}/${key}`);
-                                  }
-                                }}
-                              >
-                                <div className="flex flex-col items-center justify-center">
-                                  <IconTag className="h-10 w-10" />
-                                  <div className="text-xl">{availableText}</div>
+                          return (
+                            <div key={e.id}>
+                              <div className="flex flex-row flex-wrap gap-4 md:flex-nowrap">
+                                <div className="group relative aspect-video h-44 rounded-lg">
+                                  <Image
+                                    src={e.image || LandscapePlaceholder}
+                                    layout="responsive"
+                                    width={160}
+                                    height={90}
+                                    alt={`${e.title} still`}
+                                    className="rounded-lg"
+                                  />
+                                  <div
+                                    className={`${
+                                      e.available
+                                        ? "cursor-pointer"
+                                        : "cursor-not-allowed"
+                                    } absolute inset-0 flex h-full w-full flex-col items-center justify-center rounded-lg bg-black/60 opacity-60 group-hover:opacity-100`}
+                                    onClick={async () => {
+                                      if (e.available) {
+                                        const key = (
+                                          await ky
+                                            .post(`/api/key`, {
+                                              searchParams: {
+                                                tvdbId: tvdbId!,
+                                                media_type: "tv",
+                                                season: e.seasonNumber,
+                                                episode: e.episodeNumber,
+                                              },
+                                            })
+                                            .json<{ key: string }>()
+                                        ).key;
+                                        router.push(`/tv/${props.id}/${key}`);
+                                      }
+                                    }}
+                                  >
+                                    <div className="flex flex-col items-center justify-center">
+                                      <IconTag className="h-10 w-10" />
+                                      <div className="text-xl">
+                                        {availableText}
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                              <div>
-                                <div className="text-xl font-light">
-                                  {e.episodeNumber}. {e.title}
-                                </div>
-                                <div className="hidden flex-row gap-2 text-sm text-gray-500 md:flex">
+                                <div className="flex flex-col gap-2">
                                   <div>
-                                    S{e.seasonNumber}E{e.episodeNumber}
+                                    <div className="text-xl font-light">
+                                      {e.episodeNumber}. {e.title}
+                                    </div>
+                                    <div className="hidden flex-row gap-2 text-sm text-gray-500 md:flex">
+                                      <div>
+                                        S{e.seasonNumber}E{e.episodeNumber}
+                                      </div>
+                                      <div>|</div>
+                                      <div className="">{e.airDate}</div>
+                                      <div>|</div>
+                                      <div className="flex flex-row gap-1">
+                                        <div>{e.rating || "Unknown"}</div>
+                                        <HiStar className="h-5 w-5" />
+                                      </div>
+                                    </div>
                                   </div>
-                                  <div>|</div>
-                                  <div className="">{e.airDate}</div>
-                                  <div>|</div>
-                                  <div className="flex flex-row gap-1">
-                                    <div>{e.rating || "Unknown"}</div>
-                                    <HiStar className="h-5 w-5" />
+                                  <div className="line-clamp-5">
+                                    {e.overview}
                                   </div>
                                 </div>
                               </div>
-                              <div className="line-clamp-5">{e.overview}</div>
+                              <hr className="my-4 mx-1 border-gray-500" />
+                            </div>
+                          );
+                        })
+                    : [...Array(5)].map((_, i) => (
+                        <div key={i}>
+                          <div className="flex flex-row flex-wrap gap-4 md:flex-nowrap">
+                            <div className="aspect-video h-44 animate-pulse rounded-lg bg-slate-700" />
+                            <div className="flex grow flex-col gap-2">
+                              <div className="h-12 w-full animate-pulse rounded-lg bg-slate-700" />
+                              <div className="h-[120px] w-full animate-pulse rounded-lg bg-slate-700" />
                             </div>
                           </div>
                           <hr className="my-4 mx-1 border-gray-500" />
                         </div>
-                      );
-                    })}
+                      ))}
                 </div>
               </div>
             </div>

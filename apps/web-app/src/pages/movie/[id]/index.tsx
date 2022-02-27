@@ -16,13 +16,18 @@ import type {
 import InferNextPropsType from "infer-next-props-type";
 import ky from "ky";
 import { GetStaticPaths, GetStaticPropsContext } from "next";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { getPlaiceholder } from "plaiceholder";
 import useSWR from "swr";
 
 const MoviePage = (props: InferNextPropsType<typeof getStaticProps>) => {
+  const { status } = useSession();
+
   const { data: available } = useSWR<CheckMovieAvailability>(
-    `/api/available/movie?tmdbId=${props.id}`,
+    status === "authenticated"
+      ? `/api/available/movie?tmdbId=${props.id}`
+      : null,
     fetcher
   );
   const isAvailable = available?.available;
