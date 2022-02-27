@@ -20,7 +20,12 @@ export interface GetHistory {
 
 const handler = async (
   _req: NextApiRequest,
-  res: NextApiResponse<GetHistory | { error: string } | { success: true }>
+  res: NextApiResponse<
+    | GetHistory
+    | { error: string }
+    | { success: true }
+    | { percentage: number | null }
+  >
 ) => {
   const session = await getSession({ req: _req });
   if (!session) {
@@ -30,6 +35,24 @@ const handler = async (
 
   switch (_req.method) {
     case "GET": {
+      if (_req.query.one) {
+        const historyOne = await prisma.history.findUnique({
+          where: {
+            userId_tmdbId_tvdbId_isShow_season_episode: {
+              userId: session.userID,
+              tmdbId: parseInt(_req.query.tmdbId as string) || 0,
+              tvdbId: parseInt(_req.query.tvdbId as string) || 0,
+              isShow: _req.query.media_type === "tv",
+              season: parseInt(_req.query.season as string) || 0,
+              episode: parseInt(_req.query.episode as string) || 0,
+            },
+          },
+        });
+
+        res.status(200).json({ percentage: historyOne?.percentage ?? null });
+        return;
+      }
+
       const history = await prisma.history.findMany({
         where: {
           userId: session.userID,

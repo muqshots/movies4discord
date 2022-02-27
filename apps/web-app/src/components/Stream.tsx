@@ -59,6 +59,23 @@ export const Stream = ({
       if (!ref.current) return;
       const plyr = ref.current.plyr;
 
+      plyr.on("loadedmetadata", async () => {
+        if (!active) return;
+        const percentage = (
+          await ky
+            .get(`/api/history`, {
+              searchParams: {
+                ...historyParams,
+                one: true,
+              },
+            })
+            .json<{ percentage: number | null }>()
+        ).percentage;
+        if (percentage) {
+          plyr.currentTime = (percentage / 100) * plyr.duration;
+        }
+      });
+
       plyr.on(
         "progress",
         throttle(5000, () => {
@@ -76,7 +93,6 @@ export const Stream = ({
     setTimeout(addListeners, 0);
 
     return () => {
-      console.log("Inactive");
       active = false;
     };
   });
