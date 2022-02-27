@@ -68,7 +68,9 @@ const MediaPage = ({
   const { status } = useSession();
 
   const { data: watchlist, mutate } = useSWR<{ isInWatchlist: boolean }>(
-    `/api/watchlist?tmdbId=${id}&isShow=${media_type === "tv"}`,
+    status === "authenticated"
+      ? `/api/watchlist?tmdbId=${id}&isShow=${media_type === "tv"}`
+      : null,
     fetcher
   );
 
@@ -120,10 +122,10 @@ const MediaPage = ({
             />
           </div>
         )}
-        <div className="bg-theme absolute bottom-0 h-8 w-full rounded-t-full" />
+        <div className="absolute bottom-0 h-8 w-full rounded-t-full bg-theme" />
       </div>
 
-      <div className="scrollbar-hide mx-3 flex flex-col gap-8 md:ml-6">
+      <div className="mx-3 flex flex-col gap-8 scrollbar-hide md:ml-6">
         <div className="grid gap-8 md:grid-cols-[min-content,auto]">
           <div className="mx-auto -mt-32 aspect-[1/1.5] w-56 rounded-3xl">
             <div className="group relative">
@@ -186,7 +188,7 @@ const MediaPage = ({
                   isAvailable && status === "authenticated"
                     ? "hover:bg-white hover:text-black"
                     : "cursor-not-allowed"
-                } bg-graything flex flex-row items-center gap-1 rounded-md py-2 px-4 transition duration-200`}
+                } flex flex-row items-center gap-1 rounded-md bg-graything py-2 px-4 transition duration-200`}
                 onClick={onStreamClick}
               >
                 <BsFillPlayFill className="h-5 w-5" />

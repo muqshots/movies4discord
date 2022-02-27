@@ -11,7 +11,7 @@ interface MediaSliderWithItems {
 
 interface ContinueWatchingSlider {
   text: string;
-  media?: MediaThumbnailProps[];
+  media?: MediaThumbnailProps[] | string;
 
   media_type?: never;
 }
@@ -23,17 +23,23 @@ const MediaSlider = ({ text, media_type, media }: MediaSliderProps) => {
     <div className="mr-2 flex flex-col gap-4">
       <span className="text-2xl font-light md:text-3xl">{text}</span>
       <hr />
-      <div className="scrollbar-hide -m-2 flex snap-x scroll-p-2 gap-6 overflow-x-auto p-2">
-        {media
-          ? media.map((item) => (
-              <MediaThumbnail
-                key={item.id}
-                // The default movie will be overriden by {...item} on continue watching
-                media_type={media_type || "movie"}
-                {...item}
-              />
-            ))
-          : [...Array(10)].map((_, i) => <ShimmerThumbnail key={i} />)}
+      <div className="-m-2 flex snap-x scroll-p-2 flex-row gap-6 overflow-x-auto p-2 scrollbar-hide">
+        {media === undefined ? (
+          [...Array(10)].map((_, i) => <ShimmerThumbnail key={i} />)
+        ) : typeof media === "string" ? (
+          <div className="mx-auto flex h-48 flex-row items-center md:h-[237px]">
+            {media}
+          </div>
+        ) : (
+          media.map((item) => (
+            <MediaThumbnail
+              key={item.id}
+              // The default movie will be overriden by {...item} on continue watching
+              media_type={media_type || "movie"}
+              {...item}
+            />
+          ))
+        )}
       </div>
     </div>
   );

@@ -14,49 +14,52 @@ import useSWR from "swr";
 import { GetHistory } from "./api/history";
 
 const Index = ({ sliders }: InferNextPropsType<typeof getStaticProps>) => {
+  const { status } = useSession();
+
   const { data: historyJson } = useSWR<GetHistory>(
-    `/api/history?take=20`,
-    fetcher,
-    {}
+    status === "authenticated" ? `/api/history?take=20` : null,
+    fetcher
   );
 
-  const { status } = useSession();
   const router = useRouter();
 
   return (
     <>
       <div className="mx-3 flex flex-col gap-8">
-        {status !== "unauthenticated" && historyJson?.history.length !== 0 ? (
+        {
           <MediaSlider
             text="Continue watching"
-            media={historyJson?.history.map((item) => ({
-              ...item,
-              onClick: async () => {
-                const key = (
-                  await ky
-                    .post("/api/key", {
-                      searchParams: {
-                        media_type: item.media_type,
-                        tmdbId: item.id,
-                        tvdbId: item.tvdbId,
-                        season: item.season,
-                        episode: item.episode,
-                      },
-                    })
-                    .json<{ key: string }>()
-                ).key;
-                router.push(`/${item.media_type}/${item.id}/${key}`);
-              },
-            }))}
+            media={
+              status === "unauthenticated"
+                ? "Login to continue watching"
+                : historyJson?.history.length === 0
+                ? "Go watch some stuff!"
+                : historyJson?.history.map((item) => ({
+                    ...item,
+                    onClick: async () => {
+                      const key = (
+                        await ky
+                          .post("/api/key", {
+                            searchParams: {
+                              media_type: item.media_type,
+                              tmdbId: item.id,
+                              tvdbId: item.tvdbId,
+                              season: item.season,
+                              episode: item.episode,
+                            },
+                          })
+                          .json<{ key: string }>()
+                      ).key;
+                      router.push(`/${item.media_type}/${item.id}/${key}`);
+                    },
+                  }))
+            }
           />
-        ) : null}
+        }
 
         {sliders.map((slider) => (
           <MediaSlider key={slider.text} {...slider} />
         ))}
-        <div className="bg-spacer flex h-60 flex-row items-center justify-center rounded-lg border-2 border-transparent shadow-md transition duration-200 hover:border-white hover:shadow-white">
-          <span className="text-xl font-semibold">Spacer</span>
-        </div>
       </div>
     </>
   );
@@ -72,9 +75,9 @@ export const getStaticProps = async () => {
     text: "Popular movies",
     media_type: "movie" as const,
     media: await Promise.all(
-      (
-        await getPopularMovies()
-      ).map(async (movie) => formatMovieForThumbnail(movie, doPlaceholders))
+      (await getPopularMovies())
+        .slice(0, 15)
+        .map(async (movie) => formatMovieForThumbnail(movie, doPlaceholders))
     ),
   });
 
@@ -82,9 +85,9 @@ export const getStaticProps = async () => {
     text: "Popular TV",
     media_type: "tv" as const,
     media: await Promise.all(
-      (
-        await getPopularTV()
-      ).map(async (tv) => formatTVForThumbnail(tv, doPlaceholders))
+      (await getPopularTV())
+        .slice(0, 15)
+        .map(async (tv) => formatTVForThumbnail(tv, doPlaceholders))
     ),
   });
 

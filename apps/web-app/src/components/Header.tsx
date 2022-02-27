@@ -58,7 +58,7 @@ const Header = () => {
           placeholder="Search"
           className={`h-8 w-full pr-8 ${
             transparentNav && "bg-white/10 shadow-lg backdrop-blur-sm"
-          } bg-graything rounded-md border-none outline-none placeholder:text-white/50`}
+          } rounded-md border-none bg-graything outline-none placeholder:text-white/50`}
           defaultValue={getQuery(router.query.query)}
           onChange={debounce(200, (e) => {
             const { value } = e.target;

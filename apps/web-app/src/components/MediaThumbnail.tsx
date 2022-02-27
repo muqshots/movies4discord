@@ -52,7 +52,7 @@ const MediaThumbnail = ({
       <Wrapper>
         <div className="flex cursor-pointer flex-col gap-2">
           <div
-            className="shadow-darktheme relative aspect-video w-[244px] shrink-0 rounded-lg border-2 border-transparent shadow-md transition duration-200 hover:scale-105 hover:border-white hover:shadow-white md:w-[324px]" // Add 4px to 16:9 w:h for borders
+            className="relative aspect-video w-[244px] shrink-0 rounded-lg border-2 border-transparent shadow-md shadow-darktheme transition duration-200 hover:scale-105 hover:border-white hover:shadow-white md:w-[324px]" // Add 4px to 16:9 w:h for borders
           >
             <Image
               {...getImageData(image.src || LandscapePlaceholder, image.b64)}
@@ -68,10 +68,11 @@ const MediaThumbnail = ({
                 <div
                   style={{ width: `${percentage}%` }}
                   className="h-full rounded-bl-lg bg-red-600"
-                ></div>
+                />
               </div>
             )}
           </div>
+
           <div className="flex flex-col">
             <div className="flex w-60 flex-row justify-between md:w-80">
               <div className="w-10/12 truncate">{title}</div>
