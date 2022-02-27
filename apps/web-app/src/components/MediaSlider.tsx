@@ -40,10 +40,10 @@ const MediaSlider = ({
             {media}
           </div>
         ) : (
-          media.map((item) => (
+          media.map((item, i) => (
             <MediaThumbnail
               key={item.id}
-              priority={priority}
+              priority={priority && i === 0}
               // The default movie will be overriden by {...item} on continue watching
               media_type={media_type || "movie"}
               {...item}
