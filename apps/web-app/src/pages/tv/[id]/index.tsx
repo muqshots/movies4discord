@@ -64,7 +64,7 @@ const TVPage = ({
           <div
             className={`relative z-50 h-[90%] w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl`}
           >
-            <div className="scrollbar-hide relative h-full w-full overflow-y-auto overscroll-y-none rounded-t-3xl bg-[#20233d]">
+            <div className="relative h-full w-full overflow-y-auto overscroll-y-none rounded-t-3xl bg-[#1f213a] scrollbar-hide">
               <div
                 className="inset-0 mt-3 ml-auto mr-[10px] flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-gray-500"
                 onClick={() => setSeasonsShown(false)}
