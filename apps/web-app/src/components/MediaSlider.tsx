@@ -34,14 +34,14 @@ const MediaSlider = ({
   const slider = useRef<HTMLDivElement | null>(null);
 
   const [scrollDetails, setScrollDetails] = useState<{
-    scrollLeft: number;
-    maxScroll: number;
-  }>({ scrollLeft: 0, maxScroll: 0 });
+    left: boolean;
+    right: boolean;
+  }>({ left: false, right: true });
 
   useEffect(() => {
     setScrollDetails({
-      scrollLeft: slider.current!.scrollLeft,
-      maxScroll: slider.current!.scrollWidth - slider.current!.clientWidth,
+      left: slider.current!.scrollLeft !== 0,
+      right: slider.current!.scrollWidth - slider.current!.clientWidth === 0,
     });
   }, [media]);
 
@@ -52,11 +52,17 @@ const MediaSlider = ({
       <div
         ref={slider}
         onScroll={throttle(500, (e: UIEvent<HTMLDivElement>) => {
-          setScrollDetails({
-            scrollLeft: e.currentTarget.scrollLeft,
-            maxScroll:
-              e.currentTarget.scrollWidth - e.currentTarget.clientWidth,
-          });
+          const tg = e.target as HTMLDivElement;
+          if (
+            (tg.scrollLeft !== 0) !== scrollDetails.left ||
+            (tg.scrollWidth - tg.clientWidth !== tg.scrollLeft) !==
+              scrollDetails.right
+          ) {
+            setScrollDetails({
+              left: tg.scrollLeft !== 0,
+              right: tg.scrollWidth - tg.clientWidth !== tg.scrollLeft,
+            });
+          }
         })}
         className="-m-2 flex snap-x scroll-p-2 flex-row gap-6 overflow-x-auto p-2 scrollbar-hide"
       >
@@ -81,7 +87,7 @@ const MediaSlider = ({
 
       <div
         className={`${
-          scrollDetails.scrollLeft === 0 ? "hidden" : "flex"
+          scrollDetails.left ? "flex" : "hidden"
         } absolute top-4 h-full flex-col justify-center`}
       >
         <HiOutlineChevronLeft
@@ -93,9 +99,7 @@ const MediaSlider = ({
       </div>
       <div
         className={`${
-          scrollDetails.scrollLeft === scrollDetails.maxScroll
-            ? "hidden"
-            : "flex"
+          scrollDetails.right ? "flex" : "hidden"
         } absolute top-4 right-0 h-full flex-col justify-center`}
       >
         <HiOutlineChevronRight
