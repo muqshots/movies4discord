@@ -39,9 +39,11 @@ const MediaSlider = ({
   }>({ left: false, right: true });
 
   useEffect(() => {
+    const { scrollLeft, scrollWidth, clientWidth } = slider.current!;
+
     setScrollDetails({
-      left: slider.current!.scrollLeft !== 0,
-      right: slider.current!.scrollWidth - slider.current!.clientWidth === 0,
+      left: scrollLeft !== 0,
+      right: scrollWidth - clientWidth !== scrollLeft,
     });
   }, [media]);
 
