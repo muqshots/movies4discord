@@ -5,8 +5,10 @@ import { PodnapisiResults } from "@movies4discord/interfaces";
 import AdmZip from "adm-zip";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
+import QuickLRU from "quick-lru";
 
-const subsCache = {} as Record<string, string>;
+const subsCache = new QuickLRU<string, string>({ maxSize: 1000 });
+
 // params
 // q: Title of movie/tv. required
 // t: "movie"/"tv". required
@@ -62,8 +64,8 @@ const handler = async (
   }
 
   const queryKey = JSON.stringify(params);
-  if (queryKey in subsCache) {
-    res.status(200).send(subsCache[queryKey]!);
+  if (subsCache.has(queryKey)) {
+    res.status(200).send(subsCache.get(queryKey)!);
     return;
   }
   const results = await podnapisi
@@ -117,7 +119,7 @@ const handler = async (
     // .setHeader("Cache-Control", "max-age=604800")
     .send(vttSub);
 
-  subsCache[queryKey] = vttSub;
+  subsCache.set(queryKey, vttSub);
 };
 
 export default handler;

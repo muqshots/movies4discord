@@ -26,10 +26,12 @@
     "next-seo": "5.1.0",
     "plaiceholder": "2.3.0",
     "plyr-react": "3.2.1",
+    "quick-lru": "6.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "4.3.1",
     "recoil": "0.6.1",
+    "responselike": "2.0.0",
     "sharp": "0.30.1",
     "swr": "1.2.2",
     "throttle-debounce": "3.0.1"

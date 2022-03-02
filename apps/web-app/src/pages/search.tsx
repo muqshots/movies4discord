@@ -10,7 +10,6 @@ import useSWR from "swr";
 const Search = () => {
   const router = useRouter();
   const query = getQuery(router.query.query)?.trim();
-  // TODO: use error, look into swr caching options
   const { data } = useSWR<{ results: MediaThumbnailProps[] }>(
     `/api/search/multi?query=${query}`,
     fetcher
