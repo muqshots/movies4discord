@@ -11,11 +11,11 @@ import InferNextPropsType from "infer-next-props-type";
 const Index = ({ sliders }: InferNextPropsType<typeof getStaticProps>) => {
   return (
     <div className="mx-3 flex flex-col gap-8">
-      <ContinueWatching />
-
       {sliders.map((slider, i) => (
         <MediaSlider priority={i === 0} key={slider.text} {...slider} />
       ))}
+
+      <ContinueWatching />
     </div>
   );
 };

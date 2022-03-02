@@ -18,7 +18,7 @@ interface ContinueWatchingSlider {
   priority?: boolean;
 
   text: string;
-  media?: MediaThumbnailProps[] | string;
+  media?: MediaThumbnailProps[];
 
   media_type?: never;
 }
@@ -68,23 +68,17 @@ const MediaSlider = ({
         })}
         className="-m-2 flex snap-x scroll-p-2 flex-row gap-6 overflow-x-auto p-2 scrollbar-hide"
       >
-        {media === undefined ? (
-          [...Array(10)].map((_, i) => <ShimmerThumbnail key={i} />)
-        ) : typeof media === "string" ? (
-          <div className="mx-auto flex h-48 flex-row items-center md:h-[237px]">
-            {media}
-          </div>
-        ) : (
-          media.map((item, i) => (
-            <MediaThumbnail
-              key={item.id}
-              priority={priority && i === 0}
-              // The default movie will be overriden by {...item} on continue watching
-              media_type={media_type || "movie"}
-              {...item}
-            />
-          ))
-        )}
+        {!media
+          ? [...Array(10)].map((_, i) => <ShimmerThumbnail key={i} />)
+          : media.map((item, i) => (
+              <MediaThumbnail
+                key={item.id}
+                priority={priority && i === 0}
+                // The default movie will be overriden by {...item} on continue watching
+                media_type={media_type || "movie"}
+                {...item}
+              />
+            ))}
       </div>
 
       <div
