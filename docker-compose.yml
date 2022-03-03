@@ -1,22 +1,47 @@
-version: "3"
+version: '3'
 
 services:
-  web-app:
-    container_name: web-app
+
+  database:
+    container_name: database
+    hostname: database
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
+
+  migrate:
+    container_name: migrate
+    build:
+      context: .
+      dockerfile: ./packages/db/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - database
+
+  website:
+    container_name: website
+    hostname: website
     build:
       context: .
       dockerfile: ./apps/web-app/Dockerfile
-    ports:
-      - "3000:3000"
     env_file:
       - .env
+    ports:
+      - 3000:3000
+    depends_on:
+      - database
+      - migrate
 
-  stream_app:
-    container_name: stream-app
+  stream:
+    container_name: stream
+    hostname: stream
     build:
       context: .
       dockerfile: ./apps/stream-app/Dockerfile
-    ports:
-      - "6969:6969"
     env_file:
       - .env
+    ports:
+      - 6969:6969
+    depends_on:
+      - website
