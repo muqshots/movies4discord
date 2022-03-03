@@ -63,12 +63,18 @@ app.get("/", async (req, res) => {
     return;
   }
   const apiData = await api
-    .get("key", { searchParams: { viewkey } })
+    .get("key", {
+      searchParams: { viewkey },
+      retry: { limit: 4 },
+    })
     .json<{ name: string; path: string; err: false }>()
-    .catch((err) => ({
-      err: true as const,
-      message: err?.response?.body || "API reach error",
-    }));
+    .catch((err) => {
+      console.error(err);
+      return {
+        err: true as const,
+        message: err?.response?.body || "API reach error",
+      };
+    });
 
   if (apiData.err) {
     res.status(500).json(apiData.message);
