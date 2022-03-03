@@ -122,13 +122,16 @@ export const Stream = ({
             <div
               key={s}
               className="rounded-lg border border-white px-3 py-1.5 hover:bg-white hover:text-black"
-              onClick={() => setServer(s)}
+              onClick={() => {
+                setServer(s);
+                ky.post(`/api/server?server=${s}`);
+              }}
             >
               {s}
             </div>
           ))}
         </div>
-        <div className="w-3/5">
+        <div className="w-4/5">
           <Plyr
             ref={ref}
             options={{

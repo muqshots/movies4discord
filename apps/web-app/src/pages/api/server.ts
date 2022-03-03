@@ -25,6 +25,9 @@ const handler = async (
     where: { id: session.userID },
     data: { server },
   });
+
+  res.status(200).json({ success: true });
+  return;
 };
 
 export default handler;
