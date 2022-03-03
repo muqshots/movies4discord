@@ -1,11 +1,40 @@
-import express from "express";
-import { got } from "got";
 import cors from "cors";
+import express from "express";
 import fs from "fs";
+import { got, Options, Response } from "got";
+import QuickLRU from "quick-lru";
+import ResponseLike from "responselike";
 
 const app = express();
 
 const allowlist = ["https://movies4discord.xyz", "http://localhost:3000"];
+
+const beforeReqHook = (lru: QuickLRU<string, string>) => (options: Options) => {
+  const url = (options.url as URL).href;
+
+  if (lru.has(url)) {
+    return new ResponseLike(
+      200,
+      { "Content-Type": "application/json", "x-lru-cache": "oui" },
+      Buffer.from(lru.get(url)!),
+      url
+    );
+  }
+};
+
+const afterResponseHook =
+  (lru: QuickLRU<string, string>) => (response: Response) => {
+    if (!response.headers["x-lru-cache"]) {
+      const url = response.requestUrl.href;
+      lru.set(url, response.body as string);
+    }
+    return response;
+  };
+
+const streamLru = new QuickLRU<string, string>({
+  maxSize: 99999,
+  maxAge: 300000, // 5 minutes
+});
 
 app.use(
   cors((req, callback) => {
@@ -21,6 +50,10 @@ app.use(
 
 const api = got.extend({
   prefixUrl: `${process.env!.API_URL!.replace(/\/$/, "")}/api`,
+  hooks: {
+    beforeRequest: [beforeReqHook(streamLru)],
+    afterResponse: [afterResponseHook(streamLru)],
+  },
 });
 
 app.get("/", async (req, res) => {
