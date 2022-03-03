@@ -1,7 +1,8 @@
 import { Stream } from "@/components/Stream";
 import { getImageUrl } from "@/lib/getImageUrl";
+import { servers } from "@/lib/getServers";
 import { getMovie } from "@/lib/getTmdbData";
-import { prisma } from "@movies4discord/db";
+import { prisma, Server } from "@movies4discord/db";
 import InferNextProps from "infer-next-props-type";
 import { GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
@@ -16,6 +17,7 @@ const StreamMovie = ({
   overview,
   year,
   backdropUrl,
+  servers,
 }: InferNextProps<typeof getServerSideProps>) => {
   return (
     <>
@@ -34,7 +36,8 @@ const StreamMovie = ({
       />
 
       <Stream
-        server={defaultServer}
+        servers={servers}
+        defaultServer={defaultServer}
         viewKey={viewKey}
         backdropUrl={backdropUrl}
         title={title}
@@ -96,6 +99,7 @@ export const getServerSideProps = async ({
       overview: movieData.overview,
       year: movieData.release_date?.slice(0, 4),
       backdropUrl: getImageUrl(movieData.backdrop_path),
+      servers: servers,
     },
   };
 };

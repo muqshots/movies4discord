@@ -3,7 +3,7 @@ import { fetcher } from "@/lib/fetcher";
 import { formatMovieForThumbnail } from "@/lib/formatMediaForThumbnail";
 import { getImageUrl } from "@/lib/getImageUrl";
 import { tmdb } from "@/lib/got";
-import { CheckMovieAvailability } from "@/pages/api/available/movie";
+import { CheckMovieAvailability } from "@/pages/api/movie";
 import type {
   Credits,
   Images,
@@ -25,9 +25,7 @@ const MoviePage = (props: InferNextPropsType<typeof getStaticProps>) => {
   const { status } = useSession();
 
   const { data: available } = useSWR<CheckMovieAvailability>(
-    status === "authenticated"
-      ? `/api/available/movie?tmdbId=${props.id}`
-      : null,
+    status === "authenticated" ? `/api/movie?tmdbId=${props.id}` : null,
     fetcher
   );
   const isAvailable = available?.available;

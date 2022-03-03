@@ -1,5 +1,6 @@
 import { Stream } from "@/components/Stream";
 import { getImageUrl } from "@/lib/getImageUrl";
+import { servers } from "@/lib/getServers";
 import { getTV } from "@/lib/getTmdbData";
 import { prisma } from "@movies4discord/db";
 import InferNextProps from "infer-next-props-type";
@@ -10,6 +11,7 @@ import "plyr-react/dist/plyr.css";
 
 const StreamTV = ({
   defaultServer,
+  servers,
   viewKey,
   id,
   title,
@@ -38,7 +40,8 @@ const StreamTV = ({
       />
 
       <Stream
-        server={defaultServer}
+        servers={servers}
+        defaultServer={defaultServer}
         viewKey={viewKey}
         backdropUrl={backdropUrl}
         title={title}
@@ -122,6 +125,7 @@ export const getServerSideProps = async ({
       tvdbId: keyData.tmvdbId,
       season: keyData.season,
       episode: keyData.episode,
+      servers: servers,
     },
   };
 };

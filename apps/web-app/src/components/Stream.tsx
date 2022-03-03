@@ -8,7 +8,8 @@ import { useEffect, useRef, useState } from "react";
 import { throttle } from "throttle-debounce";
 
 interface StreamProps {
-  server: Server;
+  servers: Server[];
+  defaultServer: Server;
   viewKey: string;
   historyParams:
     | {
@@ -28,14 +29,17 @@ interface StreamProps {
 }
 
 export const Stream = ({
-  server,
+  defaultServer,
   viewKey,
   historyParams,
   title,
   backdropUrl,
   subs,
+  servers,
 }: StreamProps) => {
-  const [streamUrl, setStreamUrl] = useState(getStreamUrl(server, viewKey));
+  const [server, setServer] = useState<Server>(defaultServer);
+
+  const streamUrl = getStreamUrl(server, viewKey);
 
   const router = useRouter();
   const ref = useRef<{ plyr: Plyr }>(null);
@@ -109,8 +113,22 @@ export const Stream = ({
 
   return (
     <>
-      <div className="flex flex-row items-center justify-center">
-        <div className="w-4/5">
+      <div className="ml-5 flex flex-col justify-center">
+        <div className="items-start text-xl font-bold">
+          Streaming {title} on {server} server
+        </div>
+        <div className="flex flex-row gap-2">
+          {servers.map((s) => (
+            <div
+              key={s}
+              className="rounded-lg border border-white px-3 py-1.5 hover:bg-white hover:text-black"
+              onClick={() => setServer(s)}
+            >
+              {s}
+            </div>
+          ))}
+        </div>
+        <div className="w-3/5">
           <Plyr
             ref={ref}
             options={{

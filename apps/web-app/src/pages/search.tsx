@@ -11,7 +11,7 @@ const Search = () => {
   const router = useRouter();
   const query = getQuery(router.query.query)?.trim();
   const { data } = useSWR<{ results: MediaThumbnailProps[] }>(
-    `/api/search/multi?query=${query}`,
+    `/api/search?query=${query}`,
     fetcher
   );
   const searchResults = data?.results;
