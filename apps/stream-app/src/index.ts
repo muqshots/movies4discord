@@ -25,8 +25,10 @@ const beforeReqHook = (lru: QuickLRU<string, string>) => (options: Options) => {
 const afterResponseHook =
   (lru: QuickLRU<string, string>) => (response: Response) => {
     if (!response.headers["x-lru-cache"]) {
-      const url = response.requestUrl.href;
-      lru.set(url, response.body as string);
+      if (response.statusCode === 200) {
+        const url = response.requestUrl.href;
+        lru.set(url, response.body as string);
+      }
     }
     return response;
   };
