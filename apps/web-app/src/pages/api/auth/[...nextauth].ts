@@ -36,7 +36,7 @@ export default NextAuth({
         (g) => g.id === "935915138429648997"
       );
 
-      return allowedToSignIn;
+      return allowedToSignIn || "https://discord.movies4discord.xyz";
     },
     async session({ session, user }) {
       session.userID = user.id;
