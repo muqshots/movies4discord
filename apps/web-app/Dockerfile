@@ -35,7 +35,7 @@ WORKDIR /app
 COPY . .
 COPY --from=deps /workspace-install ./
 
-RUN yarn db migrate:deploy
+# RUN yarn db migrate:deploy
 RUN yarn workspace web-app build
 
 RUN --mount=type=cache,target=/root/.yarn-cache,id=workspace-install,rw \
