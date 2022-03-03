@@ -55,8 +55,8 @@ services:
       - type: bind
         source: ${DOCKER_STREAM_DATA}
         target: /data
-    depends_on:
-      - website
+    # depends_on:
+    #   - website
 
 networks:
   mainnetwork:
