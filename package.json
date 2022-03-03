@@ -23,7 +23,8 @@
     "clean": "rimraf '.cache/*' && yarn workspaces foreach -ptv run clean && rimraf '**/node_modules'",
     "fix:all-files": "yarn workspaces foreach -ptv run fix:all-files",
     "typecheck": "yarn workspaces foreach -ptv run typecheck",
-    "nuke:node_modules": "rimraf '**/node_modules'"
+    "nuke:node_modules": "rimraf '**/node_modules'",
+    "docker:start": "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose up -d --build"
   },
   "devDependencies": {
     "prettier": "2.5.1",
