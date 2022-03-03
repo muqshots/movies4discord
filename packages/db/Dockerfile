@@ -18,4 +18,4 @@ RUN --mount=type=cache,target=/root/.yarn-cache,id=workspace-install,rw \
     YARN_CACHE_FOLDER=/root/.yarn-cache \
     yarn workspaces focus @movies4discord/db --production
 
-CMD ["yarn", "workspace", "@movies4discord/db", "run", "migrate:deploy"]
+CMD ["yarn", "db", "docker"]

@@ -16,7 +16,8 @@
     "clean": "rimraf --no-glob ./tsconfig.tsbuildinfo ./.eslintcache",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "typecheck": "tsc --project ./tsconfig.json --noEmit",
-    "fix:all-files": "eslint . --ext .ts,.tsx,.js,.jsx --fix"
+    "fix:all-files": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
+    "docker": "yarn migrate:deploy && yarn studio"
   },
   "devDependencies": {
     "@types/node": "17.0.21",

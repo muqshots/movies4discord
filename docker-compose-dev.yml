@@ -8,12 +8,6 @@ services:
     image: postgres
     environment:
       - POSTGRES_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
-    networks:
-      - mainnetwork
-    volumes:
-      - type: bind
-        source: ${DOCKER_POSTGRES_DATA}
-        target: /var/lib/postgresql/data
 
   studio:
     container_name: studio
@@ -22,8 +16,8 @@ services:
       dockerfile: ./packages/db/Dockerfile
     env_file:
       - .env
-    networks:
-      - mainnetwork
+    ports:
+      - "5555:5555"
     depends_on:
       - database
 
@@ -35,8 +29,8 @@ services:
       dockerfile: ./apps/web-app/Dockerfile
     env_file:
       - .env
-    networks:
-      - mainnetwork
+    ports:
+      - 3000:3000
     depends_on:
       - database
       - studio
@@ -49,15 +43,7 @@ services:
       dockerfile: ./apps/stream-app/Dockerfile
     env_file:
       - .env
-    networks:
-      - mainnetwork
-    volumes:
-      - type: bind
-        source: ${DOCKER_STREAM_DATA}
-        target: /data
+    ports:
+      - 6969:6969
     depends_on:
       - website
-
-networks:
-  mainnetwork:
-    external: true
