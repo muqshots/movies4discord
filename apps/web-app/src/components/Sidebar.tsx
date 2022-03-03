@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { BsTvFill } from "react-icons/bs";
+import { FaDiscord } from "react-icons/fa";
 import { HiBookmark, HiClock, HiHome } from "react-icons/hi";
 import { MdMovie } from "react-icons/md";
 import { useRecoilState } from "recoil";
@@ -45,6 +46,12 @@ const Sidebar = () => {
       link: "/history",
       isCurrent: (asPath: string) => asPath === "/history",
     },
+    {
+      icon: FaDiscord,
+      text: "Discord",
+      link: "https://discord.movies4discord.xyz",
+      isCurrent: (asPath: string) => false,
+    },
   ];
 
   return (
@@ -62,7 +69,7 @@ const Sidebar = () => {
           sidebar.mobileShown ? "ml-0" : sidebar.isOpen ? "-ml-52" : "-ml-20"
         } ${
           sidebar.isOpen ? "w-52" : "w-20"
-        } bg-darktheme fixed z-50 h-screen border-r border-slate-800 transition-all duration-200 md:ml-0`}
+        } fixed z-50 h-screen border-r border-slate-800 bg-darktheme transition-all duration-200 md:ml-0`}
       >
         <div className="mx-6 flex flex-col gap-10">
           <div
