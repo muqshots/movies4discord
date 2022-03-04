@@ -89,7 +89,7 @@ const MediaSlider = ({
         <HiOutlineChevronLeft
           className="h-6 w-6 cursor-pointer"
           onClick={() =>
-            slider.current?.scrollBy({ left: -900, behavior: "smooth" })
+            slider.current?.scrollBy({ left: -600, behavior: "smooth" })
           }
         />
       </div>
@@ -101,7 +101,7 @@ const MediaSlider = ({
         <HiOutlineChevronRight
           className="h-6 w-6 cursor-pointer"
           onClick={() =>
-            slider.current?.scrollBy({ left: 900, behavior: "smooth" })
+            slider.current?.scrollBy({ left: 600, behavior: "smooth" })
           }
         />
       </div>
