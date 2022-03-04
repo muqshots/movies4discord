@@ -183,13 +183,17 @@ const MediaPage = ({
 
             <div className="flex flex-row gap-1.5">
               <button
-                disabled={!(isAvailable && status === "authenticated")}
+                disabled={!isAvailable && status === "authenticated"}
                 className={`${
-                  isAvailable && status === "authenticated"
+                  isAvailable === true || status === "unauthenticated"
                     ? "hover:bg-white hover:text-black"
                     : "cursor-not-allowed"
                 } flex flex-row items-center gap-1 rounded-md bg-graything py-2 px-4 transition duration-200`}
-                onClick={onStreamClick}
+                onClick={
+                  status === "unauthenticated"
+                    ? () => signIn("discord")
+                    : onStreamClick
+                }
               >
                 <BsFillPlayFill className="h-5 w-5" />
                 <div className="text-sm">
