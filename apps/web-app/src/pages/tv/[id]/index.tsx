@@ -294,6 +294,7 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
       runtime: TVData.episode_run_time[0] ?? 0,
       numberOfEpisodes: TVData.number_of_episodes,
       releaseDate: TVData.first_air_date || null,
+      seriesStatus: TVData.status || null,
       cast: TVData.credits.cast.slice(0, 15).map((p) => ({
         name: p.name,
         id: p.id,
