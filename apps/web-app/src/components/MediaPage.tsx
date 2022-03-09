@@ -40,6 +40,7 @@ interface MediaPageProps {
   numberOfEpisodes?: number;
   rating: number;
   releaseDate: string | null;
+  seriesStatus?: string | null;
   cast: CastSliderProps["cast"];
   recommendations: RecommendationsSliderProps["recommendations"];
 }
@@ -61,6 +62,7 @@ const MediaPage = ({
   numberOfEpisodes,
   rating,
   releaseDate,
+  seriesStatus = null,
   cast,
   recommendations,
 }: MediaPageProps) => {
@@ -179,6 +181,12 @@ const MediaPage = ({
               </div>
               <div>|</div>
               <div>{releaseDate?.slice(0, 4) ?? "Unknown year"}</div>
+              {seriesStatus ? (
+                <>
+                  <div>|</div>
+                  <div>{seriesStatus}</div>
+                </>
+              ) : null}
             </div>
 
             <div className="flex flex-row gap-1.5">
