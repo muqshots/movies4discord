@@ -19,20 +19,31 @@ import { GetStaticPaths, GetStaticPropsContext } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { getPlaiceholder } from "plaiceholder";
+import { useEffect, useState } from "react";
+import {
+  HiBadgeCheck,
+  HiDotsCircleHorizontal,
+  HiRefresh,
+  HiSearch,
+} from "react-icons/hi";
 import useSWR from "swr";
 
 const MoviePage = (props: InferNextPropsType<typeof getStaticProps>) => {
-  const { status } = useSession();
+  const { status, data: session } = useSession();
 
-  const { data: available } = useSWR<CheckMovieAvailability>(
+  const { data: radarrData, mutate } = useSWR<CheckMovieAvailability>(
     status === "authenticated" ? `/api/movie?tmdbId=${props.id}` : null,
     fetcher
   );
-  const isAvailable = available?.available;
 
   const router = useRouter();
 
-  const onStreamClick = isAvailable
+  const [actionButtonClicked, setActionButtonClicked] = useState(false);
+  const [actionButtonDone, setActionButtonDone] = useState(false);
+
+  useEffect(() => console.log(actionButtonDone), [actionButtonDone]);
+
+  const onStreamClick = radarrData?.available
     ? async () => {
         const key = (
           await ky
@@ -48,8 +59,55 @@ const MoviePage = (props: InferNextPropsType<typeof getStaticProps>) => {
   return (
     <MediaPage
       media_type="movie"
-      isAvailable={isAvailable}
+      isAvailable={radarrData?.available}
       onStreamClick={onStreamClick}
+      extraButton={
+        radarrData?.available !== undefined &&
+        status === "authenticated" &&
+        session.admin
+          ? {
+              text: actionButtonDone
+                ? "Done!"
+                : actionButtonClicked
+                ? "Doing da ting"
+                : radarrData.available
+                ? "Replace"
+                : "Search",
+              icon: actionButtonDone
+                ? HiBadgeCheck
+                : actionButtonClicked
+                ? HiDotsCircleHorizontal
+                : radarrData.available
+                ? HiRefresh
+                : HiSearch,
+              disabled: !!actionButtonDone || actionButtonClicked,
+              onClick: actionButtonClicked
+                ? () => null
+                : async () => {
+                    setActionButtonClicked(true);
+                    radarrData.available
+                      ? await ky.post(`/api/movie`, {
+                          searchParams: {
+                            action: "replace",
+                            id: radarrData.id!,
+                            tmdbId: props.id,
+                            movieFileId: radarrData.movieFileId!,
+                          },
+                        })
+                      : await ky.post(`/api/movie`, {
+                          searchParams: {
+                            action: "search",
+                            id: radarrData.id ?? 0,
+                            tmdbId: props.id,
+                          },
+                        });
+                    mutate();
+                    setActionButtonDone(true);
+                    setActionButtonClicked(false);
+                  },
+            }
+          : undefined
+      }
       {...props}
     />
   );

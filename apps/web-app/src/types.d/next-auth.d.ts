@@ -13,6 +13,12 @@ declare module "next-auth" {
     expires: string;
 
     userID: string;
+    admin: boolean;
+  }
+
+  interface User {
+    id: string;
+    admin: boolean;
   }
 
   /**
