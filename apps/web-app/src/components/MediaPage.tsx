@@ -8,6 +8,7 @@ import { signIn, useSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
 import Image from "next/image";
 import { useState } from "react";
+import { IconType } from "react-icons";
 import {
   BsFillBookmarkCheckFill,
   BsFillBookmarkFill,
@@ -27,6 +28,12 @@ interface MediaPageProps {
   media_type: "movie" | "tv";
   isAvailable: boolean | undefined;
   onStreamClick: (() => Promise<void> | void) | undefined;
+  extraButton?: {
+    text: string;
+    icon: IconType;
+    disabled: boolean;
+    onClick: () => Promise<void> | void | null;
+  };
 
   id: number;
   title: string;
@@ -49,6 +56,7 @@ const MediaPage = ({
   media_type,
   isAvailable,
   onStreamClick,
+  extraButton,
 
   id,
   title,
@@ -83,6 +91,8 @@ const MediaPage = ({
       : inWatchlist
       ? BsFillBookmarkCheckFill
       : BsFillBookmarkPlusFill;
+
+  const ExtraButtonIcon = extraButton?.icon;
 
   return (
     <>
@@ -236,6 +246,20 @@ const MediaPage = ({
                 <WatchlistIcon className="h-[1.125rem] w-[1.125rem]" />
                 <div className="text-sm">{inWatchlist ? "Saved" : "Save "}</div>
               </button>
+
+              {extraButton && ExtraButtonIcon && (
+                <button
+                  className={`${
+                    !extraButton.disabled
+                      ? "hover:bg-white hover:text-black"
+                      : "cursor-not-allowed"
+                  } flex flex-row items-center gap-1 rounded-md bg-graything py-2 px-4 transition duration-200`}
+                  onClick={extraButton.onClick}
+                >
+                  <ExtraButtonIcon className="h-[1.125rem] w-[1.125rem]" />
+                  <div className="text-sm">{extraButton.text}</div>
+                </button>
+              )}
             </div>
           </div>
         </div>

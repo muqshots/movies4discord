@@ -26,7 +26,12 @@ const afterResponseHook =
     return response;
   };
 
-const arrLru = new QuickLRU<string, string>({
+export const radarrLru = new QuickLRU<string, string>({
+  maxSize: 99999,
+  maxAge: 300000, // 5 minutes
+});
+
+const sonarrLru = new QuickLRU<string, string>({
   maxSize: 99999,
   maxAge: 300000, // 5 minutes
 });
@@ -51,14 +56,18 @@ export const podnapisi = got.extend({
   // is cached in api/subtitles.ts
 });
 
+export const radarrPrefix = `${process.env.RADARR_URL!.replace(
+  /\/$/,
+  ""
+)}/api/v3`;
 export const radarr = got.extend({
-  prefixUrl: `${process.env.RADARR_URL!.replace(/\/$/, "")}/api/v3`,
+  prefixUrl: radarrPrefix,
   searchParams: {
     apikey: process.env.RADARR_API_KEY!,
   },
   hooks: {
-    beforeRequest: [beforeReqHook(arrLru)],
-    afterResponse: [afterResponseHook(arrLru)],
+    beforeRequest: [beforeReqHook(radarrLru)],
+    afterResponse: [afterResponseHook(radarrLru)],
   },
 });
 
@@ -68,15 +77,15 @@ export const sonarr = got.extend({
     apikey: process.env.SONARR_API_KEY!,
   },
   hooks: {
-    beforeRequest: [beforeReqHook(arrLru)],
-    afterResponse: [afterResponseHook(arrLru)],
+    beforeRequest: [beforeReqHook(sonarrLru)],
+    afterResponse: [afterResponseHook(sonarrLru)],
   },
 });
 
 export const skyhook = got.extend({
   prefixUrl: `https://skyhook.sonarr.tv/v1/tvdb`,
   hooks: {
-    beforeRequest: [beforeReqHook(arrLru)],
-    afterResponse: [afterResponseHook(arrLru)],
+    beforeRequest: [beforeReqHook(sonarrLru)],
+    afterResponse: [afterResponseHook(sonarrLru)],
   },
 });

@@ -40,6 +40,7 @@ export default NextAuth({
     },
     async session({ session, user }) {
       session.userID = user.id;
+      session.admin = user.admin;
       return session;
     },
   },
