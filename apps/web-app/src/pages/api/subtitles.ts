@@ -104,13 +104,19 @@ const handler = async (
     return;
   }
 
-  const vttSub = await new Promise<string>((resolve) => {
-    file.getDataAsync((buffer) => {
-      const srtSub = buffer.toString("utf8");
-      const vtt = srtToVtt(srtSub);
-      resolve(vtt);
+  let vttSub;
+  try {
+    vttSub = await new Promise<string>((resolve) => {
+      file.getDataAsync((buffer) => {
+        const srtSub = buffer.toString("utf8");
+        const vtt = srtToVtt(srtSub);
+        resolve(vtt);
+      });
     });
-  });
+  } catch (error) {
+    res.status(500).json({ error: "Could not convert" });
+    return;
+  }
 
   res
     .status(200)
