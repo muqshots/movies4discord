@@ -14,7 +14,7 @@ services:
       - type: bind
         source: ${DOCKER_POSTGRES_DATA}
         target: /var/lib/postgresql/data
-    restart: on-failure
+    restart: unless-stopped
 
   studio:
     container_name: studio
@@ -27,7 +27,7 @@ services:
       - mainnetwork
     depends_on:
       - database
-    restart: on-failure
+    restart: unless-stopped
 
   website:
     container_name: website
@@ -42,7 +42,7 @@ services:
     depends_on:
       - database
       - studio
-    restart: on-failure
+    restart: unless-stopped
 
   stream:
     container_name: stream
@@ -60,7 +60,7 @@ services:
         target: /data
     # depends_on:
     #   - website
-    restart: on-failure
+    restart: unless-stopped
 
 networks:
   mainnetwork:
