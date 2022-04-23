@@ -113,11 +113,11 @@ export const Stream = ({
 
   return (
     <>
-      <div className="ml-5 flex flex-col justify-center">
-        <div className="items-start text-xl font-bold">
+      <div className="ml-5 flex flex-col justify-center items-center">
+        <div className="items-start text-xl font-bold mt-5">
           Streaming {title} on {server} server
         </div>
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 m-5">
           {servers.map((s) => (
             <div
               key={s}
