@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { BsTvFill } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
 import { HiBookmark, HiClock, HiHome } from "react-icons/hi";
+import {GiReceiveMoney} from "react-icons/gi"
 import { MdMovie } from "react-icons/md";
 import { useRecoilState } from "recoil";
 
@@ -51,6 +52,12 @@ const Sidebar = () => {
       text: "Discord",
       link: "https://discord.movies4discord.xyz",
       isCurrent: (asPath: string) => false,
+    },
+    {
+      icon: GiReceiveMoney,
+      text: "Donate",
+      link: "/donate",
+      isCurrent: (asPath: string) => asPath.startsWith("/donate"),
     },
   ];
 
