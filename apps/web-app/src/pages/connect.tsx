@@ -6,7 +6,7 @@ interface Pincode{
     pincode: number
 }
 
-const connect = () => {
+const Connect = () => {
     const { status } = useSession();
     const { data: pincodeJson } = useSWR<Pincode>(
         status === "authenticated" ? `/api/connect` : null,
@@ -23,4 +23,4 @@ const connect = () => {
     )
 }
 
-export default connect;
+export default Connect;
