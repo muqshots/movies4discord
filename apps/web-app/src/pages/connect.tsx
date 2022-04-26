@@ -2,9 +2,13 @@ import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { fetcher } from "@/lib/fetcher";
 
+interface Pincode{
+    pincode: number
+}
+
 const connect = () => {
     const { status } = useSession();
-    const { data: pincodeJson } = useSWR(
+    const { data: pincodeJson } = useSWR<Pincode>(
         status === "authenticated" ? `/api/connect` : null,
         fetcher
     );
