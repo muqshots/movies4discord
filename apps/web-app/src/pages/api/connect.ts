@@ -32,7 +32,7 @@ const handler = async (
                 })
 
                 // Declare all number chars.
-                let chars = '0123456789';
+                const chars = '0123456789';
 
                 // Pick numbers randomly
                 let str = '';
@@ -54,7 +54,7 @@ const handler = async (
                 return;
             }
 
-            let chars = '0123456789';
+            const chars = '0123456789';
 
             // Pick numbers randomly
             let str = '';

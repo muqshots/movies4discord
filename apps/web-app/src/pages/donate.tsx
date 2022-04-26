@@ -5,7 +5,7 @@ import BTC from "../../public/BTC.png";
 import ETH from "../../public/ETH.png";
 import LTC from "../../public/LTC.png";
 
-const donate = () => {
+const Donate = () => {
     return (
         <div className="flex flex-col justify-center items-center overflow-hidden">
             <text className="text-center">
@@ -18,25 +18,25 @@ const donate = () => {
             </text>
             <div className="flex flex-col md:flex-row justify-center items-center m-10">
                 <div className="flex flex-row md:flex-col justify-center items-center  m-5">
-                    <Image src={BTC} width={215} height={215}></Image>
+                    <Image src={BTC} width={215} height={215} alt="BTC"></Image>
                     <text className="m-5">
                     BTC (Bitcoin)
                 </text>
                 </div>
                 <div className="flex flex-row md:flex-col justify-center items-center m-5">
-                    <Image src={XMR} width={215} height={215}></Image>
+                    <Image src={XMR} width={215} height={215} alt="XMR"></Image>
                     <text className="m-5">
                     XMR (Monero)
                 </text>
                 </div>
                 <div className="flex flex-row md:flex-col justify-center items-center m-5">
-                <Image src={ETH} width={215} height={215}></Image>
+                <Image src={ETH} width={215} height={215} alt="ETH"></Image>
                 <text className="m-5">
                 ETH (Etherum)
                 </text>
                 </div>
                 <div className="flex flex-row md:flex-col justify-center items-center m-5">
-                <Image src={LTC} width={215} height={215}></Image>
+                <Image src={LTC} width={215} height={215} alt="LTC"></Image>
                 <text className="m-5">
                     LTC (Litecoin)
                 </text>
@@ -46,4 +46,4 @@ const donate = () => {
     )
 }
 
-export default donate;
+export default Donate;
