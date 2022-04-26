@@ -9,9 +9,21 @@ const handler = async (
 ) => {
   const session = await getSession({ req: _req });
 
-  if (!session) {
+  var check = null
+  if (!session && !_req.query.id) {
     res.status(401).json({ error: "Unauthorized..." });
     return;
+  }
+  else if(_req.query.id){
+    check = await prisma.user.findUnique({
+      where:{
+        id: _req.query.id as string
+      }
+    })
+    if(!check){
+      res.status(401).json({ error: "Unauthorized..." });
+      return;
+    }
   }
 
   const server = _req.query.server as Server | undefined;
@@ -22,7 +34,7 @@ const handler = async (
   }
 
   await prisma.user.update({
-    where: { id: session.userID },
+    where: { id: session ? session.userID : check?.id },
     data: { server },
   });
 

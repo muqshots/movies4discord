@@ -10,9 +10,21 @@ import { getSession } from "next-auth/react";
 const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req: _req });
 
-  if (!session) {
+  var check = null
+  if (!session && !_req.query.id) {
     res.status(401).json({ error: "Unauthorized..." });
     return;
+  }
+  else if (_req.query.id) {
+    check = await prisma.user.findUnique({
+      where: {
+        id: _req.query.id as string
+      }
+    })
+    if (!check) {
+      res.status(401).json({ error: "Unauthorized..." });
+      return;
+    }
   }
 
   const tmdbId = parseInt(_req.query.tmdbId as string) as number;
@@ -25,7 +37,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
       if (Number.isNaN(tmdbId)) {
         const watchlist = await prisma.watchlist.findMany({
           select: { tmdbId: true, isShow: true },
-          where: { userId: session.userID },
+          where: { userId: session ? session.userID : check?.id },
           orderBy: { createdAt: "desc" },
         });
 
@@ -61,7 +73,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
           select: { id: true },
           where: {
             userId_tmdbId_isShow: {
-              userId: session.userID,
+              userId: session ? session.userID : check?.id as string,
               tmdbId: tmdbId,
               isShow: isShow,
             },
@@ -73,7 +85,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
     }
     case "POST": {
       const createdItem = await prisma.watchlist.create({
-        data: { tmdbId, isShow, userId: session.userID },
+        data: { tmdbId, isShow, userId: session ? session.userID : check?.id as string },
       });
       res.status(200).json(createdItem);
       break;
@@ -81,7 +93,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
     case "DELETE": {
       await prisma.watchlist.delete({
         where: {
-          userId_tmdbId_isShow: { userId: session.userID, tmdbId, isShow },
+          userId_tmdbId_isShow: { userId: session ? session.userID : check?.id as string, tmdbId, isShow },
         },
       });
       res.status(200).json({});

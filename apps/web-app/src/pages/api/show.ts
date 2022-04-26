@@ -3,6 +3,7 @@ import { sonarr } from "@/lib/got";
 import { SonarrEpisode, SonarrTV } from "@movies4discord/interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
+import { prisma } from "@movies4discord/db";
 
 export interface GetShow {
   episodes: {
@@ -27,9 +28,21 @@ const handler = async (
 ) => {
   const session = await getSession({ req: _req });
 
-  if (!session) {
+  var check = null
+  if (!session && !_req.query.id) {
     res.status(401).json({ error: "Unauthorized..." });
     return;
+  }
+  else if (_req.query.id) {
+    check = await prisma.user.findUnique({
+      where: {
+        id: _req.query.id as string
+      }
+    })
+    if (!check) {
+      res.status(401).json({ error: "Unauthorized..." });
+      return;
+    }
   }
 
   const tvdbId = parseInt(_req.query.tvdbId as string);

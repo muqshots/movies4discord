@@ -6,6 +6,7 @@ import AdmZip from "adm-zip";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import QuickLRU from "quick-lru";
+import { prisma } from "@movies4discord/db";
 
 const subsCache = new QuickLRU<string, string>({ maxSize: 1000 });
 
@@ -21,9 +22,21 @@ const handler = async (
   res: NextApiResponse<string | { error: string }>
 ) => {
   const session = await getSession({ req: _req });
-  if (!session) {
+  var check = null
+  if (!session && !_req.query.id) {
     res.status(401).json({ error: "Unauthorized..." });
     return;
+  }
+  else if (_req.query.id) {
+    check = await prisma.user.findUnique({
+      where: {
+        id: _req.query.id as string
+      }
+    })
+    if (!check) {
+      res.status(401).json({ error: "Unauthorized..." });
+      return;
+    }
   }
 
   let { q, t, season, episode, year, language } = _req.query;

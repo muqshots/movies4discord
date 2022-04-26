@@ -7,8 +7,9 @@ import { useRouter } from "next/router";
 import { BsTvFill } from "react-icons/bs";
 import { FaDiscord } from "react-icons/fa";
 import { HiBookmark, HiClock, HiHome } from "react-icons/hi";
-import {GiReceiveMoney} from "react-icons/gi"
+import { GiReceiveMoney, GiTvRemote } from "react-icons/gi"
 import { MdMovie } from "react-icons/md";
+import {ImConnection} from "react-icons/im"
 import { useRecoilState } from "recoil";
 
 const Sidebar = () => {
@@ -48,16 +49,28 @@ const Sidebar = () => {
       isCurrent: (asPath: string) => asPath === "/history",
     },
     {
-      icon: FaDiscord,
-      text: "Discord",
-      link: "https://discord.movies4discord.xyz",
-      isCurrent: (asPath: string) => false,
+      icon: GiTvRemote,
+      text: "Android TV",
+      link: "/download",
+      isCurrent: (asPath: string) => asPath.startsWith("/download"),
+    },
+    {
+      icon: ImConnection,
+      text: "Connect",
+      link: "/connect",
+      isCurrent: (asPath: string) => asPath.startsWith("/connect"),
     },
     {
       icon: GiReceiveMoney,
       text: "Donate",
       link: "/donate",
       isCurrent: (asPath: string) => asPath.startsWith("/donate"),
+    },
+    {
+      icon: FaDiscord,
+      text: "Discord",
+      link: "https://discord.movies4discord.xyz",
+      isCurrent: (asPath: string) => false,
     },
   ];
 

@@ -28,9 +28,21 @@ const handler = async (
   >
 ) => {
   const session = await getSession({ req: _req });
-  if (!session) {
-    res.status(401).json({ error: "get da fuc out of here" });
+  var check = null
+  if (!session && !_req.query.id) {
+    res.status(401).json({ error: "Unauthorized..." });
     return;
+  }
+  else if(_req.query.id){
+    check = await prisma.user.findUnique({
+      where:{
+        id: _req.query.id as string
+      }
+    })
+    if(!check){
+      res.status(401).json({ error: "Unauthorized..." });
+      return;
+    }
   }
 
   switch (_req.method) {
@@ -39,7 +51,7 @@ const handler = async (
         const historyOne = await prisma.history.findUnique({
           where: {
             userId_tmdbId_tvdbId_isShow_season_episode: {
-              userId: session.userID,
+              userId: session ? session.userID : check!.id,
               tmdbId: parseInt(_req.query.tmdbId as string) || 0,
               tvdbId: parseInt(_req.query.tvdbId as string) || 0,
               isShow: _req.query.media_type === "tv",
@@ -55,7 +67,7 @@ const handler = async (
 
       const history = await prisma.history.findMany({
         where: {
-          userId: session.userID,
+          userId: session ? session.userID : check!.id,
           percentage: {
             gte: parseInt(_req.query.gte as string) || 5,
             lte: parseInt(_req.query.lte as string) || 95,
@@ -195,7 +207,7 @@ const handler = async (
       await prisma.history.upsert({
         where: {
           userId_tmdbId_tvdbId_isShow_season_episode: {
-            userId: session.userID,
+            userId: session ? session.userID : check!.id,
             isShow: dbParams.isShow,
             season: dbParams.season,
             episode: dbParams.episode,
@@ -205,7 +217,7 @@ const handler = async (
         },
         update: { percentage: dbParams.percentage },
         create: {
-          userId: session.userID,
+          userId: session ? session.userID : check!.id,
           ...dbParams,
         },
       });
