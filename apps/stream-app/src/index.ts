@@ -66,7 +66,7 @@ app.get("/", async (req, res) => {
   }
   const apiData = await api
     .get("key", {
-      searchParams: { key },
+      searchParams: { viewkey: key },
       retry: { limit: 4 },
     })
     .json<{ name: string; path: string; err: false }>()
