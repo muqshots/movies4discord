@@ -59,95 +59,91 @@ const api = got.extend({
 });
 
 app.get("/", async (req, res) => {
-  try {
-    const viewkey = req.query.viewkey as string | undefined;
-    if (!viewkey) {
-      res.status(422).json({ error: "No viewkey given" });
-      return;
-    }
-    const apiData = await api
-      .get("key", {
-        searchParams: { viewkey },
-        retry: { limit: 4 },
-      })
-      .json<{ name: string; path: string; err: false }>()
-      .catch((err) => {
-        console.error(err);
-        return {
-          err: true as const,
-          message: err?.response?.body || "API reach error",
-        };
-      });
-
-    if (apiData.err) {
-      res.status(500).json(apiData.message);
-      return;
-    }
-
-    fs.stat(apiData.path, (err, stats) => {
-      if (err) {
-        if (err.code === "ENOENT") {
-          // 404 Error if file not found
-          res
-            .status(404)
-            .end("File not found, wait 10m or then contact admins.");
-          return;
-        }
-        res.end("500");
-        return;
-      }
-
-      const range =
-        req.headers.range ??
-        (/firefox/i.test(req.headers["user-agent"] ?? "") ? "bytes=0-" : null);
-      const total = stats.size;
-
-      if (!range) {
-        const head = {
-          "Content-Length": total,
-          "Content-Type": "video/mp4",
-          "Content-Disposition": `filename=${apiData.name || "unknown"}.mp4`,
-          // "Access-Control-Allow-Origin": origin,
-        };
-        res.writeHead(200, head);
-        fs.createReadStream(apiData.path).pipe(res);
-      } else {
-        const positions = range.replace(/bytes=/, "").split("-");
-        const start = parseInt(positions[0]!, 10);
-        const end = positions[1] ? parseInt(positions[1], 10) : total - 1;
-        const chunksize = end - start + 1;
-
-        if (start >= end) {
-          res.end("Invalid range");
-          return;
-        }
-
-        res.writeHead(206, {
-          "Content-Range": "bytes " + start + "-" + end + "/" + total,
-          "Content-Disposition": `filename=${apiData.name || "unknown"}.mp4`,
-          "Accept-Ranges": "bytes",
-          "Content-Length": chunksize,
-          "Content-Type": "video/mp4",
-          // "Access-Control-Allow-Origin": origin,
-        });
-
-        const stream = fs
-          .createReadStream(apiData.path, {
-            start: start,
-            end: end,
-          })
-          .on("open", () => {
-            stream.pipe(res);
-          })
-          .on("error", (err) => {
-            res.end(err);
-          });
-      }
-    });
-  } catch {
-    res.writableEnded ? res.end() : null;
+  const key = req.query.viewkey as string | undefined;
+  if (!key) {
+    res.status(422).json({ error: "No key given" });
     return;
   }
+  const apiData = await api
+    .get("key", {
+      searchParams: { key },
+      retry: { limit: 4 },
+    })
+    .json<{ name: string; path: string; err: false }>()
+    .catch((err) => {
+      console.error(err);
+      return {
+        err: true as const,
+        message: err?.response?.body || "API reach error",
+      };
+    });
+
+  if (apiData.err) {
+    res.status(500).json(apiData.message);
+    return;
+  }
+
+  const ua = req.headers["user-agent"];
+
+  let browser = "unknown"
+
+  if (/firefox/i.test(ua as string)) {
+    browser = "firefox";
+  } else {
+    browser = "unknown";
+  }
+
+  fs.stat(apiData.path, function (err, stat) {
+    if (err) {
+      res
+        .status(404)
+        .send(
+          "Problem with file, if it has been downloaded recently, wait 10-15min, then try again contact admins if still does not work"
+        );
+      return;
+    }
+    const fileSize = stat.size;
+    let range = req.headers.range;
+
+    if (browser == "firefox" && !range) {
+      range = "bytes=0-";
+    }
+    if (range) {
+      const parts = range.replace(/bytes=/, "").split("-");
+      const start = parseInt(parts[0] as string, 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+
+      if (start >= fileSize) {
+        res
+          .status(416)
+          .send(
+            "Requested range not satisfiable\n" +
+            start +
+            " >= " +
+            fileSize
+          );
+        return;
+      }
+      const chunksize = end - start + 1;
+      const file = fs.createReadStream(apiData.path, { start, end });
+      const head = {
+        "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+        "Accept-Ranges": "bytes",
+        "Content-Length": chunksize,
+        "Content-Type": "video/mp4",
+      };
+
+      res.writeHead(206, head);
+      file.pipe(res);
+    } else {
+      const head = {
+        "Content-Length": fileSize,
+        "Content-Type": "video/mp4",
+      };
+      res.writeHead(200, head);
+      fs.createReadStream(apiData.path).pipe(res);
+    }
+  });
 });
 
-app.listen(6969, () => console.log("App listening at http://localhost:6969"));
+  app.listen(6969, () => console.log("App listening at http://localhost:6969"));
