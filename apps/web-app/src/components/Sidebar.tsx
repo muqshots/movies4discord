@@ -51,7 +51,7 @@ const Sidebar = () => {
     {
       icon: GiTvRemote,
       text: "Android TV",
-      link: "/download",
+      link: "/M4DTV.apk",
       isCurrent: (asPath: string) => asPath.startsWith("/download"),
     },
     {
