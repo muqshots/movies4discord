@@ -51,6 +51,7 @@ yarn-error.log*
 .classpath
 *.launch
 *.sublime-workspace
+.devcontainer
 
 .vscode/
 !.vscode/settings.json

@@ -134,7 +134,7 @@ const Sidebar = () => {
                         <span
                           className={`${!sidebar.isOpen && "hidden"} ${
                             isCurrentPage ? "text-white" : "text-[#808191]"
-                          } text-lg transition duration-200 group-hover:text-white`}
+                          } text-lg whitespace-nowrap transition duration-200 group-hover:text-white`}
                         >
                           {item.text}
                         </span>
