@@ -158,5 +158,3 @@ app.get("/", async (req, res) => {
 });
 
 app.listen(6969, () => console.log("App listening at http://localhost:6969"));
-
-proce
