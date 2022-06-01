@@ -124,26 +124,39 @@ app.get("/", async (req, res) => {
           );
         return;
       }
-      const chunksize = end - start + 1;
-      const file = fs.createReadStream(apiData.path, { start, end });
-      const head = {
-        "Content-Range": `bytes ${start}-${end}/${fileSize}`,
-        "Accept-Ranges": "bytes",
-        "Content-Length": chunksize,
-        "Content-Type": "video/mp4",
-      };
+      try {
+        const chunksize = end - start + 1;
+        const file = fs.createReadStream(apiData.path, { start, end });
+        const head = {
+          "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+          "Accept-Ranges": "bytes",
+          "Content-Length": chunksize,
+          "Content-Type": "video/mp4",
+        };
 
-      res.writeHead(206, head);
-      file.pipe(res);
+        res.writeHead(206, head);
+        file.pipe(res);
+      }
+      catch (err) {
+        console.log(err)
+        res.status(404).end("Something went wrong, please retry.")
+      }
     } else {
+      try{
       const head = {
         "Content-Length": fileSize,
         "Content-Type": "video/mp4",
       };
       res.writeHead(200, head);
-      fs.createReadStream(apiData.path).pipe(res);
+      fs.createReadStream(apiData.path).pipe(res);}
+      catch(err){
+        console.log(err)
+        res.status(404).end("Something went wrong, please retry.")
+      }
     }
   });
 });
 
-  app.listen(6969, () => console.log("App listening at http://localhost:6969"));
+app.listen(6969, () => console.log("App listening at http://localhost:6969"));
+
+proce
