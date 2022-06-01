@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { prisma } from "@movies4discord/db";
-import { readSync } from "fs";
 
 const handler = async (
     _req: NextApiRequest,
@@ -21,7 +20,7 @@ const handler = async (
             })
 
             if (pincode) {
-                if (!(new Date().getTime() - pincode.createdAt.getTime() > 1000 * 60 * 5)) {
+                if (new Date().getTime() - pincode.createdAt.getTime() < 1000 * 60 * 5) {
                     res.status(200).json({ pincode: pincode.pincode })
                     return;
                 }
@@ -30,28 +29,6 @@ const handler = async (
                         pincode: pincode.pincode
                     }
                 })
-
-                // Declare all number chars.
-                const chars = '0123456789';
-
-                // Pick numbers randomly
-                let str = '';
-                for (let i = 0; i < 6; i++) {
-                    str += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-
-                const newpincode = await prisma.pincode.create({
-                    data: {
-                        userId: session?.userID as string,
-                        pincode: parseInt(str)
-                    },
-                    select: {
-                        pincode: true
-                    }
-                })
-
-                res.status(200).json(newpincode)
-                return;
             }
 
             const chars = '0123456789';
@@ -93,8 +70,6 @@ const handler = async (
                         pincode: parseInt(_req.query.pincode as string)
                     }
                 })
-                res.status(404).json({ error: "Invalid pincode provided." })
-                return
             }
             res.status(404).json({ error: "Invalid pincode provided." })
             return;
