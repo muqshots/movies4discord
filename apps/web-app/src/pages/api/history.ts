@@ -225,6 +225,28 @@ const handler = async (
       res.status(200).json({ success: true });
       return;
     }
+
+    case "DELETE": {
+      // hans get ze flammenwerfer
+      await prisma.history.delete({
+        where: {
+          userId_tmdbId_tvdbId_isShow_season_episode: {
+            userId: session ? session.userID : check!.id,
+            tmdbId: parseInt(_req.query.tmdbId as string) || 0,
+            tvdbId: parseInt(_req.query.tvdbId as string) || 0,
+            isShow: _req.query.media_type === "tv",
+            season: parseInt(_req.query.season as string) || 0,
+            episode: parseInt(_req.query.episode as string) || 0,
+          },
+        },
+      }).catch((err) => {
+        res.status(500).json({ error: "error deleting history item" });
+        return;
+      });
+
+      res.status(200).json({ success: true });
+      return;
+    }
   }
 };
 

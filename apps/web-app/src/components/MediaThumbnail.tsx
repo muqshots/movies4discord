@@ -1,11 +1,12 @@
 import { getImageData } from "@/lib/getImageData";
 import LandscapePlaceholder from "@/public/LandscapePlaceholder.jpg";
+import ky from "ky";
 import type { ImageProps } from "next/image";
 import Image from "next/image";
 import Link from "next/link";
 import { BsTvFill } from "react-icons/bs";
 import { HiStar } from "react-icons/hi";
-import { MdMovie } from "react-icons/md";
+import { MdDelete, MdMovie } from "react-icons/md";
 
 export interface MediaThumbnailProps {
   media_type: "movie" | "tv";
@@ -18,6 +19,7 @@ export interface MediaThumbnailProps {
   release_date: string | null;
   rating: number;
   onClick?: () => void;
+  onDelete?: () => void;
   percentage?: number;
   priority?: boolean;
 }
@@ -35,6 +37,7 @@ const MediaThumbnail = ({
   release_date,
   rating,
   onClick,
+  onDelete,
   percentage,
   priority = false,
 }: MediaThumbnailProps) => {
@@ -66,6 +69,20 @@ const MediaThumbnail = ({
               className="rounded-lg" // Need rounded here also to make it work with Safari
               alt={`${title} backdrop`}
             />
+            {onDelete && (
+              <div onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                ky.delete('/api/history', {
+                  searchParams: {
+                    media_type,
+                    tmdbId: id,
+                  }
+                }).then(() => onDelete());
+              }} className="absolute top-0 right-0 bg-white text-black rounded-full p-2 m-2 transition-all duration-200 hover:scale-105 hover:bg-red-600 hover:text-white">
+                <MdDelete className="h-[1.125rem] w-[1.125rem]" />
+              </div>
+            )}
             {percentage && (
               <div className="absolute bottom-0 h-1 w-full rounded-b-lg bg-gray-700">
                 <div
