@@ -28,6 +28,9 @@ const handler = async (
   const results = resultsW.filter(isMedia).map((r) => ({
     media_type: r.media_type,
     id: r.id,
+    episode: 0,
+    season: 0,
+    tvdbId: 0,
     title: r.media_type === "movie" ? r.title : r.name,
     image: { src: getImageUrl(r.backdrop_path), b64: null },
     release_date:

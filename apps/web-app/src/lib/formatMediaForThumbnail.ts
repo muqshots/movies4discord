@@ -13,6 +13,9 @@ export const formatMovieForThumbnail = async (
   );
   return {
     id: movie.id,
+    tvdbId: 0,
+    season: 0,
+    episode: 0,
     title: movie.title,
     image: {
       src: imageUrl,
@@ -34,6 +37,9 @@ export const formatTVForThumbnail = async (
   const imageUrl = getImageUrl(poster ? tv.poster_path : tv.backdrop_path);
   return {
     id: tv.id,
+    tvdbId: 0,
+    season: 0,
+    episode: 0,
     title: tv.name,
     image: {
       src: imageUrl,
