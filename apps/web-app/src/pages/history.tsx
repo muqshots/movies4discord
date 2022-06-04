@@ -26,7 +26,7 @@ const Watchlist = () => {
           [...Array(10)].map((_, i) => <ShimmerThumbnail key={i} />)
         ) : history.length > 0 ? (
           history?.map((r) => (
-            <MediaThumbnail key={r.media_type + r.id} onDelete={mutate} {...r} />
+            <MediaThumbnail key={r.media_type + r.id + r.season + r.episode + r.tvdbId} onDelete={mutate} {...r} />
           ))
         ) : (
           <div className="text-center">You have nothing here :(</div>

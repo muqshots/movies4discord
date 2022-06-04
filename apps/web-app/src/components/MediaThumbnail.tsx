@@ -12,6 +12,9 @@ export interface MediaThumbnailProps {
   media_type: "movie" | "tv";
   id: number;
   title: string;
+  season: number | string | null | undefined;
+  episode: number | string | null | undefined;
+  tvdbId: number | string | null | undefined;
   image: {
     src: ImageProps["src"] | null;
     b64: string | null;
@@ -32,6 +35,9 @@ const MediaTypeLogos = {
 const MediaThumbnail = ({
   image,
   id,
+  season,
+  episode,
+  tvdbId,
   title,
   media_type,
   release_date,
@@ -77,6 +83,9 @@ const MediaThumbnail = ({
                   searchParams: {
                     media_type,
                     tmdbId: id,
+                    tvdbId: tvdbId ? tvdbId : 0,
+                    season: season ? season : 0,
+                    episode: episode ? episode : 0
                   }
                 }).then(() => onDelete());
               }} className="absolute top-0 right-0 bg-white text-black rounded-full p-2 m-2 transition-all duration-200 hover:scale-105 hover:bg-red-600 hover:text-white">
