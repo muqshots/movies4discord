@@ -11,6 +11,9 @@ import { MdDelete, MdMovie } from "react-icons/md";
 export interface MediaThumbnailProps {
   media_type: "movie" | "tv";
   id: number;
+  tvdbId: number;
+  season: number;
+  episode: number;
   title: string;
   season: number | string | null | undefined;
   episode: number | string | null | undefined;
