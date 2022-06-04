@@ -1,6 +1,4 @@
-import MediaThumbnail, {
-  MediaThumbnailProps,
-} from "@/components/MediaThumbnail";
+import MediaThumbnail from "@/components/MediaThumbnail";
 import ShimmerThumbnail from "@/components/ShimmerThumbnail";
 import { fetcher } from "@/lib/fetcher";
 import { useSession } from "next-auth/react";
@@ -9,7 +7,7 @@ import { GetHistory } from "./api/history";
 
 const Watchlist = () => {
   const { status } = useSession();
-  const { data: historyJson } = useSWR<GetHistory>(
+  const { data: historyJson, mutate } = useSWR<GetHistory>(
     status === "authenticated" ? `/api/history?gte=0&lte=100` : null,
     fetcher
   );
@@ -28,7 +26,7 @@ const Watchlist = () => {
           [...Array(10)].map((_, i) => <ShimmerThumbnail key={i} />)
         ) : history.length > 0 ? (
           history?.map((r) => (
-            <MediaThumbnail key={r.media_type + r.id} {...r} />
+            <MediaThumbnail key={r.media_type + r.id} onDelete={mutate} {...r} />
           ))
         ) : (
           <div className="text-center">You have nothing here :(</div>

@@ -6,7 +6,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { HiSearch } from "react-icons/hi";
+import { HiOutlineGlobeAlt, HiOutlineLogout, HiSearch } from "react-icons/hi";
 import { useSetRecoilState } from "recoil";
 import { debounce, throttle } from "throttle-debounce";
 import Modal from "./Modal";
@@ -87,23 +87,21 @@ const Header = () => {
             <div className="hidden flex-col justify-center lg:flex">
               {session.user.name}
             </div>
-            <div className="scale-0 group-hover:scale-100 absolute transition duration-250 ease-in-out origin-top-right right-3 z-50 w-56 px-5 py-5 mt-[3.45rem] dark:bg-theme bg-white rounded-lg shadow border">
-                <ul className="space-y-3 dark:text-white">
+            <div className="scale-0 group-hover:scale-100 absolute transition duration-250 ease-in-out origin-top-right right-3 z-50 w-56 px-5 py-5 mt-[3.45rem] bg-theme rounded-lg shadow border">
+                <ul className="space-y-3 text-white">
                   <li className="font-medium">
-                    <a href="javascript:void(0);" onClick={() => setShowModal(true)} className="flex items-center transform transition-colors duration-200 border-r-4 border-transparent hover:border-indigo-700">
+                    <a onClick={(e) => {e.preventDefault(); setShowModal(true)}} className="flex items-center transform transition-colors duration-200 border-r-4 border-transparent hover:border-indigo-700">
                       <div className="mr-3 text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                        </svg>
+                        <HiOutlineGlobeAlt className="h-6 w-6" />
                       </div>
                         Change Server
                     </a>
                   </li>
                   <hr className="dark:border-gray-700" />
                   <li className="font-medium">
-                    <a href="javascript:void(0);" onClick={() => signOut()} className="flex items-center transform transition-colors duration-200 border-r-4 border-transparent hover:border-red-600">
+                    <a onClick={(e) => {e.preventDefault(); signOut()}} className="flex items-center transform transition-colors duration-200 border-r-4 border-transparent hover:border-red-600">
                       <div className="mr-3 text-red-600">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        <HiOutlineLogout className="w-6 h-6" />
                       </div>
                       Logout
                     </a>

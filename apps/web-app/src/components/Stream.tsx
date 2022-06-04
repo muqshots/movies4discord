@@ -28,6 +28,15 @@ interface StreamProps {
   subs: Plyr.Track[];
 }
 
+interface HTMLVideoElementWithTracks extends HTMLVideoElement {
+  audioTracks: AudioTrack[];
+}
+
+interface AudioTrack {
+  enabled: boolean;
+  language: string;
+}
+
 export const Stream = ({
   defaultServer,
   viewKey,
@@ -73,6 +82,19 @@ export const Stream = ({
       ).percentage;
       if (percentage) {
         e.detail.plyr.currentTime = (percentage / 100) * e.detail.plyr.duration;
+      }
+      const video = (document.querySelector('video')) as HTMLVideoElementWithTracks;
+      if (video && video.audioTracks != null) {
+        const audioTracks = Array.from(video.audioTracks);
+        const engTrack = audioTracks.find((track) => track.language === "eng");
+        if (engTrack) {
+          engTrack.enabled = true;
+          const otherTracks = audioTracks.filter((track) => track !== engTrack);
+          otherTracks.forEach((track) => track.enabled = false);
+        }
+        // Video sometimes stopped after changing track until moved but this seems to reliably fix it
+        video.currentTime = video.currentTime-0.01
+        video.play()
       }
     }
 
