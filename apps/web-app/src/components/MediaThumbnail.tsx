@@ -11,6 +11,9 @@ import { MdDelete, MdMovie } from "react-icons/md";
 export interface MediaThumbnailProps {
   media_type: "movie" | "tv";
   id: number;
+  tvdbId: number;
+  season: number;
+  episode: number;
   title: string;
   image: {
     src: ImageProps["src"] | null;
@@ -32,6 +35,9 @@ const MediaTypeLogos = {
 const MediaThumbnail = ({
   image,
   id,
+  tvdbId,
+  season,
+  episode,
   title,
   media_type,
   release_date,
@@ -77,6 +83,9 @@ const MediaThumbnail = ({
                   searchParams: {
                     media_type,
                     tmdbId: id,
+                    tvdbId: tvdbId,
+                    season: season,
+                    episode: episode,
                   }
                 }).then(() => onDelete());
               }} className="absolute top-0 right-0 bg-white text-black rounded-full p-2 m-2 transition-all duration-200 hover:scale-105 hover:bg-red-600 hover:text-white">
