@@ -10,7 +10,7 @@ import MediaSlider from "./MediaSlider";
 const ContinueWatching = () => {
   const { status } = useSession();
 
-  const { data: historyJson } = useSWR<GetHistory>(
+  const { data: historyJson, mutate } = useSWR<GetHistory>(
     status === "authenticated" ? `/api/history?take=20` : null,
     fetcher
   );
@@ -40,6 +40,7 @@ const ContinueWatching = () => {
               ).key;
               router.push(`/${item.media_type}/${item.id}/${key}`);
             },
+            onDelete: mutate,
           }))}
         />
       )}{" "}
