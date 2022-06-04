@@ -89,10 +89,7 @@ const handler = async (
             );
             return {
               media_type,
-              tvdbId: 0,
               isShow: false,
-              season: 0,
-              episode: 0,
               percentage: item.percentage,
 
               ...formattedMovie,
@@ -240,6 +237,7 @@ const handler = async (
           },
         },
       }).catch((err) => {
+
         res.status(500).json({ error: "error deleting history item" });
         return;
       });
