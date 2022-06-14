@@ -173,6 +173,9 @@ export const Stream = ({
                 "airplay",
                 "fullscreen",
               ],
+              fullscreen: {
+                iosNative: true,
+              }
             }}
             source={{
               type: "video",
