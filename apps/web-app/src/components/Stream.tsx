@@ -34,6 +34,9 @@ interface HTMLVideoElementWithTracks extends HTMLVideoElement {
 
 interface AudioTrack {
   enabled: boolean;
+  id: string;
+  kind: string;
+  label: string;
   language: string;
 }
 
@@ -86,14 +89,17 @@ export const Stream = ({
       const video = (document.querySelector('video')) as HTMLVideoElementWithTracks;
       if (video && video.audioTracks != null) {
         const audioTracks = Array.from(video.audioTracks);
-        const engTrack = audioTracks.find((track) => track.language === "eng");
-        if (engTrack) {
+        const engTracks = audioTracks.filter(track => track.language === "eng");
+        if (engTracks && engTracks.length > 0) {
+          const engStereoTrack = engTracks.find(track => track.label === "Stereo");
+          const engTrack = engStereoTrack || engTracks[0];
+          // @ts-ignore
           engTrack.enabled = true;
           const otherTracks = audioTracks.filter((track) => track !== engTrack);
           otherTracks.forEach((track) => track.enabled = false);
         }
         // Video sometimes stopped after changing track until moved but this seems to reliably fix it
-        video.currentTime = video.currentTime-0.01
+        video.currentTime = video.currentTime - 0.01
         video.play()
       }
     }
@@ -139,7 +145,14 @@ export const Stream = ({
         <div className="items-start text-xl font-bold mt-5">
           Streaming {title} on {server} server
         </div>
-        <div className="flex flex-row gap-2 m-5">
+        {historyParams.media_type === "tv" && (
+          <div>
+            <div className="flex items-center">
+              <div className="text-xl">Season {historyParams.season} Episode {historyParams.episode}</div>
+            </div>
+          </div>
+        )}
+        <div className="flex flex-row gap-2 m-4">
           {servers.map((s) => (
             <div
               key={s}
@@ -161,7 +174,9 @@ export const Stream = ({
               storage: { enabled: true, key: "m4d" },
               controls: [
                 "play-large",
+                "rewind",
                 "play",
+                "fast-forward",
                 "progress",
                 "current-time",
                 "mute",
