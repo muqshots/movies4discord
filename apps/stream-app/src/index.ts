@@ -13,12 +13,12 @@ const beforeReqHook = (lru: QuickLRU<string, string>) => (options: Options) => {
   const url = (options.url as URL).href;
 
   if (lru.has(url)) {
-    return new ResponseLike(
-      200,
-      { "Content-Type": "application/json", "x-lru-cache": "oui" },
-      Buffer.from(lru.get(url)!),
-      url
-    );
+    return new ResponseLike({
+      statusCode: 200,
+      headers: { "Content-Type": "application/json", "x-lru-cache": "oui" },
+      body: Buffer.from(lru.get(url)!),
+      url,
+    });
   }
 };
 
@@ -136,20 +136,19 @@ app.get("/", async (req, res) => {
 
         res.writeHead(206, head);
         file.pipe(res);
-      }
-      catch (err) {
+      } catch (err) {
         console.log(err)
         res.status(404).end("Something went wrong, please retry.")
       }
     } else {
-      try{
-      const head = {
-        "Content-Length": fileSize,
-        "Content-Type": "video/mp4",
-      };
-      res.writeHead(200, head);
-      fs.createReadStream(apiData.path).pipe(res);}
-      catch(err){
+      try {
+        const head = {
+          "Content-Length": fileSize,
+          "Content-Type": "video/mp4",
+        };
+        res.writeHead(200, head);
+        fs.createReadStream(apiData.path).pipe(res);
+      } catch(err) {
         console.log(err)
         res.status(404).end("Something went wrong, please retry.")
       }

@@ -7,7 +7,7 @@ import InferNextProps from "infer-next-props-type";
 import { GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
-import "plyr-react/dist/plyr.css";
+import "plyr-react/plyr.css";
 
 const StreamMovie = ({
   defaultServer,

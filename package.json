@@ -28,7 +28,7 @@
     "docker:dev": "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose up -f ./docker-compose-dev.yml -d --build"
   },
   "devDependencies": {
-    "prettier": "2.5.1",
+    "prettier": "2.7.1",
     "rimraf": "3.0.2"
   },
   "engines": {
