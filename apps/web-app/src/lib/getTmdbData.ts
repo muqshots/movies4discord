@@ -1,11 +1,14 @@
 import type {
+  Episode,
   Movie,
   MovieDetails,
   MovieWithMediaType,
   PersonWithMediaType,
+  SeasonDetails,
   TMDBListWrapper,
   TV,
   TVDetails,
+  TVExternalIds,
   TVWithMediaType,
 } from "@movies4discord/interfaces";
 import { tmdb } from "@/lib/got";
@@ -30,7 +33,15 @@ export const getMovie = async (id: string | number) => {
 };
 
 export const getTV = async (id: string | number) => {
-  return await tmdbFetcher<TVDetails>(`tv/${id}`);
+  return await tmdbFetcher<TVDetails & TVExternalIds>(`tv/${id}`, { append_to_response: "external_ids" });
+};
+
+export const getSeason = async (id: string | number, season: number) => {
+  return await tmdbFetcher<SeasonDetails>(`tv/${id}/season/${season}`);
+};
+
+export const getEpisode = async (id: string | number, season: number, episode: number) => {
+  return await tmdbFetcher<Episode>(`tv/${id}/season/${season}/episode/${episode}`, { append_to_response: "images" });
 };
 
 export const getMultiSearch = async (query: string) => {

@@ -1,12 +1,17 @@
+import MediaSlider from "@/components/MediaSlider";
 import { Stream } from "@/components/Stream";
+import { formatEpisodeforThumbnail } from "@/lib/formatMediaForThumbnail";
 import { getImageUrl } from "@/lib/getImageUrl";
 import { servers } from "@/lib/getServers";
-import { getTV } from "@/lib/getTmdbData";
+import { getSeason, getTV } from "@/lib/getTmdbData";
+import { isProd } from "@/lib/isProd";
 import { prisma } from "@movies4discord/db";
 import InferNextProps from "infer-next-props-type";
+import ky from "ky";
 import { GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
+import { useRouter } from "next/router";
 import "plyr-react/plyr.css";
 
 const StreamTV = ({
@@ -22,7 +27,10 @@ const StreamTV = ({
   tvdbId,
   season,
   episode,
+  media,
 }: InferNextProps<typeof getServerSideProps>) => {
+  const router = useRouter();
+
   return (
     <>
       <NextSeo
@@ -63,6 +71,31 @@ const StreamTV = ({
           },
         ]}
       />
+      <div className="mx-3 flex flex-col gap-8">
+        <MediaSlider
+          text="Episodes"
+          media_type="tv"
+          media={media.map((item) => ({
+            ...item,
+            onClick: async () => {
+              const key = (
+                await ky
+                  .post("/api/key", {
+                    searchParams: {
+                      media_type: "tv",
+                      tmdbId: id,
+                      tvdbId: tvdbId,
+                      season: item.season ?? 1,
+                      episode: item.episode ?? 1,
+                    },
+                  })
+                  .json<{ key: string }>()
+              ).key;
+              router.push(`/tv/${id}/${key}`);
+            }
+          }))}
+          />
+      </div>
     </>
   );
 };
@@ -72,6 +105,7 @@ export const getServerSideProps = async ({
   params,
 }: GetServerSidePropsContext<{ id: string; key: string }>) => {
   const session = await getSession({ req: req });
+  const doPlaceholders = isProd;
 
   if (!session) {
     return {
@@ -112,6 +146,12 @@ export const getServerSideProps = async ({
     };
   }
 
+  const media = await Promise.all(
+    (await getSeason(TVData.id, keyData.season))
+      .episodes
+      .map(async (episode) => formatEpisodeforThumbnail(episode, doPlaceholders))
+  );
+
   return {
     props: {
       defaultServer: user.server,
@@ -126,6 +166,7 @@ export const getServerSideProps = async ({
       season: keyData.season,
       episode: keyData.episode,
       servers: servers,
+      media: media,
     },
   };
 };

@@ -1,3 +1,5 @@
+import { Episode } from "./Episode";
+
 export interface Season {
   air_date: string;
   episode_count: number;
@@ -6,4 +8,8 @@ export interface Season {
   overview: string;
   poster_path: string;
   season_number: number;
+}
+
+export interface SeasonDetails extends Season {
+  episodes: Episode[];
 }
