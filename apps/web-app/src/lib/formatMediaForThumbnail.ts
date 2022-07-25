@@ -1,5 +1,5 @@
 import { MediaThumbnailProps } from "@/components/MediaThumbnail";
-import { Movie, MovieDetails, TV, TVDetails } from "@movies4discord/interfaces";
+import { Episode, Movie, MovieDetails, TV, TVDetails } from "@movies4discord/interfaces";
 import { getPlaiceholder } from "plaiceholder";
 import { getImageUrl } from "./getImageUrl";
 
@@ -52,3 +52,28 @@ export const formatTVForThumbnail = async (
     rating: tv.vote_average,
   };
 };
+
+export const formatEpisodeforThumbnail = async (
+  episode: Episode,
+  doPlaceholders: boolean,
+  poster = false
+): Promise<Omit<MediaThumbnailProps, "media_type">> => {
+  const imageUrl = getImageUrl(episode.still_path);
+
+  return {
+    id: episode.id,
+    tvdbId: episode.id,
+    season: episode.season_number,
+    episode: episode.episode_number,
+    title: `S${episode.season_number}E${episode.episode_number} - ${episode.name}`,
+    image: {
+      src: imageUrl,
+      b64:
+        imageUrl && doPlaceholders
+          ? (await getPlaiceholder(imageUrl)).base64
+          : null,
+    },
+    release_date: episode.air_date || null,
+    rating: episode.vote_average,
+  };
+}

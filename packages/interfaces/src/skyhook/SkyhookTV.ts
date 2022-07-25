@@ -1,3 +1,4 @@
+import { SkyhookEpisode } from "./SkyhookEpisode";
 import { SkyhookImage } from "./SkyhookImage";
 import { SkyhookRating } from "./SkyhookRating";
 
@@ -22,23 +23,5 @@ export interface SkyhookTV {
   actors: { name: string; character: string }[];
   images: SkyhookImage[];
   seasons: { seasonNumber: number; images: SkyhookImage[] }[];
-  episodes: {
-    tvdbShowId: number;
-    tvdbId: number;
-    seasonNumber: number;
-    episodeNumber: number;
-    airedBeforeSeasonNumber?: number;
-    airedBeforeEpisodeNumber?: number;
-    airedAfterSeasonNumber?: number;
-    title: string;
-    airDate?: string;
-    airDateUtc?: string;
-    overview?: string;
-    image?: string;
-    absoluteEpisodeNumber?: number;
-    rating?: SkyhookRating;
-    writers?: string[];
-    directors?: string[];
-    guestStars?: string[];
-  }[];
+  episodes: SkyhookEpisode[];
 }
