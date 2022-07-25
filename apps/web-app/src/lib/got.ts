@@ -6,12 +6,12 @@ const beforeReqHook = (lru: QuickLRU<string, string>) => (options: Options) => {
   const url = (options.url as URL).href;
 
   if (lru.has(url)) {
-    return new ResponseLike(
-      200,
-      { "Content-Type": "application/json", "x-lru-cache": "oui" },
-      Buffer.from(lru.get(url)!),
+    return new ResponseLike({
+      statusCode: 200,
+      headers: { "Content-Type": "application/json", "x-lru-cache": "oui" },
+      body: Buffer.from(lru.get(url)),
       url
-    );
+    });
   }
 };
 

@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { prisma } from "@movies4discord/db";
-import { readSync } from "fs";
 
 const handler = async (
     _req: NextApiRequest,
