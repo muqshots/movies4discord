@@ -13,6 +13,7 @@ import type {
   TV,
   TVDetails,
   TVExternalIds,
+  TVWithMediaType,
   Videos,
 } from "@movies4discord/interfaces";
 import InferNextPropsType from "infer-next-props-type";
@@ -202,7 +203,6 @@ const TVPage = ({
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // pre-generate popular movies
   const popularTVW = await tmdb.get("tv/popular").json<TMDBListWrapper<TV>>();
 
   return {
@@ -237,7 +237,7 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
           Images &
           Videos &
           Credits &
-          Recommendations<TV> &
+          Recommendations<TVWithMediaType> &
           TVExternalIds
       >();
   } catch (e) {
@@ -303,6 +303,7 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
       })),
       recommendations: await Promise.all(
         TVData.recommendations.results
+          .filter(r => r.media_type === "tv")
           .slice(0, 15)
           .map(async (t) => formatTVForThumbnail(t, false, true))
       ),

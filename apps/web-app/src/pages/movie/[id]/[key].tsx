@@ -7,7 +7,7 @@ import InferNextProps from "infer-next-props-type";
 import { GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
-import "plyr-react/plyr.css";
+import "plyr-react/dist/plyr.css";
 
 const StreamMovie = ({
   defaultServer,
@@ -69,8 +69,7 @@ export const getServerSideProps = async ({
   if (!session) {
     return {
       redirect: {
-        destination: "/",
-        statusCode: 401,
+        destination: "/"
       },
     };
   }
@@ -82,8 +81,7 @@ export const getServerSideProps = async ({
   if (!user) {
     return {
       redirect: {
-        destination: "/api/auth/signin",
-        statusCode: 401,
+        destination: "/api/auth/signin"
       },
     };
   }

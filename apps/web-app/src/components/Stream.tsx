@@ -3,7 +3,7 @@ import { Server } from "@movies4discord/db";
 import ky from "ky";
 import { useRouter } from "next/router";
 import Plyr from "plyr-react";
-import "plyr-react/plyr.css";
+import "plyr-react/dist/plyr.css";
 import { useEffect, useRef, useState } from "react";
 import { throttle } from "throttle-debounce";
 
@@ -73,6 +73,11 @@ export const Stream = ({
 
     async function handleLoad(e: Plyr.PlyrEvent) {
       if (!active) return;
+
+      // Temporary fix until plyr quits being shit or I switch to vidstack
+      const downloadLink = document.querySelectorAll('[data-plyr="download"]');
+      downloadLink[0]?.setAttribute("href", streamUrl);
+
       const percentage = (
         await ky
           .get(`/api/history`, {
@@ -87,14 +92,15 @@ export const Stream = ({
         e.detail.plyr.currentTime = (percentage / 100) * e.detail.plyr.duration;
       }
       const video = (document.querySelector('video')) as HTMLVideoElementWithTracks;
-      if (video && video.audioTracks != null) {
+
+      if (video && video.audioTracks != null && video.audioTracks.length > 0) {
         const audioTracks = Array.from(video.audioTracks);
         const engTracks = audioTracks.filter(track => track.language === "eng");
+
         if (engTracks && engTracks.length > 0) {
           const engStereoTrack = engTracks.find(track => track.label === "Stereo");
           const engTrack = engStereoTrack || engTracks[0];
-          // @ts-ignore
-          engTrack.enabled = true;
+          engTrack!.enabled = true;
           const otherTracks = audioTracks.filter((track) => track !== engTrack);
           otherTracks.forEach((track) => track.enabled = false);
         }
@@ -131,7 +137,7 @@ export const Stream = ({
       plyr.off("progress", handleProgress);
     };
 
-    setTimeout(addListeners, 0);
+    setTimeout(addListeners, 10);
 
     return () => {
       active = false;

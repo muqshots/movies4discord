@@ -40,7 +40,7 @@ const RecommendationsSlider = ({
                       <div className="flex flex-row justify-between text-sm text-gray-400">
                         <div>{release_date?.slice(0, 4) ?? "Unknown year"}</div>
                         <div className="flex flex-row gap-1">
-                          <div>{rating.toFixed(1)}</div>
+                          {rating?.toFixed(1) ?? "N/A"}
                           <HiStar className="h-5 w-5" />
                         </div>
                       </div>

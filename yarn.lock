@@ -339,10 +339,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@seznam/compose-react-refs@npm:^1.0.4":
+  version: 1.0.6
+  resolution: "@seznam/compose-react-refs@npm:1.0.6"
+  checksum: f9b1840385a6866a564897d8a2aad3a3dcdde1ccb5bef8476616ef447b689c75cdc5f47bf40e0d2e2d3b37c8e934ec13eeb9d09388fb98bb280a897788d1f478
+  languageName: node
+  linkType: hard
+
 "@sindresorhus/is@npm:^5.2.0":
   version: 5.3.0
   resolution: "@sindresorhus/is@npm:5.3.0"
   checksum: b31cebabcdece3d5322de2a4dbc8c0f004e04147a00f2606787bcaf5655ad4b1954f6727fc6914c524009b2b9a2cc01c42835b55f651ce69fd2a0083b60bb852
+  languageName: node
+  linkType: hard
+
+"@stencil/core@npm:2.5.2":
+  version: 2.5.2
+  resolution: "@stencil/core@npm:2.5.2"
+  bin:
+    stencil: bin/stencil
+  checksum: c96dcaae047f4c9b36412246315c1fbd0e1478f2dcd669ff04c29c560be3a20b4d25694a890b864e2100d5371c7d848d3ed377b0438f955ad4beefdf1e5a0b82
   languageName: node
   linkType: hard
 
@@ -489,6 +505,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/fscreen@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@types/fscreen@npm:1.0.1"
+  checksum: 06ef89c263409081639bd618ca170a66bf6c8e332ae01ed453fdf3d5e6cf41d1abd5c58a0747c1d300b64fa7cdea93abf7a92d5cb5f62602c002308011d2e1c4
+  languageName: node
+  linkType: hard
+
 "@types/http-cache-semantics@npm:*":
   version: 4.0.1
   resolution: "@types/http-cache-semantics@npm:4.0.1"
@@ -568,16 +591,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:17.0.13":
-  version: 17.0.13
-  resolution: "@types/react-dom@npm:17.0.13"
+"@types/react-dom@npm:18.0.6":
+  version: 18.0.6
+  resolution: "@types/react-dom@npm:18.0.6"
   dependencies:
     "@types/react": "*"
-  checksum: 62c42a54ac8961c23a0e74b9cdd8b0a78563757e462b1ab665b2aa365bfd8b86a73d3f6eafc09a4a80fb08659321db168f012aa597c41c0df36f645a94e9266b
+  checksum: db571047af1a567631758700b9f7d143e566df939cfe5fbf7535347cc0c726a1cdbb5e3f8566d076e54cf708b6c1166689de194a9ba09ee35efc9e1d45911685
   languageName: node
   linkType: hard
 
-"@types/react@npm:*":
+"@types/react@npm:*, @types/react@npm:18.0.15":
   version: 18.0.15
   resolution: "@types/react@npm:18.0.15"
   dependencies:
@@ -585,17 +608,6 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: e22cc388d1c145aa184787e44dc28db4789976c704cd5db475c170bb76a560eb81def5f346cfe750949bb3d43ad88822b8cbb9f19b1286e3795892a8263e7715
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:17.0.40":
-  version: 17.0.40
-  resolution: "@types/react@npm:17.0.40"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: 24d1b210b5bf3c7d49f9a7fe5490db02e005a1d989045a2d67528347557dd0bcb0d7bcf96088152697e97521ac4c9506d1357ee48a2b7d4e701c70d838dc7284
   languageName: node
   linkType: hard
 
@@ -746,6 +758,32 @@ __metadata:
     "@typescript-eslint/types": 5.30.7
     eslint-visitor-keys: ^3.3.0
   checksum: f322972aeda3143d4c24826436357937131f7fbad102d48cfa6dfca70ac245f93b20cf7beb5f1809bda4fe8f454676a6cabf8f73e39af6724076f2b2c213ee80
+  languageName: node
+  linkType: hard
+
+"@vime/core@npm:5.3.1":
+  version: 5.3.1
+  resolution: "@vime/core@npm:5.3.1"
+  dependencies:
+    "@stencil/core": 2.5.2
+    "@types/fscreen": ^1.0.1
+    fscreen: ^1.2.0
+    mitt: ^3.0.0
+    stencil-wormhole: ^3.4.1
+  checksum: f50cdddbe19ce0e034f5c026559af568e07bef0e37128fb338cdaf0ce87cd57e443fe1f2e56baa82a7ceb21e7358026ef426196dd8e704763ec58562bf170c3a
+  languageName: node
+  linkType: hard
+
+"@vime/react@npm:5.3.1":
+  version: 5.3.1
+  resolution: "@vime/react@npm:5.3.1"
+  dependencies:
+    "@seznam/compose-react-refs": ^1.0.4
+  peerDependencies:
+    "@vime/core": 5.3.1
+    react: ^17.0.0
+    react-dom: ^17.0.0
+  checksum: 17265eff183967bd7f20a53877bfa5d771d3cd35da6bb9f37e461b04aea73e7544b66638264f33da6d9cab0efa58caa6a113e45f7394e5a4825927377edb1385
   languageName: node
   linkType: hard
 
@@ -2298,6 +2336,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fscreen@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "fscreen@npm:1.2.0"
+  checksum: ac50f9ac52a157b8fe6aaecdf9efa7c1cfa90b42a76c3bc6b85372fab05c5a9cd72c1b7f4c2e273eba1a0e630e381fd72ae135fcc57acd05a0943d5d0c21b451
+  languageName: node
+  linkType: hard
+
 "fsevents@npm:~2.3.2":
   version: 2.3.2
   resolution: "fsevents@npm:2.3.2"
@@ -3346,6 +3391,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mitt@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "mitt@npm:3.0.0"
+  checksum: f7be5049d27d18b1dbe9408452d66376fa60ae4a79fe9319869d1b90ae8cbaedadc7e9dab30b32d781411256d468be5538996bb7368941c09009ef6bbfa6bfc7
+  languageName: node
+  linkType: hard
+
 "mkdirp-classic@npm:^0.5.2, mkdirp-classic@npm:^0.5.3":
   version: 0.5.3
   resolution: "mkdirp-classic@npm:0.5.3"
@@ -3951,21 +4003,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"plyr-react@npm:5.1.0":
-  version: 5.1.0
-  resolution: "plyr-react@npm:5.1.0"
+"plyr-react@npm:4.0.0":
+  version: 4.0.0
+  resolution: "plyr-react@npm:4.0.0"
   dependencies:
     plyr: ^3.7.2
-    react-aptor: ^2.0.0-alpha.1
+    react-aptor: ^1.3.1
   peerDependencies:
-    plyr: ^3.7.2
-    react: ">=16.8"
-  peerDependenciesMeta:
-    plyr:
-      optional: false
-    react:
-      optional: true
-  checksum: 56ce5c6fcde777cbb84132c9d045d93679fa068ffb7f786ba12a7c0d8ddc18365b0e9cbe7bc3d540cd4354709b8b0ef33f59a05bbb082e275aab0125964c2c8b
+    react: ^16.13.0  || ^17.0.0
+    react-dom: ^16.13.0  || ^17.0.0
+  checksum: 5f384d9e6c1498b998b9d3d4f38b2eb91b70a8b098e3ab3e2646052eb797d4e4dbb91b63964b3fd4055f71014c5db01c6353a167bda37721a95ee8b05234ac46
   languageName: node
   linkType: hard
 
@@ -4110,12 +4157,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-tailwindcss@npm:0.1.12":
-  version: 0.1.12
-  resolution: "prettier-plugin-tailwindcss@npm:0.1.12"
+"prettier-plugin-tailwindcss@npm:0.1.13":
+  version: 0.1.13
+  resolution: "prettier-plugin-tailwindcss@npm:0.1.13"
   peerDependencies:
     prettier: ">=2.2.0"
-  checksum: 9dd6ad6b4902ebf57de6421f09395cfb6a5db1108869516142f72ff469875542308e148becf2de1c6b88af0e2aa11cbcec41640eb9e3df04bdb001d4834f4a5e
+  checksum: 1b9000686e661be81de7d36d514c5ee34a98b11639b538bce8dd3a482c073c0148feb9d54b526babaede681d1c5ecb318ad97f38e8d71dd5cc26c33dfcaf8344
   languageName: node
   linkType: hard
 
@@ -4288,28 +4335,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-aptor@npm:^2.0.0-alpha.1":
-  version: 2.0.0-alpha.1
-  resolution: "react-aptor@npm:2.0.0-alpha.1"
+"react-aptor@npm:^1.3.1":
+  version: 1.3.1
+  resolution: "react-aptor@npm:1.3.1"
   peerDependencies:
-    react: ">=16.8"
-  peerDependenciesMeta:
-    react:
-      optional: true
-  checksum: f1c4332676cb53508bfd0af5b1acdc3162b07f2010176dd5fb7f02a5c67d79b603bdbdc78bbb7d440bc4c623c7e9a2b74177eb35bc8f7aa6e7800701098e2012
+    react: ^16.8.0  || ^17.0.0
+    react-dom: ^16.8.0  || ^17.0.0
+  checksum: 7f5f5dd71dc18e0840e868c5844b668649904c628dfa09a995f8c7b8a968679acb786f69028dc636110d8564aa4391200ba21dc74d162dc134afc08d3444f62e
   languageName: node
   linkType: hard
 
-"react-dom@npm:17.0.2":
-  version: 17.0.2
-  resolution: "react-dom@npm:17.0.2"
+"react-dom@npm:18.2.0":
+  version: 18.2.0
+  resolution: "react-dom@npm:18.2.0"
   dependencies:
     loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-    scheduler: ^0.20.2
+    scheduler: ^0.23.0
   peerDependencies:
-    react: 17.0.2
-  checksum: 1c1eaa3bca7c7228d24b70932e3d7c99e70d1d04e13bb0843bbf321582bc25d7961d6b8a6978a58a598af2af496d1cedcfb1bf65f6b0960a0a8161cb8dab743c
+    react: ^18.2.0
+  checksum: 7d323310bea3a91be2965f9468d552f201b1c27891e45ddc2d6b8f717680c95a75ae0bc1e3f5cf41472446a2589a75aed4483aee8169287909fcd59ad149e8cc
   languageName: node
   linkType: hard
 
@@ -4329,13 +4373,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:17.0.2":
-  version: 17.0.2
-  resolution: "react@npm:17.0.2"
+"react@npm:18.2.0":
+  version: 18.2.0
+  resolution: "react@npm:18.2.0"
   dependencies:
     loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-  checksum: b254cc17ce3011788330f7bbf383ab653c6848902d7936a87b09d835d091e3f295f7e9dd1597c6daac5dc80f90e778c8230218ba8ad599f74adcc11e33b9d61b
+  checksum: 88e38092da8839b830cda6feef2e8505dec8ace60579e46aa5490fc3dc9bba0bd50336507dc166f43e3afc1c42939c09fe33b25fae889d6f402721dcd78fca1b
   languageName: node
   linkType: hard
 
@@ -4541,13 +4584,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.20.2":
-  version: 0.20.2
-  resolution: "scheduler@npm:0.20.2"
+"scheduler@npm:^0.23.0":
+  version: 0.23.0
+  resolution: "scheduler@npm:0.23.0"
   dependencies:
     loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-  checksum: c4b35cf967c8f0d3e65753252d0f260271f81a81e427241295c5a7b783abf4ea9e905f22f815ab66676f5313be0a25f47be582254db8f9241b259213e999b8fc
+  checksum: d79192eeaa12abef860c195ea45d37cbf2bbf5f66e3c4dcd16f54a7da53b17788a70d109ee3d3dde1a0fd50e6a8fc171f4300356c5aee4fc0171de526bf35f8a
   languageName: node
   linkType: hard
 
@@ -4778,6 +4820,13 @@ __metadata:
   version: 2.0.1
   resolution: "statuses@npm:2.0.1"
   checksum: 18c7623fdb8f646fb213ca4051be4df7efb3484d4ab662937ca6fbef7ced9b9e12842709872eb3020cc3504b93bde88935c9f6417489627a7786f24f8031cbcb
+  languageName: node
+  linkType: hard
+
+"stencil-wormhole@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "stencil-wormhole@npm:3.4.1"
+  checksum: d509b9704b2350db09785306828d19642ea7a51d480acd61678649481fab159b285bc4fc476014b0708645d0b6053856fef48e68c9c49af8e98c8061918f423d
   languageName: node
   linkType: hard
 
@@ -5337,11 +5386,13 @@ __metadata:
     "@tailwindcss/line-clamp": 0.4.0
     "@types/adm-zip": 0.5.0
     "@types/node": 17.0.21
-    "@types/react": 17.0.40
-    "@types/react-dom": 17.0.13
+    "@types/react": 18.0.15
+    "@types/react-dom": 18.0.6
     "@types/throttle-debounce": 5.0.0
     "@typescript-eslint/eslint-plugin": 5.30.7
     "@typescript-eslint/parser": 5.30.7
+    "@vime/core": 5.3.1
+    "@vime/react": 5.3.1
     adm-zip: 0.5.9
     autoprefixer: 10.4.7
     env-cmd: 10.1.0
@@ -5355,13 +5406,13 @@ __metadata:
     next-auth: 4.10.2
     next-seo: 5.5.0
     plaiceholder: 2.4.0
-    plyr-react: 5.1.0
+    plyr-react: 4.0.0
     postcss: 8.4.14
     prettier: 2.7.1
-    prettier-plugin-tailwindcss: 0.1.12
+    prettier-plugin-tailwindcss: 0.1.13
     quick-lru: 6.1.1
-    react: 17.0.2
-    react-dom: 17.0.2
+    react: 18.2.0
+    react-dom: 18.2.0
     react-icons: 4.4.0
     recoil: 0.7.4
     responselike: 3.0.0

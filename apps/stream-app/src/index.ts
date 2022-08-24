@@ -71,7 +71,9 @@ app.get("/", async (req, res) => {
     })
     .json<{ name: string; path: string; err: false }>()
     .catch((err) => {
-      console.error(err);
+      if (err.response?.statusCode !== 422) {
+        console.error(err);
+      }
       return {
         err: true as const,
         message: err?.response?.body || "API reach error",

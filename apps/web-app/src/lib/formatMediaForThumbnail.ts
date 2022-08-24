@@ -1,5 +1,5 @@
 import { MediaThumbnailProps } from "@/components/MediaThumbnail";
-import { Episode, Movie, MovieDetails, TV, TVDetails } from "@movies4discord/interfaces";
+import { Movie, MovieDetails, SkyhookEpisode, TV, TVDetails } from "@movies4discord/interfaces";
 import { getPlaiceholder } from "plaiceholder";
 import { getImageUrl } from "./getImageUrl";
 
@@ -8,9 +8,7 @@ export const formatMovieForThumbnail = async (
   doPlaceholders: boolean,
   poster = false
 ): Promise<Omit<MediaThumbnailProps, "media_type">> => {
-  const imageUrl = getImageUrl(
-    poster ? movie.poster_path : movie.backdrop_path
-  );
+  const imageUrl = getImageUrl(poster ? movie.poster_path : movie.backdrop_path);
   return {
     id: movie.id,
     tvdbId: 0,
@@ -20,7 +18,7 @@ export const formatMovieForThumbnail = async (
     image: {
       src: imageUrl,
       b64:
-        imageUrl && doPlaceholders
+        (imageUrl && doPlaceholders)
           ? (await getPlaiceholder(imageUrl)).base64
           : null,
     },
@@ -44,7 +42,7 @@ export const formatTVForThumbnail = async (
     image: {
       src: imageUrl,
       b64:
-        imageUrl && doPlaceholders
+        (imageUrl && doPlaceholders)
           ? (await getPlaiceholder(imageUrl)).base64
           : null,
     },
@@ -54,26 +52,27 @@ export const formatTVForThumbnail = async (
 };
 
 export const formatEpisodeforThumbnail = async (
-  episode: Episode,
+  tmdbId: number,
+  episode: SkyhookEpisode,
   doPlaceholders: boolean,
   poster = false
 ): Promise<Omit<MediaThumbnailProps, "media_type">> => {
-  const imageUrl = getImageUrl(episode.still_path);
+  const imageUrl = episode.image ?? null;
 
   return {
-    id: episode.id,
-    tvdbId: episode.id,
-    season: episode.season_number,
-    episode: episode.episode_number,
-    title: `S${episode.season_number}E${episode.episode_number} - ${episode.name}`,
+    id: tmdbId,
+    tvdbId: episode.tvdbShowId,
+    season: episode.seasonNumber,
+    episode: episode.episodeNumber,
+    title: `S${episode.seasonNumber}E${episode.episodeNumber} - ${episode.title}`,
     image: {
       src: imageUrl,
       b64:
-        imageUrl && doPlaceholders
+        (imageUrl && doPlaceholders)
           ? (await getPlaiceholder(imageUrl)).base64
           : null,
     },
-    release_date: episode.air_date || null,
-    rating: episode.vote_average,
+    release_date: episode.airDate || null,
+    rating: parseFloat(episode.rating?.value ?? "0"),
   };
 }

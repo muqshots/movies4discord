@@ -3,7 +3,8 @@ import { Stream } from "@/components/Stream";
 import { formatEpisodeforThumbnail } from "@/lib/formatMediaForThumbnail";
 import { getImageUrl } from "@/lib/getImageUrl";
 import { servers } from "@/lib/getServers";
-import { getSeason, getTV } from "@/lib/getTmdbData";
+import { getSkyhookTV } from "@/lib/getSkyhookData";
+import { getTV } from "@/lib/getTmdbData";
 import { isProd } from "@/lib/isProd";
 import { prisma } from "@movies4discord/db";
 import InferNextProps from "infer-next-props-type";
@@ -12,7 +13,7 @@ import { GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import "plyr-react/plyr.css";
+import "plyr-react/dist/plyr.css";
 
 const StreamTV = ({
   defaultServer,
@@ -71,31 +72,33 @@ const StreamTV = ({
           },
         ]}
       />
-      <div className="mx-3 flex flex-col gap-8">
-        <MediaSlider
-          text="Episodes"
-          media_type="tv"
-          media={media.map((item) => ({
-            ...item,
-            onClick: async () => {
-              const key = (
-                await ky
-                  .post("/api/key", {
-                    searchParams: {
-                      media_type: "tv",
-                      tmdbId: id,
-                      tvdbId: tvdbId,
-                      season: item.season ?? 1,
-                      episode: item.episode ?? 1,
-                    },
-                  })
-                  .json<{ key: string }>()
-              ).key;
-              router.push(`/tv/${id}/${key}`);
-            }
-          }))}
-          />
-      </div>
+      { media &&
+        <div className="mx-3 flex flex-col gap-8">
+          <MediaSlider
+            text="Episodes"
+            media_type="tv"
+            media={media.map((item) => ({
+              ...item,
+              onClick: async () => {
+                const key = (
+                  await ky
+                    .post("/api/key", {
+                      searchParams: {
+                        media_type: "tv",
+                        tmdbId: id,
+                        tvdbId: tvdbId,
+                        season: item.season ?? 1,
+                        episode: item.episode ?? 1,
+                      },
+                    })
+                    .json<{ key: string }>()
+                ).key;
+                router.push(`/tv/${id}/${key}`);
+              }
+            }))}
+            />
+        </div>
+      }
     </>
   );
 };
@@ -110,8 +113,7 @@ export const getServerSideProps = async ({
   if (!session) {
     return {
       redirect: {
-        destination: "/",
-        statusCode: 401,
+        destination: "/"
       },
     };
   }
@@ -123,8 +125,7 @@ export const getServerSideProps = async ({
   if (!user) {
     return {
       redirect: {
-        destination: "/api/auth/signin",
-        statusCode: 401,
+        destination: "/api/auth/signin"
       },
     };
   }
@@ -147,9 +148,10 @@ export const getServerSideProps = async ({
   }
 
   const media = await Promise.all(
-    (await getSeason(TVData.id, keyData.season))
+    (await getSkyhookTV(TVData.external_ids.tvdb_id || 0))
       .episodes
-      .map(async (episode) => formatEpisodeforThumbnail(episode, doPlaceholders))
+      .filter(e => e.seasonNumber === keyData.season)
+      .map(async (episode) => formatEpisodeforThumbnail(TVData.id, episode, doPlaceholders))
   );
 
   return {

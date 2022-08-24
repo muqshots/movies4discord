@@ -2,48 +2,42 @@ version: '3'
 
 services:
 
-  database:
-    container_name: database
-    hostname: database
+  database_dev:
     image: postgres
     environment:
       - POSTGRES_PASSWORD=${DOCKER_POSTGRES_PASSWORD}
 
-  studio:
-    container_name: studio
+  studio_dev:
     build:
       context: .
       dockerfile: ./packages/db/Dockerfile
     env_file:
-      - .env
-    ports:
-      - "5555:5555"
+      - .env.dev
     depends_on:
-      - database
+      - database_dev
 
-  website:
-    container_name: website
-    hostname: website
+  website_dev:
+    hostname: website_dev
     build:
       context: .
       dockerfile: ./apps/web-app/Dockerfile
+    networks:
+      - mainnetwork
     env_file:
-      - .env
-    ports:
-      - 3000:3000
+      - .env.dev
     depends_on:
-      - database
-      - studio
+      - database_dev
+      - studio_dev
 
-  stream:
-    container_name: stream
-    hostname: stream
+  stream_dev:
     build:
       context: .
       dockerfile: ./apps/stream-app/Dockerfile
     env_file:
-      - .env
-    ports:
-      - 6969:6969
+      - .env.dev
     depends_on:
-      - website
+      - website_dev
+
+networks:
+  mainnetwork:
+    external: true

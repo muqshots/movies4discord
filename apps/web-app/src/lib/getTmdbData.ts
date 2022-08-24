@@ -4,6 +4,7 @@ import type {
   MovieDetails,
   MovieWithMediaType,
   PersonWithMediaType,
+  RadarrMovie,
   SeasonDetails,
   TMDBListWrapper,
   TV,
@@ -11,7 +12,7 @@ import type {
   TVExternalIds,
   TVWithMediaType,
 } from "@movies4discord/interfaces";
-import { tmdb } from "@/lib/got";
+import { radarr, tmdb } from "@/lib/got";
 
 const tmdbFetcher = async <T>(
   url: string,
@@ -20,16 +21,43 @@ const tmdbFetcher = async <T>(
   return await tmdb.get(url, searchParams ? { searchParams } : {}).json<T>();
 };
 
-export const getPopularMovies = async () => {
-  return (await tmdbFetcher<TMDBListWrapper<Movie>>(`movie/popular`)).results;
+export const getPopularMovies = async (
+  page?: number
+) => {
+  return (await tmdbFetcher<TMDBListWrapper<Movie>>(`movie/popular`, { page })).results;
 };
 
-export const getPopularTV = async () => {
-  return (await tmdbFetcher<TMDBListWrapper<TV>>(`tv/popular`)).results;
+export const getAvailablePopularMovies = async () => {
+  // This is a somewhat inefficient method of getting the available movies 
+  // since it has to make a request for each movie but radarr doesn't have bulk queries
+  // and it doesn't matter too much since it's done in the background anyway
+  let availableMovies: Movie[] = [], page = 1;
+
+  while (availableMovies.length < 20) {
+    const popularMovies = await getPopularMovies(page);
+    const movieAvailability = await Promise.all(
+      popularMovies.map(movie => 
+        radarr
+          .get("movie", { searchParams: { tmdbId: movie.id } })
+          .json<RadarrMovie[]>()
+      )
+    );
+
+    availableMovies = availableMovies.concat(popularMovies.filter((_, i) => movieAvailability[i]?.[0]?.hasFile ?? false));
+    page++;
+  }
+
+  return availableMovies;
+}
+
+export const getPopularTV = async (
+  page?: number
+) => {
+  return (await tmdbFetcher<TMDBListWrapper<TV>>(`tv/popular`, { page })).results;
 };
 
 export const getMovie = async (id: string | number) => {
-  return await tmdbFetcher<MovieDetails>(`movie/${id}`);
+  return await tmdbFetcher<MovieDetails>(`movie/${id}`, { append_to_response: "external_ids" });
 };
 
 export const getTV = async (id: string | number) => {

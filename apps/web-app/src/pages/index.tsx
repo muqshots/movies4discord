@@ -4,7 +4,7 @@ import {
   formatMovieForThumbnail,
   formatTVForThumbnail,
 } from "@/lib/formatMediaForThumbnail";
-import { getPopularMovies, getPopularTV } from "@/lib/getTmdbData";
+import { getAvailablePopularMovies, getPopularMovies, getPopularTV } from "@/lib/getTmdbData";
 import { isProd } from "@/lib/isProd";
 import InferNextPropsType from "infer-next-props-type";
 
@@ -30,7 +30,7 @@ export const getStaticProps = async () => {
     text: "Popular movies",
     media_type: "movie" as const,
     media: await Promise.all(
-      (await getPopularMovies())
+      (isProd ? await getAvailablePopularMovies() : await getPopularMovies())
         .slice(0, 15)
         .map(async (movie) => formatMovieForThumbnail(movie, doPlaceholders))
     ),

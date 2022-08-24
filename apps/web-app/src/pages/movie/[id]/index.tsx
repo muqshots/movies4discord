@@ -9,6 +9,7 @@ import type {
   Images,
   Movie,
   MovieDetails,
+  MovieWithMediaType,
   Recommendations,
   TMDBListWrapper,
   Videos,
@@ -146,7 +147,7 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
         },
       })
       .json<
-        MovieDetails & Images & Videos & Credits & Recommendations<Movie>
+        MovieDetails & Images & Videos & Credits & Recommendations<MovieWithMediaType>
       >();
   } catch (e) {
     return {
@@ -161,10 +162,9 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
     null;
   const logoPath = movieData.images.logos[0]?.file_path ?? null;
   const ytKey =
-    movieData.videos.results.filter(
-      (video) =>
-        video.site === "YouTube" && video.official && video.type === "Trailer"
-    )[0]?.key ?? null;
+    movieData.videos.results
+      .filter((video) => video.site === "YouTube" && video.type === "Trailer")
+      .sort((a, b) => (a.official ? -1 : 1))[0]?.key ?? null;
 
   const backdropUrl = getImageUrl(backdropPath);
   const posterUrl = getImageUrl(posterPath);
@@ -204,6 +204,7 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
       })),
       recommendations: await Promise.all(
         movieData.recommendations.results
+          .filter(r => r.media_type === "movie")
           .slice(0, 15)
           .map(async (m) => formatMovieForThumbnail(m, false, true))
       ),

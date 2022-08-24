@@ -9,7 +9,7 @@ const beforeReqHook = (lru: QuickLRU<string, string>) => (options: Options) => {
     return new ResponseLike({
       statusCode: 200,
       headers: { "Content-Type": "application/json", "x-lru-cache": "oui" },
-      body: Buffer.from(lru.get(url)),
+      body: Buffer.from(lru.get(url)!),
       url
     });
   }
