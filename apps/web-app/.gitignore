@@ -10,7 +10,7 @@ node_modules
 /e2e/.out
 
 # next.js
-/.next/
+*.next
 /out/
 
 # production

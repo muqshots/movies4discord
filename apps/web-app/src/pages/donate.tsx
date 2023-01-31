@@ -1,4 +1,3 @@
-import useSWR from "swr";
 import Image from "next/image";
 import XMR from "../../public/XMR.png";
 import BTC from "../../public/BTC.png";
@@ -16,7 +15,7 @@ const Donate = () => {
                 LTC (Litecoin): LhCuJW4uRaipTEeZuC5yg7HiDrNueCLmM9<br />
                 XMR (Monero): Address too big, use QR code below. <br />
             </text>
-            <div className="flex flex-col md:flex-row justify-center items-center m-10">
+            <div className="flex flex-col md:flex-row justify-center items-center mt-10">
                 <div className="flex flex-row md:flex-col justify-center items-center  m-5">
                     <Image src={BTC} width={215} height={215} alt="BTC"></Image>
                     <text className="m-5">

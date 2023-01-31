@@ -141,7 +141,7 @@ export const getServerSideProps = async ({
   if (!keyData) {
     return {
       redirect: {
-        destination: "/",
+        destination: `/tv/${id}`,
         permanent: false,
       },
     };

@@ -57,8 +57,21 @@ export const Stream = ({
   const ref = useRef<{ plyr: Plyr }>(null);
 
   useEffect(() => {
-    const handleError = () =>
+    const handleError = async () => {
+      if ((video.parentElement as HTMLVideoElement).networkState === 3) {
+        const key = (
+          await ky
+            .post("/api/key", {
+              searchParams: { ...historyParams },
+            })
+            .json<{ key: string }>()
+        ).key;
+  
+        router.push(`/${historyParams.media_type}/${historyParams.tmdbId}/${key}`);
+      } else {
       router.push(`/videoerror?source=${encodeURIComponent(streamUrl)}`);
+      }
+    }
 
     const video = document.getElementsByTagName("source")[0]!;
     video.addEventListener("error", handleError);
@@ -66,7 +79,7 @@ export const Stream = ({
     return () => {
       video.removeEventListener("error", handleError);
     };
-  }, [router, streamUrl]);
+  }, [router, streamUrl, historyParams]);
 
   useEffect(() => {
     let active = true;

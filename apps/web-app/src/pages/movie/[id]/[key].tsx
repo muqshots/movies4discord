@@ -86,7 +86,22 @@ export const getServerSideProps = async ({
     };
   }
 
-  const movieData = await getMovie(id);
+  const [movieData, keyData] = await Promise.all([
+    getMovie(id),
+    prisma.viewkey.findUnique({
+      where: { key },
+      select: { tmvdbId: true },
+    }),
+  ]);
+
+  if (!keyData) {
+    return {
+      redirect: {
+        destination: `/movie/${id}`,
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {
