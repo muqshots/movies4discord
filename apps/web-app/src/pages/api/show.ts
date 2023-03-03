@@ -1,6 +1,6 @@
 import { getSkyhookTV } from "@/lib/getSkyhookData";
 import { sonarr } from "@/lib/got";
-import { SonarrEpisode, SonarrTV } from "@movies4discord/interfaces";
+import { SkyhookEpisode, SonarrEpisode, SonarrTV } from "@movies4discord/interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { prisma } from "@movies4discord/db";
@@ -28,7 +28,7 @@ const handler = async (
 ) => {
   const session = await getSession({ req: _req });
 
-  var check = null
+  let check = null
   if (!session && !_req.query.id) {
     res.status(401).json({ error: "Unauthorized..." });
     return;
@@ -69,19 +69,27 @@ const handler = async (
   }
 
   const seasons = showData.seasons
-    .filter((s) => s.seasonNumber !== 0)
+    .filter((e) => {
+      if (e.seasonNumber === 0) {
+        return sonarrData[0]?.seasons[0]?.statistics.episodeFileCount || 0 > 0;
+      }
+      return true;
+    })
     .map((s) => s.seasonNumber);
 
-  const episodes = showData.episodes
-    .filter((e) => e.seasonNumber !== 0)
-    .map((e) => {
+  const episodes = (showData.episodes as SkyhookEpisode[])
+    .reduce((result, e) => {
       const sonarrEpisode = sonarrEpisodes.find(
         (sE) =>
           e.seasonNumber === sE.seasonNumber &&
           e.episodeNumber === sE.episodeNumber
       );
 
-      return {
+      if (e.seasonNumber === 0 && !sonarrEpisode?.hasFile) {
+        return result;
+      }
+
+      result.push({
         id: e.tvdbId,
         title: e.title,
         image: e.image ?? null,
@@ -92,8 +100,10 @@ const handler = async (
         rating: e.rating?.value ?? null,
 
         available: sonarrEpisode?.hasFile ?? false,
-      };
-    });
+      });
+
+      return result;
+    }, [] as GetShow["episodes"]);
 
   res.status(200).json({ episodes, seasons });
 };

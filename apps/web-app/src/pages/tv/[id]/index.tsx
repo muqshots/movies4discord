@@ -86,7 +86,7 @@ const TVPage = ({
                               : "bg-graything"
                           } cursor-pointer rounded-md py-2 px-3 text-xs transition duration-200 hover:bg-white hover:text-black`}
                         >
-                          {s}
+                          {s === 0 ? "Specials" : s}
                         </div>
                       ))
                     : [...Array(5)].map((_, i) => (
