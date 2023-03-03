@@ -3,7 +3,6 @@ import { RadarrMovie } from "@movies4discord/interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { prisma } from "@movies4discord/db";
-import { json } from "stream/consumers";
 
 export type CheckMovieAvailability = {
   id: number | null;

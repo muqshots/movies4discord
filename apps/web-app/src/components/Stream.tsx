@@ -69,7 +69,7 @@ export const Stream = ({
   
         router.push(`/${historyParams.media_type}/${historyParams.tmdbId}/${key}`);
       } else {
-      router.push(`/videoerror?source=${encodeURIComponent(streamUrl)}`);
+        router.push(`/videoerror?source=${encodeURIComponent(streamUrl)}`);
       }
     }
 
@@ -107,11 +107,13 @@ export const Stream = ({
       const video = (document.querySelector('video')) as HTMLVideoElementWithTracks;
 
       if (video && video.audioTracks != null && video.audioTracks.length > 0) {
+        if (navigator.userAgent.toLowerCase().indexOf("android") > -1) return;
         const audioTracks = Array.from(video.audioTracks);
-        const engTracks = audioTracks.filter(track => track.language === "eng");
+        const engTracks = audioTracks.filter(track => track.language.startsWith('en'));
 
         if (engTracks && engTracks.length > 0) {
-          const engStereoTrack = engTracks.find(track => track.label === "Stereo");
+          if (engTracks.some(track => track.enabled)) return;
+          const engStereoTrack = engTracks.find(track => track.label.match(/stereo|5\.1/gi));
           const engTrack = engStereoTrack || engTracks[0];
           engTrack!.enabled = true;
           const otherTracks = audioTracks.filter((track) => track !== engTrack);
@@ -139,8 +141,8 @@ export const Stream = ({
       if (!ref.current) return;
       const plyr = ref.current.plyr;
 
-      plyr.on("loadedmetadata", handleLoad);
-      plyr.on("progress", handleProgress);
+      plyr?.on("loadedmetadata", handleLoad);
+      plyr?.on("progress", handleProgress);
     };
 
     const removeListeners = () => {
