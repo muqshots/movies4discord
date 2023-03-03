@@ -85,77 +85,73 @@ app.get("/", async (req, res) => {
     return;
   }
 
-  const ua = req.headers["user-agent"];
-
-  let browser = "unknown"
-
-  if (/firefox/i.test(ua as string)) {
-    browser = "firefox";
-  } else {
-    browser = "unknown";
-  }
-
-  fs.stat(apiData.path, function (err, stat) {
-    if (err) {
-      res
-        .status(404)
-        .send(
-          "Problem with file, if it has been downloaded recently, wait 10-15min, then try again contact admins if still does not work"
-        );
-      return;
-    }
-    const fileSize = stat.size;
-    let range = req.headers.range;
-
-    if (browser == "firefox" && !range) {
-      range = "bytes=0-";
-    }
-    if (range) {
-      const parts = range.replace(/bytes=/, "").split("-");
-      const start = parseInt(parts[0] as string, 10);
-      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-
-      if (start >= fileSize) {
+  try {
+    fs.stat(apiData.path, function (err, stat) {
+      if (err) {
         res
-          .status(416)
+          .status(404)
           .send(
-            "Requested range not satisfiable\n" +
-            start +
-            " >= " +
-            fileSize
+            "Problem with file, if it has been downloaded recently, wait 10-15min, then try again contact admins if still does not work"
           );
         return;
       }
-      try {
-        const chunksize = end - start + 1;
-        const file = fs.createReadStream(apiData.path, { start, end });
-        const head = {
-          "Content-Range": `bytes ${start}-${end}/${fileSize}`,
-          "Accept-Ranges": "bytes",
-          "Content-Length": chunksize,
-          "Content-Type": "video/mp4",
-        };
+      const fileSize = stat.size;
+      let range = req.headers.range;
 
-        res.writeHead(206, head);
-        file.pipe(res);
-      } catch (err) {
-        console.log(err)
-        res.status(404).end("Something went wrong, please retry.")
+      if (/firefox/i.test(req.headers["user-agent"] as string) && !range) {
+        range = "bytes=0-";
       }
-    } else {
-      try {
-        const head = {
-          "Content-Length": fileSize,
-          "Content-Type": "video/mp4",
-        };
-        res.writeHead(200, head);
-        fs.createReadStream(apiData.path).pipe(res);
-      } catch(err) {
-        console.log(err)
-        res.status(404).end("Something went wrong, please retry.")
+      if (range) {
+        const parts = range.replace(/bytes=/, "").split("-");
+        const start = parseInt(parts[0] as string, 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+
+        if (start >= fileSize) {
+          res
+            .status(416)
+            .send("Requested range not satisfiable\n" + start + " >= " + fileSize);
+          return;
+        }
+        try {
+          const chunksize = end - start + 1;
+          const file = fs.createReadStream(apiData.path, { start, end });
+          const head = {
+            "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+            "Accept-Ranges": "bytes",
+            "Content-Length": chunksize,
+            "Content-Type": "video/mp4",
+          };
+
+          res.writeHead(206, head);
+          file.pipe(res);
+        } catch (err) {
+          console.log(err);
+          res.status(404).end("Failed to stream partial file, try again later");
+        }
+      } else {
+        try {
+          const head = {
+            "Content-Length": fileSize,
+            "Content-Type": "video/mp4",
+          };
+          res.writeHead(200, head);
+          fs.createReadStream(apiData.path).pipe(res);
+        } catch(err) {
+          // console.log(err); too much verbosity
+          res.status(404).end("Failed to stream file, try again later");
+        }
       }
-    }
-  });
+    });
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(404)
+      .send("Problem with file, if it has been downloaded recently, wait 10-15min, then try again contact admins if still does not work");
+  };
+});
+
+process.on("uncaughtException", (err) => {
+  console.error(err);
 });
 
 app.listen(6969, () => console.log("App listening at http://localhost:6969"));
