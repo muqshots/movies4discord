@@ -5,8 +5,9 @@ export interface Person {
   profile_path: string | null;
   adult: boolean;
   id: number;
-  known_for: (MovieWithMediaType | TVWithMediaType)[];
   name: string;
+  biography: string;
+  birthday: string | null;
   popularity: number;
 }
 
