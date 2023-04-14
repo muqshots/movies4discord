@@ -42,8 +42,6 @@ const MoviePage = (props: InferNextPropsType<typeof getStaticProps>) => {
   const [actionButtonClicked, setActionButtonClicked] = useState(false);
   const [actionButtonDone, setActionButtonDone] = useState(false);
 
-  useEffect(() => console.log(actionButtonDone), [actionButtonDone]);
-
   const onStreamClick = radarrData?.available
     ? async () => {
         const key = (

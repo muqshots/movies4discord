@@ -6,7 +6,12 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { HiOutlineGlobeAlt, HiOutlineLogout, HiSearch } from "react-icons/hi";
+import {
+  HiOutlineGlobeAlt,
+  HiOutlineLogout,
+  HiSearch,
+  HiAdjustments,
+} from "react-icons/hi";
 import { useSetRecoilState } from "recoil";
 import { debounce, throttle } from "throttle-debounce";
 import Modal from "./Modal";
@@ -75,7 +80,7 @@ const Header = () => {
 
       <div className="cursor-pointer">
         {session ? (
-          <div className="flex flex-row gap-2 group">
+          <div className="group flex flex-row gap-2">
             <Image
               src={session.user.image}
               layout="fixed"
@@ -87,27 +92,36 @@ const Header = () => {
             <div className="hidden flex-col justify-center lg:flex">
               {session.user.name}
             </div>
-            <div className="scale-0 group-hover:scale-100 absolute transition duration-250 ease-in-out origin-top-right right-3 z-50 w-56 px-5 py-5 mt-[3.45rem] bg-theme rounded-lg shadow border">
-                <ul className="space-y-3 text-white">
-                  <li className="font-medium">
-                    <a onClick={(e) => {e.preventDefault(); setShowModal(true)}} className="flex items-center transform transition-colors duration-200 border-r-4 border-transparent hover:border-indigo-700">
-                      <div className="mr-3 text-white">
-                        <HiOutlineGlobeAlt className="h-6 w-6" />
-                      </div>
-                        Change Server
-                    </a>
-                  </li>
-                  <hr className="dark:border-gray-700" />
-                  <li className="font-medium">
-                    <a onClick={(e) => {e.preventDefault(); signOut()}} className="flex items-center transform transition-colors duration-200 border-r-4 border-transparent hover:border-red-600">
-                      <div className="mr-3 text-red-600">
-                        <HiOutlineLogout className="w-6 h-6" />
-                      </div>
-                      Logout
-                    </a>
-                  </li>
-                </ul>
-              </div>
+            <div className="duration-250 absolute right-3 z-50 mt-[3.45rem] w-56 origin-top-right scale-0 rounded-lg border bg-theme px-5 py-5 shadow transition ease-in-out group-hover:scale-100">
+              <ul className="space-y-3 text-white">
+                <li className="font-medium">
+                  <a
+                    onClick={() => {router.push("/settings")}}
+                    className="flex transform items-center border-r-4 border-transparent transition-colors duration-200 hover:border-indigo-700"
+                  >
+                    <div className="mr-3 text-white">
+                      <HiAdjustments className="h-6 w-6" />
+                    </div>
+                    User Settings
+                  </a>
+                </li>
+                <hr className="dark:border-gray-700" />
+                <li className="font-medium">
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      signOut();
+                    }}
+                    className="flex transform items-center border-r-4 border-transparent transition-colors duration-200 hover:border-red-600"
+                  >
+                    <div className="mr-3 text-red-600">
+                      <HiOutlineLogout className="h-6 w-6" />
+                    </div>
+                    Logout
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         ) : status === "unauthenticated" ? (
           <button
@@ -123,27 +137,6 @@ const Header = () => {
           </div>
         )}
       </div>
-
-      {showModal ? (
-        <Modal>
-          <div className="flex justify-between items-center pb-3">
-            <p className="text-2xl font-bold">Select Region</p>
-            <div className="modal-close cursor-pointer z-50 hover:opacity-50" onClick={() => setShowModal(false)}>
-              <svg className="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-                <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
-              </svg>
-            </div>
-          </div>
-
-          <div className="min-w-full grid grid-cols-3 gap-x-4">
-            {['EU', 'US', 'AS'].map((region) => (
-              <div key={region} className="rounded-md bg-graything py-2 px-4 transition duration-200 hover:bg-white hover:text-black">
-                <button onClick={() => {ky.post(`/api/server?server=${region}`); setShowModal(false);}} className="text-base w-full h-full">{region}</button>
-              </div>
-            ))}
-          </div>
-        </Modal>
-      ) : null}
     </div>
   );
 };

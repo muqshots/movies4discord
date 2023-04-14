@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import Plyr from "plyr-react";
 import "plyr-react/dist/plyr.css";
 import { useEffect, useRef, useState } from "react";
-import { throttle } from "throttle-debounce";
+import { throttle, debounce } from "throttle-debounce";
 
 interface StreamProps {
   servers: Server[];
@@ -50,8 +50,12 @@ export const Stream = ({
   servers,
 }: StreamProps) => {
   const [server, setServer] = useState<Server>(defaultServer);
+  const [hide, setHide] = useState(true);
 
   const streamUrl = getStreamUrl(server, viewKey);
+
+  let previousOffset = 0;
+  let mediaObj: any = {};
 
   const router = useRouter();
   const ref = useRef<{ plyr: Plyr }>(null);
@@ -71,7 +75,7 @@ export const Stream = ({
       } else {
         router.push(`/videoerror?source=${encodeURIComponent(streamUrl)}`);
       }
-    }
+    };
 
     const video = document.getElementsByTagName("source")[0]!;
     video.addEventListener("error", handleError);
@@ -86,6 +90,7 @@ export const Stream = ({
 
     async function handleLoad(e: Plyr.PlyrEvent) {
       if (!active) return;
+      const plyr = e.detail.plyr;
 
       // Temporary fix until plyr quits being shit or I switch to vidstack
       const downloadLink = document.querySelectorAll('[data-plyr="download"]');
@@ -102,26 +107,41 @@ export const Stream = ({
           .json<{ percentage: number | null }>()
       ).percentage;
       if (percentage) {
-        e.detail.plyr.currentTime = (percentage / 100) * e.detail.plyr.duration;
+        plyr.currentTime = (percentage / 100) * plyr.duration;
       }
-      const video = (document.querySelector('video')) as HTMLVideoElementWithTracks;
+      const video = document.querySelector("video") as HTMLVideoElementWithTracks;
 
       if (video && video.audioTracks != null && video.audioTracks.length > 0) {
         if (navigator.userAgent.toLowerCase().indexOf("android") > -1) return;
         const audioTracks = Array.from(video.audioTracks);
         const engTracks = audioTracks.filter(track => track.language.startsWith('en'));
 
-        if (engTracks && engTracks.length > 0) {
-          if (engTracks.some(track => track.enabled)) return;
-          const engStereoTrack = engTracks.find(track => track.label.match(/stereo|5\.1/gi));
-          const engTrack = engStereoTrack || engTracks[0];
-          engTrack!.enabled = true;
-          const otherTracks = audioTracks.filter((track) => track !== engTrack);
-          otherTracks.forEach((track) => track.enabled = false);
-        }
-        // Video sometimes stopped after changing track until moved but this seems to reliably fix it
-        video.currentTime = video.currentTime - 0.01
-        video.play()
+      if (historyParams.media_type === "tv") {
+        const mediaRes: any = await ky
+          .get(`/api/trakt?mode=search&tmdbId=${historyParams.tmdbId}`)
+          .json();
+
+        const episodeRes: any = await ky
+          .get(`/api/trakt?mode=episode&showId=${mediaRes[0].show.ids.trakt}&season=${historyParams.season}&episode=${historyParams.episode}`)
+          .json();
+
+        mediaObj = {
+          episode: {
+            ids: {
+              trakt: episodeRes.ids.trakt,
+            },
+          },
+          progress: (plyr.currentTime / plyr.duration) * 100,
+        };
+      } else {
+        mediaObj = {
+          movie: {
+            ids: {
+              tmdb: historyParams.tmdbId,
+            },
+          },
+          progress: (plyr.currentTime / plyr.duration) * 100,
+        };
       }
     }
 
@@ -134,6 +154,56 @@ export const Stream = ({
               (e.detail.plyr.currentTime / e.detail.plyr.duration) * 100,
           },
         });
+        if (mediaObj) {
+          if (
+            (e.detail.plyr?.currentTime / e.detail.plyr?.duration) * 100 >
+            90
+          ) {
+            await ky
+              .post("/api/trakt", {
+                json: {
+                  mode: "scrobble/stop",
+                  mediaType: historyParams.media_type,
+                  tmdbId: historyParams.tmdbId,
+                  episodeId:
+                    historyParams.media_type === "tv"
+                      ? mediaObj.episode.ids.trakt
+                      : null,
+                  progress:
+                    (e.detail.plyr?.currentTime / e.detail.plyr?.duration) *
+                    100,
+                },
+              })
+              .catch(e => console.log(e));
+          }
+        }
+        if (e.detail.plyr.currentTime >= e.detail.plyr.duration - 0.01 && historyParams.media_type === "tv") {
+          const nextEpisode = (
+            await ky
+              .get(`/api/nextepisode`, {
+                searchParams: {
+                  ...historyParams,
+                  one: true,
+                },
+              })
+              .json<{ nextEpisode: number | null }>()
+          ).nextEpisode;
+          if (nextEpisode) {
+            const key = (
+              await ky
+                .post("/api/key", {
+                  searchParams: {
+                    ...historyParams,
+                    episode: nextEpisode,
+                  },
+                })
+                .json<{ key: string }>()
+            ).key;
+            router.push(
+              `/${historyParams.media_type}/${historyParams.tmdbId}/${key}`
+            );
+          }
+        }
       }
     });
 
@@ -143,6 +213,44 @@ export const Stream = ({
 
       plyr?.on("loadedmetadata", handleLoad);
       plyr?.on("progress", handleProgress);
+      plyr?.on(
+        "play",
+        debounce(250, async () => {
+          await ky
+            .post("/api/trakt", {
+              json: {
+                mode: "scrobble/start",
+                tmdbId: historyParams.tmdbId,
+                mediaType: historyParams.media_type,
+                episodeId:
+                  historyParams.media_type === "tv"
+                    ? mediaObj!.episode?.ids.trakt
+                    : null,
+                progress: (plyr.currentTime / plyr.duration) * 100,
+              },
+            })
+            .catch(e => console.log(e));
+        })
+      );
+      plyr?.on("pause", async () => {
+        const progress = (plyr?.currentTime / plyr?.duration) * 100;
+        if (progress < 90) {
+          await ky
+            .post("/api/trakt", {
+              json: {
+                mode: "scrobble/pause",
+                tmdbId: historyParams.tmdbId,
+                mediaType: historyParams.media_type,
+                episodeId:
+                  historyParams.media_type === "tv"
+                    ? mediaObj!.episode?.ids.trakt
+                    : null,
+                progress: progress,
+              },
+            })
+            .catch(e => console.log(e));
+        }
+      });
     };
 
     const removeListeners = () => {
@@ -150,6 +258,23 @@ export const Stream = ({
       const plyr = ref.current.plyr;
       plyr.off("loadedmetadata", handleLoad);
       plyr.off("progress", handleProgress);
+
+      if (mediaObj) {
+        ky.post("/api/trakt", {
+          json: {
+            mode: "scrobble/stop",
+            mediaType: historyParams.media_type,
+            tmdbId: historyParams.tmdbId,
+            episodeId:
+              historyParams.media_type === "tv"
+                ? mediaObj.episode?.ids.trakt
+                : null,
+            progress:
+              (plyr?.currentTime / plyr?.duration) * 100,
+          },
+        })
+        .catch(e => console.log(e));
+      }
     };
 
     setTimeout(addListeners, 10);
@@ -162,8 +287,8 @@ export const Stream = ({
 
   return (
     <>
-      <div className="ml-5 flex flex-col justify-center items-center">
-        <div className="items-start text-xl font-bold mt-5">
+      <div className="ml-5 flex flex-col items-center justify-center">
+        <div className="mt-5 items-start text-xl font-bold">
           Streaming {title} on {server} server
         </div>
         {historyParams.media_type === "tv" && (
@@ -173,7 +298,7 @@ export const Stream = ({
             </div>
           </div>
         )}
-        <div className="flex flex-row gap-2 m-4">
+        <div className="m-4 flex flex-row gap-2">
           {servers.map((s) => (
             <div
               key={s}
@@ -211,7 +336,7 @@ export const Stream = ({
               ],
               fullscreen: {
                 iosNative: true,
-              }
+              },
             }}
             source={{
               type: "video",
@@ -227,6 +352,65 @@ export const Stream = ({
               tracks: subs,
             }}
           />
+        </div>
+        <div className="mt-5 flex w-full flex-col items-center justify-center text-black">
+          <button
+            className="flex flex-row items-center gap-1 rounded-md bg-blue-500 py-2 px-4 text-white transition duration-200 hover:bg-white hover:text-black"
+            onClick={() => {
+              setHide(!hide);
+            }}
+          >
+            <div className="text-sm">{hide ? "Open Sync" : "Close Sync"}</div>
+          </button>
+
+        </div>
+        <div
+          className={`mt-3 mb-5 flex w-auto flex-col items-center justify-center rounded-xl bg-gray-800 text-black ${
+            hide ? "hidden" : "transition-all duration-200"
+          }`}
+        >
+          <p className="mb-10 mt-5 flex flex-row text-xl text-white">
+            Sync subtitles:
+          </p>
+          <p className="wrap mb-10 ml-5 mr-5 flex flex-row text-center text-xl text-white">
+            To sync subtitles, either enter a positive number or a negative
+            number.
+            <br /> Syncing is done by milliseconds.
+            <br /> A positive duration will make subtitles faster.
+            <br /> A negative duration will make subtitles slower.
+            <br /> Dont close the menu after syncing, it wont work.
+            <br /> 1 second = 1000 miliseconds
+          </p>
+          <input
+            type={"number"}
+            className="mx-3 mb-5 flex flex-row items-center justify-center gap-8 rounded-lg"
+            placeholder="1 second = 1000 ms"
+            onChange={debounce(500, (e) => {
+              if (e.target.value.length > 0) {
+                const offset = parseInt(e.target.value) / 1000;
+                const video = document.getElementsByTagName("video")[0];
+                if (video) {
+                  Array.from(video.textTracks).forEach((track) => {
+                    Array.from(track.cues || []).forEach((cue) => {
+                      cue.startTime = cue.startTime + offset;
+                      cue.endTime = cue.endTime + offset;
+                    });
+                  });
+                  previousOffset = offset;
+                }
+              } else {
+                const video = document.getElementsByTagName("video")[0];
+                if (video) {
+                  Array.from(video.textTracks).forEach((track) => {
+                    Array.from(track.cues || []).forEach((cue) => {
+                      cue.startTime = cue.startTime - previousOffset;
+                      cue.endTime = cue.endTime - previousOffset;
+                    });
+                  });
+                }
+              }
+            })}
+          ></input>
         </div>
       </div>
     </>

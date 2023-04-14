@@ -1,4 +1,4 @@
-ARG NODE_VERSION=lts
+ARG NODE_VERSION=16.19.0
 # ARG NODE_VERSION=16-alpine3.15
 
 FROM node:${NODE_VERSION} AS deps
@@ -23,7 +23,7 @@ RUN --mount=type=bind,target=/docker-context \
 
 RUN --mount=type=cache,target=/root/.yarn-cache \
     YARN_CACHE_FOLDER=/root/.yarn-cache \
-    yarn install --immutable --inline-builds
+    yarn install --inline-builds
 
 
 
