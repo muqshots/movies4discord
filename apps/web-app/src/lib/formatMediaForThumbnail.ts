@@ -1,10 +1,10 @@
 import { MediaThumbnailProps } from "@/components/MediaThumbnail";
-import { Movie, MovieDetails, SkyhookEpisode, TV, TVDetails } from "@movies4discord/interfaces";
+import { CastMember, CrewMember, Movie, MovieDetails, SkyhookEpisode, TV, TVDetails } from "@movies4discord/interfaces";
 import { getPlaiceholder } from "plaiceholder";
 import { getImageUrl } from "./getImageUrl";
 
 export const formatMovieForThumbnail = async (
-  movie: Movie | MovieDetails,
+  movie: Movie | MovieDetails | CrewMember | CastMember,
   doPlaceholders: boolean,
   poster = false
 ): Promise<Omit<MediaThumbnailProps, "media_type">> => {
@@ -28,7 +28,7 @@ export const formatMovieForThumbnail = async (
 };
 
 export const formatTVForThumbnail = async (
-  tv: TV | TVDetails,
+  tv: TV | TVDetails | CrewMember | CastMember,
   doPlaceholders: boolean,
   poster = false
 ): Promise<Omit<MediaThumbnailProps, "media_type">> => {
@@ -59,6 +59,13 @@ export const formatEpisodeforThumbnail = async (
 ): Promise<Omit<MediaThumbnailProps, "media_type">> => {
   const imageUrl = episode.image ?? null;
 
+  let plaiceholder = null;
+  try {
+    plaiceholder = (imageUrl && doPlaceholders) ? (await getPlaiceholder(imageUrl)).base64 : null
+  } catch (e) {
+    console.log(e);
+  }
+
   return {
     id: tmdbId,
     tvdbId: episode.tvdbShowId,
@@ -67,10 +74,7 @@ export const formatEpisodeforThumbnail = async (
     title: `S${episode.seasonNumber}E${episode.episodeNumber} - ${episode.title}`,
     image: {
       src: imageUrl,
-      b64:
-        (imageUrl && doPlaceholders)
-          ? (await getPlaiceholder(imageUrl)).base64
-          : null,
+      b64: plaiceholder
     },
     release_date: episode.airDate || null,
     rating: parseFloat(episode.rating?.value ?? "0"),

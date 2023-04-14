@@ -53,6 +53,7 @@ export const tmdb = got.extend({
 export const podnapisi = got.extend({
   prefixUrl: "https://www.podnapisi.net",
   headers: { Accept: "application/json" },
+  https: { rejectUnauthorized: false },
   // is cached in api/subtitles.ts
 });
 

@@ -1,14 +1,25 @@
 export interface CastMember {
-  adult: boolean;
-  gender: number | null;
   id: number;
-  known_for_department: string;
+  original_language?: string;
+  episode_count?: number;
+  overview?: string;
+  origin_country?: string[];
+  original_name?: string;
+  genre_ids?: number[];
   name: string;
-  original_name: string;
-  popularity: number;
+  media_type: string;
+  poster_path: string | null;
   profile_path: string | null;
-  cast_id: number;
+  first_air_date: string;
+  vote_average: number;
+  vote_count?: number;
   character: string;
-  credit_id: string;
-  order: number;
+  backdrop_path: string | null;
+  popularity: number;
+  credit_id?: string;
+  original_title?: string;
+  video?: boolean;
+  release_date: string;
+  title: string;
+  adult?: boolean;
 }
