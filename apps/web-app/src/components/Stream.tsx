@@ -62,7 +62,14 @@ export const Stream = ({
 
   useEffect(() => {
     const handleError = async () => {
-      if ((video.parentElement as HTMLVideoElement).networkState === 3) {
+      const videoParent = video.parentElement as HTMLVideoElement;
+      if (videoParent.networkState === 3) {
+        const videoPage = await ky.get(streamUrl, { throwHttpErrors: false });
+        if (videoPage.status == 404) {
+          const responseText = await videoPage.text();
+          router.push(`/videoerror?mediaPage=/${historyParams.media_type}/${historyParams.tmdbId}&errorText=${responseText}`);
+          return;
+        }
         const key = (
           await ky
             .post("/api/key", {
@@ -73,7 +80,7 @@ export const Stream = ({
   
         router.push(`/${historyParams.media_type}/${historyParams.tmdbId}/${key}`);
       } else {
-        router.push(`/videoerror?source=${encodeURIComponent(streamUrl)}`);
+        router.push(`/videoerror?source=&errorText=Network State: ${videoParent.networkState}`);
       }
     };
 
@@ -114,7 +121,20 @@ export const Stream = ({
       if (video && video.audioTracks != null && video.audioTracks.length > 0) {
         if (navigator.userAgent.toLowerCase().indexOf("android") > -1) return;
         const audioTracks = Array.from(video.audioTracks);
-        const engTracks = audioTracks.filter(track => track.language.startsWith('en'));
+        const engTracks = audioTracks.filter((track) => track.language.startsWith("en"));
+
+        if (engTracks && engTracks.length > 0) {
+          if (engTracks.some((track) => track.enabled)) return;
+          const engStereoTrack = engTracks.find((track) => track.label.match(/stereo|5\.1/gi));
+          const engTrack = engStereoTrack || engTracks[0];
+          engTrack!.enabled = true;
+          const otherTracks = audioTracks.filter((track) => track !== engTrack);
+          otherTracks.forEach((track) => (track.enabled = false));
+        }
+        // Video sometimes stopped after changing track until moved but this seems to reliably fix it
+        video.currentTime = video.currentTime - 0.01;
+        video.play();
+      }
 
       if (historyParams.media_type === "tv") {
         const mediaRes: any = await ky
