@@ -7,7 +7,7 @@ import ResponseLike from "responselike";
 
 const app = express();
 
-const allowlist = ["https://movies4discord.xyz", "http://localhost:3000"];
+const allowlist = ["https://movies4discord.xyz", "https://testing.movies4discord.xyz", "http://localhost:3000"];
 
 const beforeReqHook = (lru: QuickLRU<string, string>) => (options: Options) => {
   const url = (options.url as URL).href;

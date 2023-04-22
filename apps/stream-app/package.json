@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "withenv": "env-cmd --silent -f ../../.env -- ",
-    "dev": "yarn withenv nodemon --watch ./src/ -e ts --exec \"node --loader ts-node/esm ./src/index.ts\"",
+    "withenv:dev": "env-cmd --silent -f ../../.env.dev -- ",
+    "dev": "yarn withenv:dev nodemon --watch ./src/ -e ts --exec \"node --loader ts-node/esm ./src/index.ts\"",
     "build": "tsc",
     "start": "yarn withenv node ./dist/index.js",
     "clean": "rimraf ./dist"

@@ -76,12 +76,12 @@ const Settings = ({
             ))}
           </div>
         </div>
-        <div className="w-auto flex-col">
+        {/* <div className="w-auto flex-col">
           <div className="flex flex-row items-center justify-center pb-3">
             <p className="text-2xl font-bold">Toggle Autoplay</p>
           </div>
 
-          {/* <div className="grid w-full grid-rows-3 gap-y-4 text-center">
+          <div className="grid w-full grid-rows-3 gap-y-4 text-center">
             <div
               key={"autoPlay"}
               className={`className="h-full text-base" w-full rounded-md py-2 px-4 transition duration-200 ${
@@ -93,8 +93,8 @@ const Settings = ({
             >
               <p>{autoPlay ? "Toggle off" : "Toggle on"}</p>
             </div>
-          </div> */}
-        </div>
+          </div>
+        </div> */}
       </div>
       </div>
     </>
