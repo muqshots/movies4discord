@@ -6,6 +6,7 @@ import Plyr from "plyr-react";
 import "plyr-react/dist/plyr.css";
 import { useEffect, useRef, useState } from "react";
 import { throttle, debounce } from "throttle-debounce";
+import ServerChip from "./ServerChip";
 
 interface StreamProps {
   servers: Server[];
@@ -319,18 +320,7 @@ export const Stream = ({
           </div>
         )}
         <div className="m-4 flex flex-row gap-2">
-          {servers.map((s) => (
-            <div
-              key={s}
-              className="rounded-lg border border-white px-3 py-1.5 hover:bg-white hover:text-black"
-              onClick={() => {
-                setServer(s);
-                ky.post(`/api/server?server=${s}`);
-              }}
-            >
-              {s}
-            </div>
-          ))}
+          {servers.map((s) => ServerChip(s, setServer))}
         </div>
         <div className="w-4/5">
           <Plyr

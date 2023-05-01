@@ -21,6 +21,7 @@ export interface MediaThumbnailProps {
   };
   release_date: string | null;
   rating: number;
+  adult: boolean;
   onClick?: () => void;
   onDelete?: () => void;
   percentage?: number;
@@ -42,6 +43,7 @@ const MediaThumbnail = ({
   media_type,
   release_date,
   rating,
+  adult,
   onClick,
   onDelete,
   percentage,
@@ -49,7 +51,7 @@ const MediaThumbnail = ({
 }: MediaThumbnailProps) => {
   const IconTag = MediaTypeLogos[media_type];
 
-  const Wrapper: React.FC = ({ children }) =>
+  const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     onClick ? (
       <div onClick={onClick}>{children}</div>
     ) : (

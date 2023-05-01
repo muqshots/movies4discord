@@ -36,6 +36,7 @@ const handler = async (
     release_date:
       (r.media_type === "movie" ? r.release_date : r.first_air_date) || null,
     rating: r.vote_average,
+    adult: r.media_type === "movie" ? r.adult : false,
   }));
 
   res.status(200).json({ results });
