@@ -13,7 +13,6 @@ import { GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import "plyr-react/dist/plyr.css";
 
 const StreamTV = ({
   defaultServer,

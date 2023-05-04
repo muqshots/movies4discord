@@ -29,8 +29,7 @@ model Account {
   oauth_token_secret String?
   oauth_token        String?
   created_at         Int?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -44,22 +43,20 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String      @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?     @unique
   emailVerified DateTime?
   image         String?
+  server        Server      @default(EU)
+  admin         Boolean     @default(false)
+
   accounts      Account[]
-
-  admin  Boolean @default(false)
-  server Server  @default(EU)
-
-  Watchlist Watchlist[]
-  Viewkeys  Viewkey[]
-  History   History[]
-  Sessions  Session[]
-  Pincodes  Pincode[]
-
+  History       History[]
+  Pincodes      Pincode[]
+  Sessions      Session[]
+  Viewkeys      Viewkey[]
+  Watchlist     Watchlist[]
 }
 
 model Watchlist {
@@ -68,8 +65,7 @@ model Watchlist {
   tmdbId    Int
   isShow    Boolean
   createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, tmdbId, isShow])
 }
@@ -82,8 +78,7 @@ model Viewkey {
   season    Int
   episode   Int
   createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, tmvdbId, isShow, season, episode])
 }
@@ -98,8 +93,7 @@ model History {
   episode    Int
   percentage Float
   updatedAt  DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, tmdbId, tvdbId, isShow, season, episode])
 }
@@ -109,8 +103,7 @@ model Pincode {
   userId    String
   pincode   Int
   createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, pincode])
 }

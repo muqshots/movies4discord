@@ -16,16 +16,16 @@ export default NextAuth({
   adapter: PrismaAdapter(prisma),
   callbacks: {
     async signIn({ user, account, profile }) {
-      if (user.image !== profile.image_url) {
+      if (user.image !== profile?.image) {
         await prisma.user.update({
           where: { id: user.id },
-          data: { image: profile.image_url as string },
+          data: { image: profile?.image as string },
         });
       }
 
       const list_of_guilds = await got
         .get("https://discord.com/api/users/@me/guilds", {
-          headers: { Authorization: `Bearer ${account.access_token}` },
+          headers: { Authorization: `Bearer ${account?.access_token}` },
         })
         .json<
           {

@@ -23,7 +23,7 @@ RUN --mount=type=bind,target=/docker-context \
 
 RUN --mount=type=cache,target=/root/.yarn-cache \
     YARN_CACHE_FOLDER=/root/.yarn-cache \
-    yarn install --inline-builds
+    yarn install --immutable --inline-builds
 
 
 

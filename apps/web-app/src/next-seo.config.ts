@@ -3,7 +3,7 @@ export const SEO = {
   defaultTitle: "Movies4Discord",
   description: "🚀Watch all your media in one place!🚀",
   openGraph: {
-    site_name: "Movies4Discord",
+    siteName: "Movies4Discord",
     images: [],
   },
   additionalMetaTags: [

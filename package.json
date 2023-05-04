@@ -28,13 +28,13 @@
     "docker:dev": "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose up -f ./docker-compose-dev.yml -d --build"
   },
   "devDependencies": {
-    "prettier": "2.7.1",
-    "rimraf": "3.0.2"
+    "prettier": "2.8.8",
+    "rimraf": "4.4.1"
   },
   "engines": {
     "node": "^14.13.1 || >=16.0.0",
     "yarn": ">=1.22.0",
     "npm": "please-use-yarn"
   },
-  "packageManager": "yarn@3.2.0-rc.15"
+  "packageManager": "yarn@3.5.1"
 }
