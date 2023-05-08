@@ -6,6 +6,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "withenv": "env-cmd --silent -f ../../.env -- ",
+    "withenv:dev": "env-cmd --silent -f ../../.env.dev -- ",
     "generate": "prisma generate",
     "migrate:dev": "yarn withenv prisma migrate dev",
     "migrate:deploy": "yarn withenv prisma migrate deploy",
@@ -20,18 +21,18 @@
     "docker": "yarn migrate:deploy && yarn studio"
   },
   "devDependencies": {
-    "@types/node": "17.0.21",
-    "@typescript-eslint/eslint-plugin": "5.30.7",
-    "@typescript-eslint/parser": "5.30.7",
-    "eslint": "8.20.0",
-    "eslint-config-prettier": "8.5.0",
-    "prettier": "2.7.1",
+    "@types/node": "18.16.3",
+    "@typescript-eslint/eslint-plugin": "5.59.2",
+    "@typescript-eslint/parser": "5.59.2",
+    "eslint": "8.29.0",
+    "eslint-config-prettier": "8.8.0",
+    "prettier": "2.8.8",
     "rimraf": "3.0.2",
-    "typescript": "4.7.4"
+    "typescript": "4.9.3"
   },
   "dependencies": {
-    "@prisma/client": "3.15.2",
+    "@prisma/client": "4.13.0",
     "env-cmd": "10.1.0",
-    "prisma": "3.15.2"
+    "prisma": "4.13.0"
   }
 }

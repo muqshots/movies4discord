@@ -16,7 +16,7 @@ services:
         target: /var/lib/postgresql/data
     restart: unless-stopped
     ports:
-      - 5431:5432
+      - 127.0.0.1:5431:5432
 
   studio:
     container_name: studio
@@ -60,8 +60,8 @@ services:
       - type: bind
         source: ${DOCKER_STREAM_DATA}
         target: /data
-    # depends_on:
-    #   - website
+    depends_on:
+      - website
     restart: unless-stopped
 
 networks:

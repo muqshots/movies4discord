@@ -71,17 +71,18 @@ app.get("/", async (req, res) => {
     })
     .json<{ name: string; path: string; err: false }>()
     .catch((err) => {
-      if (err.response?.statusCode !== 422) {
-        console.error(err);
-      }
       return {
         err: true as const,
-        message: err?.response?.body || "API reach error",
+        message: JSON.parse(err?.response?.body).error || "API reach error",
+        statusCode: err?.response?.statusCode || 500,
       };
     });
 
-  if (apiData.err) {
-    res.status(500).json(apiData.message);
+  if (apiData.err && (apiData.statusCode === 422 || apiData.statusCode === 404)) {
+    res.status(404).json({ error: apiData.message });
+    return;
+  } else if (apiData.err) {
+    res.status(500).json({ error: apiData.message });
     return;
   }
 

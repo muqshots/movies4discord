@@ -15,7 +15,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
       const viewkey = _req.query.viewkey as string | undefined;
 
       if (!viewkey) {
-        res.status(422).json({ error: "No vk given" });
+        res.status(422).json({ error: "No viewkey given" });
         return;
       }
 
@@ -31,8 +31,10 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
       }
 
       if (vk.isShow) {
-        // res.status(404).json({ error: "bruhw" });
-        vk.tmvdbId;
+        if (!vk.season || !vk.episode || !vk.tmvdbId) {
+          res.status(422).json({ error: "Mislabeled key" });
+          return;
+        }
 
         const sonarrSeries = await sonarr
           .get(`series`, { searchParams: { tvdbId: vk.tmvdbId } })
@@ -45,6 +47,11 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
         const sonarrEpisode = sonarrEpisodes.find(
           (e) => e.seasonNumber === vk.season && e.episodeNumber === vk.episode
         );
+
+        if (!sonarrEpisode?.hasFile) {
+          res.status(404).json({ error: "Episode not available" });
+          return;
+        }
 
         const sonarrEpisodeFile = await sonarr
           .get(`episodefile/${sonarrEpisode!.episodeFileId}`)
@@ -97,7 +104,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
       const media_type = _req.query.media_type as string | undefined;
 
       if (media_type !== "movie" && media_type !== "tv") {
-        res.status(422).json({ error: "Invalid media type" });
+        res.status(420).json({ error: "Invalid media type" });
         return;
       }
 
@@ -111,14 +118,14 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
       if (media_type === "movie") {
         const tmdbId = parseInt(_req.query.tmdbId as string);
         if (Number.isNaN(tmdbId)) {
-          res.status(422).json({ error: "No tmdbId given" });
+          res.status(421).json({ error: "No tmdbId given" });
           return;
         }
         dbParams = { tmvdbId: tmdbId, season: 0, episode: 0, isShow: false };
       } else {
         const tvdbId = parseInt(_req.query.tvdbId as string);
         if (Number.isNaN(tvdbId)) {
-          res.status(422).json({ error: "No tvdbId given" });
+          res.status(421).json({ error: "No tvdbId given" });
           return;
         }
 
