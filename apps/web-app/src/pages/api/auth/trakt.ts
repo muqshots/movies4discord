@@ -1,23 +1,10 @@
 import { prisma } from "@movies4discord/db";
 import { trakt } from "@/lib/got";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { TokenResponse, UserSettings } from "@movies4discord/interfaces";
+import { authOptions } from "./[...nextauth]";
 
-interface TraktTokenResponse {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-  refresh_token: string;
-  scope: string;
-  created_at: number;
-}
-
-interface TraktUserSettings {
-  user: {
-    username: string;
-    private: boolean;
-  }
-}
 const CLIENT_ID = process.env.TRAKT_ID;
 const CLIENT_SECRET =  process.env.TRAKT_SECRET;
 
@@ -25,7 +12,7 @@ const handler = async (
   _req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const session = await getSession({ req: _req });
+  const session = await getServerSession(_req, res, authOptions);
 
   let check = null;
   if (!session && !_req.query.id) {
@@ -67,7 +54,7 @@ const handler = async (
         redirect_uri: process.env.NEXTAUTH_URL + "/api/auth/trakt",
         grant_type: "authorization_code"
       }
-    }).json<TraktTokenResponse>();
+    }).json<TokenResponse>();
 
     if (!response.access_token) {
       res.status(401).json({ error: "Unauthorized..." });
@@ -78,7 +65,7 @@ const handler = async (
       headers: {
         Authorization: `Bearer ${response.access_token}`,
       },
-    }).json<TraktUserSettings>();
+    }).json<UserSettings>();
 
     if (!traktAcc) {
       const traktAcc = await prisma.account.create({
@@ -100,7 +87,7 @@ const handler = async (
         },
       });
     } else {
-      const traktAcc= await prisma.account.updateMany({
+      const traktAcc = await prisma.account.updateMany({
         where: {
           user: {
             id: userId,
@@ -117,10 +104,6 @@ const handler = async (
 
     res.redirect(process.env.NEXTAUTH_URL! + "/settings");
   }
-
-  // use this to get the access token
-  // if (_req.method === "POST") {
-  // }
 };
 
 export default handler;

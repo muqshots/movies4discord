@@ -3,7 +3,7 @@ import { Server } from "@movies4discord/db";
 import ky from "ky";
 import { useRouter } from "next/router";
 import Plyr from "plyr-react";
-import "plyr-react/plyr.css";
+import "plyr-react/dist/plyr.css";
 import { useEffect, useRef, useState } from "react";
 import { throttle, debounce } from "throttle-debounce";
 import ServerChip from "./ServerChip";

@@ -7,13 +7,10 @@ import type {
   Person,
   PersonImages,
   TMDBListWrapper,
-  TV,
   TVExternalIds,
 } from "@movies4discord/interfaces";
 import InferNextPropsType from "infer-next-props-type";
 import { GetStaticPaths, GetStaticPropsContext } from "next";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import { getPlaiceholder } from "plaiceholder";
 
 const ComradePage = (props: InferNextPropsType<typeof getStaticProps>) => {
@@ -74,7 +71,6 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
     posterB64 = posterUrl ? (await getPlaiceholder(posterUrl)).base64 : null;
   }
 
-  const tvdbId = ActorData.external_ids.tvdb_id ?? null;
   const credits = ActorData.combined_credits.cast;
 
   const movie_credits = credits
@@ -107,20 +103,20 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
 
   return {
     props: {
-        id: ActorData.id,
-        name: ActorData.name,
-        biography: ActorData.biography,
-        poster: {
-          url: posterUrl,
-          b64: posterB64,
-        },
-        backdrop: {
-          url: backdropUrl,
-        },
-        popularity: ActorData.popularity,
-        birthday: ActorData.birthday,
-        movie_credits: await Promise.all(movie_credits),
-        tv_credits: await Promise.all(tv_credits),
+      id: ActorData.id,
+      name: ActorData.name,
+      biography: ActorData.biography,
+      poster: {
+        url: posterUrl,
+        b64: posterB64,
+      },
+      backdrop: {
+        url: backdropUrl,
+      },
+      popularity: ActorData.popularity,
+      birthday: ActorData.birthday,
+      movie_credits: await Promise.all(movie_credits),
+      tv_credits: await Promise.all(tv_credits),
     },
     revalidate: 604800, // Revalidate every week
   };

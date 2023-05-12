@@ -2,10 +2,11 @@ import { Stream } from "@/components/Stream";
 import { getImageUrl } from "@/lib/getImageUrl";
 import { servers } from "@/lib/getServers";
 import { getMovie } from "@/lib/getTmdbData";
-import { prisma, Server } from "@movies4discord/db";
+import { prisma } from "@movies4discord/db";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import InferNextProps from "infer-next-props-type";
 import { GetServerSidePropsContext } from "next";
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
 import { NextSeo } from "next-seo";
 
 const StreamMovie = ({
@@ -61,9 +62,10 @@ const StreamMovie = ({
 
 export const getServerSideProps = async ({
   req,
+  res,
   params,
 }: GetServerSidePropsContext<{ id: string; key: string }>) => {
-  const session = await getSession({ req: req });
+  const session = await getServerSession(req, res, authOptions);
 
   if (!session) {
     return {

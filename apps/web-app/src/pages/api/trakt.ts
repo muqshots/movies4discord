@@ -1,11 +1,19 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
 import { prisma } from "@movies4discord/db";
 import { trakt } from "@/lib/got";
+import { TokenResponse } from "@movies4discord/interfaces";
+import { authOptions } from "./auth/[...nextauth]";
 
-const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
-  const session = await getSession({ req: _req });
-  
+const CLIENT_ID = process.env.TRAKT_ID;
+const CLIENT_SECRET =  process.env.TRAKT_SECRET;
+
+const handler = async (
+  _req: NextApiRequest,
+  res: NextApiResponse
+) => {
+  const session = await getServerSession(_req, res, authOptions);
+
   let check = null;
   if (!session && !_req.query.id) {
     res.status(401).json({ error: "Unauthorized..." });
@@ -29,17 +37,49 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
     },
   });
   if (!traktAcc) {
-    res.status(401).json({ error: "Unauthorized..." });
+    res.status(401).json({ error: "No trakt account linked" });
     return;
   }
-  const token = traktAcc.access_token;
+
+  let token = traktAcc.access_token;
+
+  if (traktAcc.expires_at && traktAcc.expires_at < (Date.now() / 1000)) {
+    let refresh_token = await trakt
+      .post("oauth/token", {
+        json: {
+          refresh_token: traktAcc.refresh_token,
+          client_id: CLIENT_ID,
+          client_secret: CLIENT_SECRET,
+          redirect_uri: process.env.NEXTAUTH_URL + "/api/auth/trakt",
+          grant_type: "refresh_token"
+        },
+      }).json<TokenResponse>();
+
+    if (!refresh_token.access_token) {
+      res.status(401).json({ error: "Failed to refresh trakt token" });
+      return;
+    }
+
+    await prisma.account.update({
+      where: {
+        id: traktAcc.id,
+      },
+      data: {
+        access_token: refresh_token.access_token,
+        refresh_token: refresh_token.refresh_token,
+        expires_at: refresh_token.created_at + refresh_token.expires_in,
+      },
+    });
+
+    token = refresh_token.access_token;
+  }
 
   switch (_req.method) {
     case "GET":
       if (_req.query.mode === "search") {
         const tmdbId = parseInt(_req.query.tmdbId as string);
         if (Number.isNaN(tmdbId)) {
-          res.status(422).json({ error: "gib tmdbId" });
+          res.status(422).json({ error: "No tmdbId provided" });
           return;
         }
         const showData = await trakt
@@ -55,13 +95,11 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
           Number.isNaN(seasonNumber) ||
           Number.isNaN(episodeNumber)
         ) {
-          res.status(422).json({ error: "I need my numbers man!" });
+          res.status(422).json({ error: "No episode info provided" });
           return;
         }
         const showData = await trakt
-          .get(
-            `shows/${showId}/seasons/${seasonNumber}/episodes/${episodeNumber}`
-          )
+          .get(`shows/${showId}/seasons/${seasonNumber}/episodes/${episodeNumber}`)
           .json();
         res.status(200).json(showData);
       }
@@ -74,7 +112,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
         const progress = parseInt(_req.body.progress as string);
 
         if (Number.isNaN(progress)) {
-          res.json({ error: 'No progress' });
+          res.json({ error: "No progress" });
           return;
         }
         if (

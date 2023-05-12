@@ -7,7 +7,8 @@ import {
   SonarrTV,
 } from "@movies4discord/interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./auth/[...nextauth]";
 
 const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
   switch (_req.method) {
@@ -83,22 +84,14 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
     }
 
     case "POST": {
-      const session = await getSession({ req: _req });
-      var check = null
-      if (!session && !_req.query.id) {
+      const session = await getServerSession(_req, res, authOptions);
+      const user = await prisma.user.findUnique({
+        where: { id: session?.userID || _req.query.id as string }
+      });
+
+      if (!user) {
         res.status(401).json({ error: "Unauthorized..." });
         return;
-      }
-      else if (_req.query.id) {
-        check = await prisma.user.findUnique({
-          where: {
-            id: _req.query.id as string
-          }
-        })
-        if (!check) {
-          res.status(401).json({ error: "Unauthorized..." });
-          return;
-        }
       }
 
       const media_type = _req.query.media_type as string | undefined;
@@ -142,7 +135,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
       const exists = await prisma.viewkey.findUnique({
         where: {
           userId_tmvdbId_isShow_season_episode: {
-            userId: session ? session.userID : check!.id,
+            userId: user.id,
             ...dbParams,
           },
         },
@@ -167,7 +160,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
       }
 
       const key = await prisma.viewkey.create({
-        data: { userId: session ? session.userID : check!.id, ...dbParams },
+        data: { userId: user.id, ...dbParams },
         select: { key: true },
       });
 

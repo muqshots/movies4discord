@@ -1,13 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
 import { prisma, Server } from "@movies4discord/db";
 import { servers } from "@/lib/getServers";
+import { authOptions } from "./auth/[...nextauth]";
 
 const handler = async (
   _req: NextApiRequest,
   res: NextApiResponse<{ success: boolean } | { error: string }>
 ) => {
-  const session = await getSession({ req: _req });
+  const session = await getServerSession(_req, res, authOptions);
 
   var check = null
   if (!session && !_req.query.id) {

@@ -1,10 +1,10 @@
 import { prisma } from "@movies4discord/db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import got from "got";
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID!,
@@ -16,10 +16,10 @@ export default NextAuth({
   adapter: PrismaAdapter(prisma),
   callbacks: {
     async signIn({ user, account, profile }) {
-      if (user.image !== profile?.image) {
+      if (user.image !== profile?.image_url) {
         await prisma.user.update({
           where: { id: user.id },
-          data: { image: profile?.image as string },
+          data: { image: profile?.image_url as string },
         });
       }
 
@@ -51,4 +51,6 @@ export default NextAuth({
       return session;
     },
   },
-});
+}
+
+export default NextAuth(authOptions);

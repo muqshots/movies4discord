@@ -1,9 +1,10 @@
 import ky from "ky";
-import { getSession, useSession } from "next-auth/react";
 import { useState } from "react";
 import { prisma, Server } from "@movies4discord/db";
 import { GetServerSidePropsContext } from "next";
 import InferNextProps from "infer-next-props-type";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]";
 
 const Settings = ({
   defaultServer,
@@ -11,7 +12,6 @@ const Settings = ({
 }: InferNextProps<typeof getServerSideProps>) => {
   const [server, setServer] = useState<Server>(defaultServer);
   const [autoPlay, setAutoPlay] = useState(false)
-
 
   return (
     <><div className="overflow-x-hidden">
@@ -103,8 +103,9 @@ const Settings = ({
 
 export const getServerSideProps = async ({
   req,
+  res
 }: GetServerSidePropsContext) => {
-  const session = await getSession({ req: req });
+  const session = await getServerSession(req, res, authOptions);
 
   if (!session) {
     return {

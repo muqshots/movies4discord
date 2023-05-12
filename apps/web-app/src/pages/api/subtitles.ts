@@ -4,9 +4,10 @@ import { srtToVtt } from "@/lib/srtToVtt";
 import { PodnapisiResults } from "@movies4discord/interfaces";
 import AdmZip from "adm-zip";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
 import QuickLRU from "quick-lru";
 import { prisma } from "@movies4discord/db";
+import { authOptions } from "./auth/[...nextauth]";
 
 const subsCache = new QuickLRU<string, string>({ maxSize: 1000 });
 
@@ -21,7 +22,7 @@ const handler = async (
   _req: NextApiRequest,
   res: NextApiResponse<string | { error: string }>
 ) => {
-  const session = await getSession({ req: _req });
+  const session = await getServerSession(_req, res, authOptions);
   var check = null
   if (!session && !_req.query.id) {
     res.status(401).json({ error: "Unauthorized..." });

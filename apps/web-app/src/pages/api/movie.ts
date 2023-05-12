@@ -1,8 +1,9 @@
 import { radarr, radarrLru, radarrPrefix } from "@/lib/got";
 import { RadarrMovie } from "@movies4discord/interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
 import { prisma } from "@movies4discord/db";
+import { authOptions } from "./auth/[...nextauth]";
+import { getServerSession } from "next-auth";
 
 export type CheckMovieAvailability = {
   id: number | null;
@@ -18,15 +19,15 @@ const handler = async (
   _req: NextApiRequest,
   res: NextApiResponse<CheckMovieAvailability | { error: string } | MovieAction>
 ) => {
-  const session = await getSession({ req: _req });
+  const session = await getServerSession(_req, res, authOptions);
   var check = null
   if (!session && !_req.query.id) {
     res.status(401).json({ error: "Unauthorized..." });
     return;
   }
-  else if(_req.query.id){
+  else if (_req.query.id) {
     check = await prisma.user.findUnique({
-      where:{
+      where: {
         id: _req.query.id as string
       }
     })

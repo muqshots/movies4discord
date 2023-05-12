@@ -2,8 +2,9 @@ import { getSkyhookTV } from "@/lib/getSkyhookData";
 import { sonarr } from "@/lib/got";
 import { SkyhookEpisode, SonarrEpisode, SonarrTV } from "@movies4discord/interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
 import { prisma } from "@movies4discord/db";
+import { authOptions } from "./auth/[...nextauth]";
 
 export interface GetShow {
   episodes: {
@@ -26,7 +27,7 @@ const handler = async (
   _req: NextApiRequest,
   res: NextApiResponse<GetShow | { error: string }>
 ) => {
-  const session = await getSession({ req: _req });
+  const session = await getServerSession(_req, res, authOptions);
 
   let check = null
   if (!session && !_req.query.id) {

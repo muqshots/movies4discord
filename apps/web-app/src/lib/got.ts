@@ -90,3 +90,22 @@ export const skyhook = got.extend({
     afterResponse: [afterResponseHook(sonarrLru)],
   },
 });
+
+export const trakt = got.extend({
+  prefixUrl: "https://api.trakt.tv",
+  headers: {
+    "Content-Type": "application/json",
+    "trakt-api-version": "2",
+    "trakt-api-key": process.env.TRAKT_ID!,
+  },
+  hooks: {
+    afterResponse: [
+      (response) => {
+        if (response.statusCode === 429) {
+          console.log(response.body);
+        }
+        return response;
+      }
+    ]
+  }
+});

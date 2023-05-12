@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
 import { prisma } from "@movies4discord/db";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./auth/[...nextauth]";
 
 const handler = async (
     _req: NextApiRequest,
     res: NextApiResponse
 ) => {
-    const session = await getSession({ req: _req });
+    const session = await getServerSession(_req, res, authOptions);
     if (!session && _req.method !== "POST") {
         res.status(401).json({ error: "Unauthorized..." });
         return;

@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
 import { prisma } from "@movies4discord/db";
+import { authOptions } from "./auth/[...nextauth]";
 
 const handler = async (
     _req: NextApiRequest,
     res: NextApiResponse
 ) => {
-    const session = await getSession({ req: _req });
+    const session = await getServerSession(_req, res, authOptions);
     var check = null
     if (!session && !_req.query.id) {
         res.status(401).json({ error: "Unauthorized..." });
@@ -27,8 +28,10 @@ const handler = async (
         case "DELETE": {
             const acc = await prisma.user.deleteMany({
                 where: {
-                    account: {
-                        providerAccountId: _req.query.userId as string
+                    accounts: {
+                        some: {
+                            providerAccountId: _req.query.userId as string
+                        }    
                     }
                 }
             })
@@ -42,8 +45,10 @@ const handler = async (
         case "GET":{
             const acc = await prisma.user.findFirst({
                 where: {
-                    account: {
-                        providerAccountId: _req.query.userId as string
+                    accounts: {
+                        some: {
+                            providerAccountId: _req.query.userId as string
+                        }    
                     }
                 }
             })

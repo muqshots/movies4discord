@@ -28,5 +28,9 @@ declare module "next-auth" {
   // interface Account {}
 
   /** The OAuth profile returned from your provider */
-  // interface Profile {}
+  interface Profile {
+    name?: string
+    email?: string
+    image_url?: string
+  }
 }
