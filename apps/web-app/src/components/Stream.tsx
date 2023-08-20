@@ -13,17 +13,17 @@ interface StreamProps {
   defaultServer: Server;
   viewKey: string;
   historyParams:
-    | {
-        tmdbId: number;
-        media_type: "movie";
-      }
-    | {
-        tmdbId: number;
-        media_type: "tv";
-        tvdbId: number;
-        season: number;
-        episode: number;
-      };
+  | {
+    tmdbId: number;
+    media_type: "movie";
+  }
+  | {
+    tmdbId: number;
+    media_type: "tv";
+    tvdbId: number;
+    season: number;
+    episode: number;
+  };
   title: string;
   backdropUrl: string | null;
   subs: Plyr.Track[];
@@ -52,10 +52,10 @@ export const Stream = ({
 }: StreamProps) => {
   const [server, setServer] = useState<Server>(defaultServer);
   const [hide, setHide] = useState(true);
+  const [offset, setOffset] = useState(0);
 
   const streamUrl = getStreamUrl(server, viewKey);
 
-  let previousOffset = 0;
   let mediaObj: any = {};
 
   const router = useRouter();
@@ -66,9 +66,9 @@ export const Stream = ({
       const videoParent = video.parentElement as HTMLVideoElement;
       if (videoParent.networkState === 3) {
         const videoPage = await ky.get(streamUrl, { throwHttpErrors: false });
-        if (videoPage.status == 404) {
+        if (videoPage.status !== 404) {
           const responseText = await videoPage.text();
-          router.push(`/videoerror?mediaPage=/${historyParams.media_type}/${historyParams.tmdbId}&errorText=${responseText}`);
+          router.push(`/videoerror?mediaPage=/${historyParams.media_type}/${historyParams.tmdbId}&errorText=${responseText}&mediaTitle=${title}${historyParams.media_type === "tv" ? "&season=" + historyParams.season + "&episode=" + historyParams.episode : null}&server=${server}`);
           return;
         }
         const key = (
@@ -78,7 +78,7 @@ export const Stream = ({
             })
             .json<{ key: string }>()
         ).key;
-  
+
         router.push(`/${historyParams.media_type}/${historyParams.tmdbId}/${key}`);
       } else {
         router.push(`/videoerror?source=&errorText=Network State: ${videoParent.networkState}`);
@@ -88,9 +88,7 @@ export const Stream = ({
     const video = document.getElementsByTagName("source")[0]!;
     video.addEventListener("error", handleError);
 
-    return () => {
-      video.removeEventListener("error", handleError);
-    };
+    return () => video.removeEventListener("error", handleError);
   }, [router, streamUrl, historyParams]);
 
   useEffect(() => {
@@ -294,7 +292,7 @@ export const Stream = ({
               (plyr?.currentTime / plyr?.duration) * 100,
           },
         })
-        .catch(e => console.log(e));
+          .catch(e => console.log(e));
       }
     };
 
@@ -375,9 +373,7 @@ export const Stream = ({
 
         </div>
         <div
-          className={`mt-3 mb-5 flex w-auto flex-col items-center justify-center rounded-xl bg-gray-800 text-black ${
-            hide ? "hidden" : "transition-all duration-200"
-          }`}
+          className={`mt-3 mb-5 flex w-auto flex-col items-center justify-center rounded-xl bg-gray-800 text-black ${hide ? "hidden" : "transition-all duration-200"}`}
         >
           <p className="mb-10 mt-5 flex flex-row text-xl text-white">
             Sync subtitles:
@@ -397,30 +393,64 @@ export const Stream = ({
             placeholder="1 second = 1000 ms"
             onChange={debounce(500, (e) => {
               if (e.target.value.length > 0) {
-                const offset = parseInt(e.target.value) / 1000;
+                const newOffset = parseInt(e.target.value) / 1000;
                 const video = document.getElementsByTagName("video")[0];
                 if (video) {
                   Array.from(video.textTracks).forEach((track) => {
                     Array.from(track.cues || []).forEach((cue) => {
-                      cue.startTime = cue.startTime + offset;
-                      cue.endTime = cue.endTime + offset;
+                      cue.startTime = cue.startTime + newOffset;
+                      cue.endTime = cue.endTime + newOffset;
                     });
                   });
-                  previousOffset = offset;
+                  setOffset(newOffset);
                 }
               } else {
                 const video = document.getElementsByTagName("video")[0];
                 if (video) {
                   Array.from(video.textTracks).forEach((track) => {
                     Array.from(track.cues || []).forEach((cue) => {
-                      cue.startTime = cue.startTime - previousOffset;
-                      cue.endTime = cue.endTime - previousOffset;
+                      cue.startTime = cue.startTime - offset;
+                      cue.endTime = cue.endTime - offset;
                     });
                   });
                 }
               }
             })}
-          ></input>
+          />
+          
+          <p className="text-white">Offset: {offset} seconds</p>
+          <input
+            type="range"
+            className="mx-3 mb-5 flex flex-row items-center justify-center gap-8 rounded-lg w-9/12"
+            min="-7500"
+            max="7500"
+            step="500" 
+            onChange={debounce(500, (e) => {
+              if (e.target.value.length > 0) {
+                const newOffset = parseInt(e.target.value) / 1000;
+                const video = document.getElementsByTagName("video")[0];
+                if (video) {
+                  Array.from(video.textTracks).forEach((track) => {
+                    Array.from(track.cues || []).forEach((cue) => {
+                      cue.startTime = cue.startTime + newOffset;
+                      cue.endTime = cue.endTime + newOffset;
+                    });
+                  });
+                  setOffset(newOffset);
+                }
+              } else {
+                const video = document.getElementsByTagName("video")[0];
+                if (video) {
+                  Array.from(video.textTracks).forEach((track) => {
+                    Array.from(track.cues || []).forEach((cue) => {
+                      cue.startTime = cue.startTime - offset;
+                      cue.endTime = cue.endTime - offset;
+                    });
+                  });
+                }
+              }
+            })}
+          />
         </div>
       </div>
     </>
