@@ -7,18 +7,15 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import {
-  HiOutlineGlobeAlt,
   HiOutlineLogout,
   HiSearch,
   HiAdjustments,
 } from "react-icons/hi";
 import { useSetRecoilState } from "recoil";
 import { debounce, throttle } from "throttle-debounce";
-import Modal from "./Modal";
 
 const Header = () => {
   const setSidebar = useSetRecoilState(sidebarState);
-  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
   // Pixels to scroll with transparent bg

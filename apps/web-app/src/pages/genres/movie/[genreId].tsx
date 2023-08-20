@@ -43,10 +43,16 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
     };
   }
 
+  // Reduce load times by only loading the movies that will be displayed
+  let movieCount = 0;
   const movies = await Promise.all(
     (
       await getMoviesByGenre(genreId)
-    ).map((m) => formatMovieForThumbnail(m, doPlaceholders))
+    ).map((m) => {
+      movieCount++;
+      if (movieCount <= 10) return formatMovieForThumbnail(m, doPlaceholders);
+      return formatMovieForThumbnail(m, false);
+    })
   );
 
   return {

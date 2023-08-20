@@ -43,10 +43,15 @@ export const getStaticProps = async ({ params }: GetStaticPropsContext) => {
     };
   }
 
+  let tvCount = 0;
   const tvs = await Promise.all(
     (
       await getTVSByGenre(genreId)
-    ).map((t) => formatTVForThumbnail(t, doPlaceholders))
+    ).map((t) => {
+      tvCount++;
+      if (tvCount <= 10) return formatTVForThumbnail(t, doPlaceholders);
+      return formatTVForThumbnail(t, false);
+    })
   );
 
   return {

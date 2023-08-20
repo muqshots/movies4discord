@@ -21,11 +21,12 @@ export interface MediaThumbnailProps {
   };
   release_date: string | null;
   rating: number;
-  adult: boolean;
+  adult?: boolean;
   onClick?: () => void;
   onDelete?: () => void;
   percentage?: number;
   priority?: boolean;
+  overview?: string
 }
 
 const MediaTypeLogos = {
@@ -106,7 +107,7 @@ const MediaThumbnail = ({
 
           <div className="flex flex-col">
             <div className="flex w-60 flex-row justify-between md:w-80">
-              <div className="w-10/12 truncate">{title}</div>
+              <div className="w-10/12 truncate" title={title}>{title}</div>
               <IconTag className="h-5 w-5 text-gray-400" />
             </div>
 

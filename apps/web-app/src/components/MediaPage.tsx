@@ -18,7 +18,7 @@ import {
 import { HiStar } from "react-icons/hi";
 import useSWR from "swr";
 import CastSlider, { CastSliderProps } from "./CastSlider";
-import GenreButton from "./GenreButton";
+import SelectableButton from "./SelectableButton";
 import RecommendationsSlider, {
   RecommendationsSliderProps,
 } from "./RecommendationsSlider";
@@ -169,10 +169,13 @@ const MediaPage = ({
             </div>
             <div className="flex flex-row flex-wrap gap-1">
               {genres.map((genre) => (
-                <GenreButton
+                <SelectableButton
                   key={genre.id}
-                  genre={genre}
-                  media_type={media_type}
+                  item={{
+                    id: genre.id,
+                    name: genre.name,
+                    url: `/genres/${media_type}/${genre.id}`,
+                  }}
                   selected={false}
                 />
               ))}

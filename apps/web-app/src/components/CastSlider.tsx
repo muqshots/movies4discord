@@ -26,8 +26,8 @@ const CastSlider = ({ cast }: CastSliderProps) => {
                       />
                     </div>
                     <div className="flex max-w-[160px] flex-col">
-                      <div className="truncate whitespace-nowrap">{p.name}</div>
-                      <div className="text-sm text-gray-500">{p.character}</div>
+                      <div className="truncate whitespace-nowrap" title={p.name}>{p.name}</div>
+                      <div className="text-sm text-gray-500" title={p.character}>{p.character}</div>
                     </div>
                   </div>
                 </div>

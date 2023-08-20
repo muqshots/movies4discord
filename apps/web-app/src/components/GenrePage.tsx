@@ -1,4 +1,4 @@
-import GenreButton from "@/components/GenreButton";
+import SelectableButton from "@/components/SelectableButton";
 import MediaThumbnail, {
   MediaThumbnailProps,
 } from "@/components/MediaThumbnail";
@@ -24,11 +24,15 @@ const GenrePage = ({
       <div className="text-center text-2xl font-light md:text-left md:text-4xl">
         {text}
       </div>
-      <div className="flex flex-row flex-wrap justify-center gap-1 md:justify-start">
+      <div className="flex flex-row overflow-x-auto gap-1 md:justify-start scrollbar-hide">
         {genres.map((genre) => (
-          <GenreButton
+          <SelectableButton
             key={genre.id}
-            genre={genre}
+            item={{
+              id: genre.id,
+              name: genre.name,
+              url: `/genres/${media_type}/${genre.id}`,
+            }}
             media_type={media_type}
             selected={selectedGenre === genre.name}
           />

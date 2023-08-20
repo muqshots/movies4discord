@@ -30,11 +30,29 @@ const PersonPage = ({
     tv_credits,
 }: PersonPageProps) => {
   const [tab, setTab] = useState<"movie" | "tv">("movie");
+  const [showFullBio, setShowFullBio] = useState(false);
+
+  const bioLimit = 150;
+  const shortBio = biography?.substring(0, bioLimit);
+  const isShortBio = biography && biography.length > bioLimit;
+
   return (
     <>
       <NextSeo
         title={name}
         description={biography || "No Description Available."}
+        openGraph={{
+          title: name,
+          description: biography || "No Description Available.",
+          images: [
+            {
+              url: poster.url || PortraitPlaceholder.src,
+              width: 500,
+              height: 750,
+              alt: `${name} poster`,
+            },
+          ],
+        }}
       />
 
       <div className="relative -mt-20 h-[22rem]">
@@ -71,13 +89,26 @@ const PersonPage = ({
             <div className="mb-2 text-center text-2xl font-semibold md:text-left md:text-4xl">
               {name}
             </div>
+            <div className="text-center text-gray-400 md:text-left">
+              {isShortBio && !showFullBio
+                ? `${shortBio}... `
+                : biography || "No Description Available."}
+              {isShortBio && (
+                <button
+                  className="text-blue-500 hover:text-blue-700"
+                  onClick={() => setShowFullBio(!showFullBio)}
+                >
+                  {showFullBio ? " Show less" : "Show more"}
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
         <div className="flex justify-center gap-8 md:justify-start">
           <button
             className={`text-xl font-medium ${
-              tab === "movie" ? "text-gray-800" : "text-gray-500"
+              tab === "movie" ? "text-gray-600" : "text-gray-300"
             }`}
             onClick={() => setTab("movie")}
           >
@@ -85,7 +116,7 @@ const PersonPage = ({
           </button>
           <button
             className={`text-xl font-medium ${
-              tab === "tv" ? "text-gray-800" : "text-gray-500"
+              tab === "tv" ? "text-gray-600" : "text-gray-300"
             }`}
             onClick={() => setTab("tv")}
           >

@@ -78,5 +78,6 @@ export const formatEpisodeforThumbnail = async (
     },
     release_date: episode.airDate || null,
     rating: parseFloat(episode.rating?.value ?? "0"),
+    overview: episode.overview
   };
 }
