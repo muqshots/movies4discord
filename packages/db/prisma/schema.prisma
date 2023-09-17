@@ -107,3 +107,26 @@ model Pincode {
 
   @@unique([userId, pincode])
 }
+
+model IntroHash {
+  id        String @id @default(cuid())
+  tmdbId    Int
+  tvdbId    Int
+  season    Int
+  startHash String
+  endHash   String
+
+  @@index([tvdbId, season])
+}
+
+model IntroTimestamp {
+  id             String @id @default(cuid())
+  tmdbId         Int
+  tvdbId         Int
+  season         Int
+  episode        Int
+  startTimestamp Int
+  endTimestamp   Int
+
+  @@index([tvdbId, season, episode])
+}
