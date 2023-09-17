@@ -56,6 +56,12 @@ export const getPopularTV = async (
   return (await tmdbFetcher<TMDBListWrapper<TV>>(`tv/popular`, { page })).results;
 };
 
+export const discoverTV = async (
+  page?: number
+) => {
+  return (await tmdbFetcher<TMDBListWrapper<TV>>(`discover/tv`, { page, with_original_language: "en" })).results;
+};
+
 export const getMovie = async (id: string | number) => {
   return await tmdbFetcher<MovieDetails>(`movie/${id}`, { append_to_response: "external_ids" });
 };

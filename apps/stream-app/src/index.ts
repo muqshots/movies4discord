@@ -73,8 +73,8 @@ app.get("/", async (req, res) => {
     .catch((err) => {
       return {
         err: true as const,
-        message: JSON.parse(err?.response?.body).error || "API reach error",
-        statusCode: err?.response?.statusCode || 500,
+        message: err.response?.body != undefined ? JSON.parse(err.response.body).error : "API reach error",
+        statusCode: err.response?.statusCode || 500,
       };
     });
 

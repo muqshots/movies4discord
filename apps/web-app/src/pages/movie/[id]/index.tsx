@@ -88,7 +88,7 @@ const MoviePage = (props: InferNextPropsType<typeof getStaticProps>) => {
                       ? await ky.post(`/api/movie`, {
                           searchParams: {
                             action: "replace",
-                            id: radarrData.id!,
+                            radarrId: radarrData.id!,
                             tmdbId: props.id,
                             movieFileId: radarrData.movieFileId!,
                           },
@@ -96,7 +96,7 @@ const MoviePage = (props: InferNextPropsType<typeof getStaticProps>) => {
                       : await ky.post(`/api/movie`, {
                           searchParams: {
                             action: "search",
-                            id: radarrData.id ?? 0,
+                            radarrId: radarrData.id ?? 0,
                             tmdbId: props.id,
                           },
                         });

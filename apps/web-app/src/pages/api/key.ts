@@ -1,11 +1,7 @@
-import { radarr, sonarr } from "@/lib/got";
+import { checkEpisode, checkMovie } from "@/lib/getArrData";
+import { sonarr } from "@/lib/got";
 import { prisma } from "@movies4discord/db";
-import {
-  RadarrMovie,
-  SonarrEpisode,
-  SonarrEpisodeFile,
-  SonarrTV,
-} from "@movies4discord/interfaces";
+import { SonarrEpisodeFile } from "@movies4discord/interfaces";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
@@ -37,19 +33,8 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
           return;
         }
 
-        const sonarrSeries = await sonarr
-          .get(`series`, { searchParams: { tvdbId: vk.tmvdbId } })
-          .json<SonarrTV[]>();
-
-        const sonarrEpisodes = await sonarr
-          .get(`episode`, { searchParams: { seriesId: sonarrSeries[0]!.id } })
-          .json<SonarrEpisode[]>();
-
-        const sonarrEpisode = sonarrEpisodes.find(
-          (e) => e.seasonNumber === vk.season && e.episodeNumber === vk.episode
-        );
-
-        if (!sonarrEpisode?.hasFile) {
+        const sonarrEpisode = await checkEpisode(vk.tmvdbId, vk.season, vk.episode);
+        if (!sonarrEpisode?.exists) {
           res.status(404).json({ error: "Episode not available" });
           return;
         }
@@ -59,24 +44,21 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
           .json<SonarrEpisodeFile>();
 
         res.status(200).json({
-          name: `${sonarrSeries[0]!.title} (S${vk.season}E${vk.episode})`,
+          name: `${sonarrEpisode.seriesTitle} (S${vk.season}E${vk.episode})`,
           path: sonarrEpisodeFile.path,
           err: false,
         });
         return;
       } else {
-        const radarrData = await radarr
-          .get("movie", { searchParams: { tmdbId: vk.tmvdbId } })
-          .json<RadarrMovie[]>();
-        const movieAvailable = radarrData[0]?.hasFile ?? false;
-        if (!movieAvailable) {
+        const movie = await checkMovie(vk.tmvdbId);
+        if (!movie.exists) {
           res.status(404).json({ error: "Movie not available" });
           return;
         }
 
         res.status(200).json({
-          name: `${radarrData[0]!.title} (${radarrData[0]!.year})`,
-          path: radarrData[0]!.movieFile!.path,
+          name: `${movie.title} (${movie.year})`,
+          path: movie.path,
           err: false,
         });
         return;
@@ -94,6 +76,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
         return;
       }
 
+      const server = user.server.toLowerCase() ?? "eu";
       const media_type = _req.query.media_type as string | undefined;
 
       if (media_type !== "movie" && media_type !== "tv") {
@@ -149,7 +132,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
             1000 * 60 * 60 * 4
           )
         ) {
-          res.status(200).json({ key: exists.key });
+          res.status(200).json({ key: exists.key, server });
           return;
         } else {
           await prisma.viewkey.delete({
@@ -159,12 +142,30 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
         }
       }
 
-      const key = await prisma.viewkey.create({
+      if (media_type === "movie") {
+        const movie = await checkMovie(dbParams.tmvdbId);
+        if (!movie.exists) {
+          res.status(404).json({ error: "Movie not available" });
+          return;
+        }
+      } else {
+        const episode = await checkEpisode(
+          dbParams.tmvdbId,
+          dbParams.season,
+          dbParams.episode
+        );
+        if (!episode.exists) {
+          res.status(404).json({ error: "Episode not available" });
+          return;
+        }
+      }
+
+      const { key } = await prisma.viewkey.create({
         data: { userId: user.id, ...dbParams },
         select: { key: true },
       });
 
-      res.status(200).json(key);
+      res.status(200).json({ key, server });
       return;
     }
   }
