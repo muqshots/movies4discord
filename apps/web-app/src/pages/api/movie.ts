@@ -95,16 +95,16 @@ const handler = async (
             json: { name: "MoviesSearch", movieIds: [movie.id] },
           });
         } else {
-          const { title, year, images, titleSlug } = movie;
+          const { title, year } = movie;
           radarr.post(`movie`, {
             json: {
               title,
               year,
               tmdbId,
-              images,
-              titleSlug,
-              monitored: true,
-              addOptions: { searchForMovie: true },
+              addOptions: {
+                monitor: "movieOnly",
+                searchForMovie: true
+              },
               rootFolderPath: process.env.RADARR_ROOT_FOLDER,
               qualityProfileId: parseInt(
                 process.env.RADARR_QUALITY_PROFILE as string
@@ -117,8 +117,8 @@ const handler = async (
       }
 
       if (action === "replace") {
-        const id = parseInt(_req.query.id as string);
-        if (Number.isNaN(id)) {
+        const movieId = parseInt(_req.query.radarrId as string);
+        if (Number.isNaN(movieId)) {
           res.status(422).json({ error: "Invalid id" });
           return;
         }
@@ -129,12 +129,10 @@ const handler = async (
           return;
         }
 
-        radarr.delete(`moviefile/${movieFileId}`).json();
-
         await new Promise<void>((resolve) => {
           setTimeout(() => {
             radarr.post(`command`, {
-              json: { name: "MoviesSearch", movieIds: [id] },
+              json: { name: "MoviesSearch", movieIds: [movieId] },
             });
             resolve();
           }, 4000);

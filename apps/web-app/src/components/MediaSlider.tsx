@@ -72,7 +72,7 @@ const MediaSlider = ({
           ? [...Array(10)].map((_, i) => <ShimmerThumbnail key={i} />)
           : media.map((item, i) => (
               <MediaThumbnail
-                key={ media_type || "movie" + item.id + item.season + item.episode + item.tvdbId }
+                key={ (media_type || "movie") + item.id + item.season + item.episode + item.tvdbId }
                 priority={priority && i === 0}
                 // The default movie will be overriden by {...item} on continue watching
                 media_type={media_type || "movie"}

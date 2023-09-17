@@ -57,10 +57,7 @@ export const podnapisi = got.extend({
   // is cached in api/subtitles.ts
 });
 
-export const radarrPrefix = `${process.env.RADARR_URL!.replace(
-  /\/$/,
-  ""
-)}/api/v3`;
+export const radarrPrefix = `${process.env.RADARR_URL!.replace(/\/$/,"")}/api/v3`;
 export const radarr = got.extend({
   prefixUrl: radarrPrefix,
   searchParams: {

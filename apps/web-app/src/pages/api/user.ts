@@ -60,6 +60,10 @@ const handler = async (
             res.status(404).json({ error: "User account was not found." })
             return;
         }
+        default: {
+            res.status(405).json({ error: "Method not allowed" })
+            return;
+        }
     }
     }
 

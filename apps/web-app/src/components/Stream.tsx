@@ -307,7 +307,7 @@ export const Stream = ({
   return (
     <>
       <div className="ml-5 flex flex-col items-center justify-center">
-        <div className="mt-5 items-start text-xl font-bold">
+        <div className="mt-1 items-start text-xl font-bold">
           Streaming {title} on {server} server
         </div>
         {historyParams.media_type === "tv" && (
@@ -317,7 +317,7 @@ export const Stream = ({
             </div>
           </div>
         )}
-        <div className="m-4 flex flex-row gap-2">
+        <div className="my-3 flex flex-row gap-2">
           {servers.map((s) => ServerChip(s, setServer))}
         </div>
         <div className="w-4/5">

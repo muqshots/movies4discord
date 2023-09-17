@@ -5,11 +5,11 @@ const placeHolderVideo =
 const STREAM_BASE = process.env.NEXT_PUBLIC_STREAM_BASE;
 
 export const getStreamUrl = (server: string, viewKey: string) => {
-  return isProd
-    ? STREAM_BASE
-      ? STREAM_BASE === "false"
-        ? placeHolderVideo
-        : `${STREAM_BASE}?viewkey=${viewKey}`
-      : `https://${server.toLowerCase()}.movies4discord.xyz?viewkey=${viewKey}`
-    : placeHolderVideo;
+  return STREAM_BASE
+    ? STREAM_BASE === "false"
+      ? placeHolderVideo
+      : `${STREAM_BASE}?viewkey=${viewKey}`
+    : isProd
+      ? `https://${server.toLowerCase()}.movies4discord.xyz?viewkey=${viewKey}`
+      : placeHolderVideo;
 };
