@@ -223,7 +223,7 @@ const MediaPage = ({
                     : isAvailable === true
                     ? "Stream"
                     : isAvailable === false
-                    ? "Request on discord"
+                    ? "Not Available"
                     : "Loading"}
                 </div>
               </button>

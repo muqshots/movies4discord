@@ -35,7 +35,7 @@ const afterResponseHook =
 
 const streamLru = new QuickLRU<string, string>({
   maxSize: 99999,
-  maxAge: 300000, // 5 minutes
+  maxAge: 1000 * 60 * 30, // 30 minutes
 });
 
 app.use(
@@ -87,7 +87,7 @@ app.get("/", async (req, res) => {
   }
 
   try {
-    fs.stat(apiData.path, function (err, stat) {
+    fs.stat(apiData.path, function (err, { size: fileSize }) {
       if (err) {
         res
           .status(404)
@@ -96,7 +96,6 @@ app.get("/", async (req, res) => {
           );
         return;
       }
-      const fileSize = stat.size;
       let range = req.headers.range;
 
       if (/firefox/i.test(req.headers["user-agent"] as string) && !range) {
@@ -121,6 +120,7 @@ app.get("/", async (req, res) => {
             "Accept-Ranges": "bytes",
             "Content-Length": chunksize,
             "Content-Type": "video/mp4",
+            "Content-Disposition": "inline; filename=" + apiData.path.split('/').pop()
           };
 
           res.writeHead(206, head);
