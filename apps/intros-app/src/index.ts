@@ -209,7 +209,3 @@ app.get("/timestamp/:tvdbId/:season/:episode", async (req, res) => {
 });
 
 app.listen(4200, () => console.log("Intros app listening at http://localhost:4200"));
-function readdirSync(seasonPath: string) {
-  throw new Error("Function not implemented.");
-}
-
