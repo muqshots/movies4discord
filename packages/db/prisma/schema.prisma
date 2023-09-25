@@ -110,7 +110,6 @@ model Pincode {
 
 model IntroHash {
   id        String @id @default(cuid())
-  tmdbId    Int
   tvdbId    Int
   season    Int
   startHash String
@@ -121,7 +120,6 @@ model IntroHash {
 
 model IntroTimestamp {
   id             String @id @default(cuid())
-  tmdbId         Int
   tvdbId         Int
   season         Int
   episode        Int

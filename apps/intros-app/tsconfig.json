@@ -1,10 +1,10 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "target": "ESNext",
     "module": "ESNext",
     "noEmit": false,
     "outDir": "./dist",
-    "types": ["bun-types"]
   },
   "include": ["./src"],
   "exclude": ["./dist"]
