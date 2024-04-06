@@ -1,8 +1,8 @@
 import { SvelteKitAuth } from "@auth/sveltekit"
 import Discord from "@auth/sveltekit/providers/discord"
-// import { prisma } from "@movies4discord/db";
-// import { PrismaAdapter } from "@auth/prisma-adapter"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 import got from "got";
+import { prisma } from "@movies4discord/db";
 
 // Extending user and session interfaces.
 declare module "@auth/sveltekit" {
@@ -23,14 +23,14 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
                 "https://discord.com/api/oauth2/authorize?scope=identify guilds",
         }),
     ],
-    // adapter: PrismaAdapter(prisma),
+    adapter: PrismaAdapter(prisma),
     callbacks: {
         async signIn({ user, account, profile }) {
             if (user.image !== profile?.image_url) {
-                // await prisma.user.update({
-                //     where: { id: user.id },
-                //     data: { image: profile?.image_url as string },
-                // });
+                await prisma.user.update({
+                    where: { id: user.id },
+                    data: { image: profile?.image_url as string },
+                });
             }
 
             const list_of_guilds = await got
