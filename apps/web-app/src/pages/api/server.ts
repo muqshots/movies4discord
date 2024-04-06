@@ -10,7 +10,7 @@ const handler = async (
 ) => {
   const session = await getServerSession(_req, res, authOptions);
 
-  var check = null
+  let check = null
   if (!session && !_req.query.id) {
     res.status(401).json({ error: "Unauthorized..." });
     return;

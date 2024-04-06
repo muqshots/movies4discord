@@ -3,7 +3,7 @@ import { Server } from "@movies4discord/db";
 import ky from "ky";
 import { useRouter } from "next/router";
 import Plyr from "plyr-react";
-import "plyr-react/dist/plyr.css";
+import "plyr-react/plyr.css";
 import { useEffect, useRef, useState } from "react";
 import { throttle, debounce } from "throttle-debounce";
 import ServerChip from "./ServerChip";
@@ -56,6 +56,7 @@ export const Stream = ({
 
   const streamUrl = getStreamUrl(server, viewKey);
 
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   let mediaObj: any = {};
 
   const router = useRouter();
@@ -89,7 +90,7 @@ export const Stream = ({
     video.addEventListener("error", handleError);
 
     return () => video.removeEventListener("error", handleError);
-  }, [router, streamUrl, historyParams]);
+  }, [router, streamUrl, server, historyParams, title]);
 
   useEffect(() => {
     let active = true;
@@ -136,10 +137,12 @@ export const Stream = ({
       }
 
       if (historyParams.media_type === "tv") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const mediaRes: any = await ky
           .get(`/api/trakt?mode=search&tmdbId=${historyParams.tmdbId}`)
           .json();
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const episodeRes: any = await ky
           .get(`/api/trakt?mode=episode&showId=${mediaRes[0].show.ids.trakt}&season=${historyParams.season}&episode=${historyParams.episode}`)
           .json();

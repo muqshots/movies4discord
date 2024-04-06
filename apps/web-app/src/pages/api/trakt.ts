@@ -44,7 +44,7 @@ const handler = async (
   let token = traktAcc.access_token;
 
   if (traktAcc.expires_at && traktAcc.expires_at < (Date.now() / 1000)) {
-    let refresh_token = await trakt
+    const refresh_token = await trakt
       .post("oauth/token", {
         json: {
           refresh_token: traktAcc.refresh_token,

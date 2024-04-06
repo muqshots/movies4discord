@@ -25,7 +25,7 @@ const SelectableCheckbox = ({ item, selected, onClick }: SelectableCheckboxProps
         type="checkbox"
         className="hidden"
         checked={selected}
-        onChange={() => {}}
+        onChange={() => undefined}
       />
       {selected ? (
         <MdCheckCircleOutline className="ml-1 h-3 w-3 my-auto" />

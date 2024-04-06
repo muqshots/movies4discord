@@ -16,9 +16,8 @@ import type {
   TVWithMediaType,
   Videos,
 } from "@movies4discord/interfaces";
-import InferNextPropsType from "infer-next-props-type";
 import ky from "ky";
-import { GetStaticPaths, GetStaticPropsContext } from "next";
+import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -31,7 +30,7 @@ import useSWR from "swr";
 const TVPage = ({
   tvdbId,
   ...props
-}: InferNextPropsType<typeof getStaticProps>) => {
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter();
   const { status } = useSession();
 
@@ -115,9 +114,10 @@ const TVPage = ({
                                 <div className="group relative aspect-video h-44 rounded-lg">
                                   <Image
                                     src={e.image || LandscapePlaceholder}
-                                    layout="responsive"
-                                    width={160}
-                                    height={90}
+                                    fill
+                                    style={{
+                                      objectFit: 'cover',
+                                    }}
                                     alt={`${e.title} still`}
                                     className="rounded-lg"
                                   />

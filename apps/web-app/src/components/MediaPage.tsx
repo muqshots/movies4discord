@@ -118,9 +118,11 @@ const MediaPage = ({
         <Image
           {...getImageData(backdrop.url || LandscapePlaceholder, backdrop.b64)}
           priority={true}
-          layout="fill"
+          fill
           className="opacity-[0.7]"
-          objectFit="cover"
+          style={{
+            objectFit: "cover"
+          }}
           objectPosition={backdrop.url ? "top" : "center"}
           alt={`${title} backdrop`}
         />
@@ -128,8 +130,10 @@ const MediaPage = ({
           <div className="absolute inset-[50%] h-full max-h-[70%] w-full max-w-[75%] translate-x-[-50%] translate-y-[-60%] md:max-w-2xl md:translate-y-[-50%]">
             <Image
               src={logoUrl}
-              layout="fill"
-              objectFit="contain"
+              fill
+              style={{
+                objectFit: "contain"
+              }}
               alt={`${title} logo`}
             />
           </div>
@@ -143,7 +147,7 @@ const MediaPage = ({
             <div className="group relative">
               <Image
                 {...getImageData(poster.url || PortraitPlaceholder, poster.b64)}
-                layout="responsive"
+                style={{ width: '100%', height: 'auto' }}
                 priority
                 height={1.5}
                 width={1}

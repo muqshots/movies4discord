@@ -127,10 +127,7 @@ const handler = async (_req: NextApiRequest, res: NextApiResponse) => {
 
       if (exists) {
         if (
-          !(
-            new Date().getTime() - exists.createdAt.getTime() >
-            1000 * 60 * 60 * 4
-          )
+          new Date().getTime() - exists.createdAt.getTime() < 1000 * 60 * 60 * 4
         ) {
           res.status(200).json({ key: exists.key, server });
           return;

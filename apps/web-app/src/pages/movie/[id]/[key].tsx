@@ -4,8 +4,7 @@ import { servers } from "@/lib/getServers";
 import { getMovie } from "@/lib/getTmdbData";
 import { prisma } from "@movies4discord/db";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import InferNextProps from "infer-next-props-type";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
 import { NextSeo } from "next-seo";
 
@@ -18,7 +17,7 @@ const StreamMovie = ({
   year,
   backdropUrl,
   servers,
-}: InferNextProps<typeof getServerSideProps>) => {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <>
       <NextSeo

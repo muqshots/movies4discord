@@ -8,9 +8,8 @@ import { getTV } from "@/lib/getTmdbData";
 import { isProd } from "@/lib/isProd";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { prisma } from "@movies4discord/db";
-import InferNextProps from "infer-next-props-type";
 import ky from "ky";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
@@ -29,7 +28,7 @@ const StreamTV = ({
   season,
   episode,
   media,
-}: InferNextProps<typeof getServerSideProps>) => {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
 
   return (

@@ -14,9 +14,8 @@ import type {
   TMDBListWrapper,
   Videos,
 } from "@movies4discord/interfaces";
-import InferNextPropsType from "infer-next-props-type";
 import ky from "ky";
-import { GetStaticPaths, GetStaticPropsContext } from "next";
+import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { getPlaiceholder } from "plaiceholder";
@@ -29,7 +28,7 @@ import {
 } from "react-icons/hi";
 import useSWR from "swr";
 
-const MoviePage = (props: InferNextPropsType<typeof getStaticProps>) => {
+const MoviePage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { status, data: session } = useSession();
 
   const { data: radarrData, mutate } = useSWR<CheckMovieAvailability>(

@@ -57,7 +57,7 @@ const MediaThumbnail = ({
       <div onClick={onClick}>{children}</div>
     ) : (
       <Link href={`/${media_type}/${id}`}>
-        <a>{children}</a>
+        {children}
       </Link>
     );
 
@@ -71,9 +71,7 @@ const MediaThumbnail = ({
             <Image
               {...getImageData(image.src || LandscapePlaceholder, image.b64)}
               priority={priority}
-              layout="responsive"
-              width={160}
-              height={90}
+              fill
               sizes="(min-width: 768px) 320px, 240px"
               className="rounded-lg" // Need rounded here also to make it work with Safari
               alt={`${title} backdrop`}

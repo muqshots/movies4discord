@@ -6,10 +6,9 @@ import {
 } from "@/lib/formatMediaForThumbnail";
 import { discoverTV, getAvailablePopularMovies } from "@/lib/getTmdbData";
 import { isProd } from "@/lib/isProd";
-import InferNextPropsType from "infer-next-props-type";
-import { GetServerSidePropsContext } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 
-const Index = ({ sliders }: InferNextPropsType<typeof getServerSideProps>) => {
+const Index = ({ sliders }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <div className="mx-3 flex flex-col gap-8">
       {sliders.map((slider, i) => (

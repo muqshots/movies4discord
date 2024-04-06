@@ -3,13 +3,12 @@ import { formatTVForThumbnail } from "@/lib/formatMediaForThumbnail";
 import { getTVSByGenre } from "@/lib/getTmdbData";
 import { isProd } from "@/lib/isProd";
 import { tvGenres } from "@/lib/tmdbGenres";
-import InferNextProps from "infer-next-props-type";
-import { GetStaticPropsContext } from "next";
+import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 
 const TVGenresPage = ({
   media,
   selectedGenre,
-}: InferNextProps<typeof getStaticProps>) => {
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <GenrePage
       genres={tvGenres}

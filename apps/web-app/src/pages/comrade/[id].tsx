@@ -9,11 +9,10 @@ import type {
   TMDBListWrapper,
   TVExternalIds,
 } from "@movies4discord/interfaces";
-import InferNextPropsType from "infer-next-props-type";
-import { GetStaticPaths, GetStaticPropsContext } from "next";
+import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import { getPlaiceholder } from "plaiceholder";
 
-const ComradePage = (props: InferNextPropsType<typeof getStaticProps>) => {
+const ComradePage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <PersonPage
       {...props}

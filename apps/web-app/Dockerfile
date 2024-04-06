@@ -1,5 +1,5 @@
-ARG NODE_VERSION=16
-# ARG NODE_VERSION=16-alpine3.15
+ARG NODE_VERSION=18
+# ARG NODE_VERSION=18-alpine3.15
 
 FROM node:${NODE_VERSION} AS deps
 RUN apt-get -qy update && apt-get -qy install rsync

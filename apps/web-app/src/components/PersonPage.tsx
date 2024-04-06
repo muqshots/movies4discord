@@ -59,9 +59,11 @@ const PersonPage = ({
         <Image
           {...getImageData(backdrop.url || LandscapePlaceholder, null)}
           priority={true}
-          layout="fill"
+          fill
+          style={{
+            objectFit: "cover"
+          }}
           className="opacity-[0.7]"
-          objectFit="cover"
           objectPosition={"center"}
           alt={`${name} backdrop`}
         />
@@ -74,7 +76,7 @@ const PersonPage = ({
             <div className="group relative">
               <Image
                 {...getImageData(poster.url || PortraitPlaceholder, poster.b64)}
-                layout="responsive"
+                style={{ width: '100%', height: 'auto' }}
                 priority
                 height={1.5}
                 width={1}
@@ -95,10 +97,10 @@ const PersonPage = ({
                 : biography || "No Description Available."}
               {isShortBio && (
                 <button
-                  className="text-blue-500 hover:text-blue-700"
+                  className="text-blue-500 hover:text-blue-700 ml-1"
                   onClick={() => setShowFullBio(!showFullBio)}
                 >
-                  {showFullBio ? " Show less" : "Show more"}
+                  {showFullBio ? "Show less" : "Show more"}
                 </button>
               )}
             </div>

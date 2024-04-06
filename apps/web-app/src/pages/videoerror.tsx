@@ -1,3 +1,6 @@
+import Image from "next/image";
+import errorImage from "../../public/error.png";
+
 const VideoError = () => {
 
   const userAgent = typeof window !== 'undefined' ? window.navigator.userAgent : "Unknown";
@@ -17,7 +20,11 @@ const VideoError = () => {
   return (
     <>
       <div className="flex w-auto flex-col items-center md:ml-5 overflow-x-hidden">
-        <img src="/error.png" alt="User raging about the site being bad" className="w-5/6 md:w-2/3 lg-w-1/2 mt-6 mb-4" />
+        <Image
+          src={errorImage}
+          alt="User raging about the site being bad"
+          className="w-5/6 md:w-2/3 lg-w-1/2 mt-6 mb-4"
+        />
         <h1 className="text-2xl md:text-4xl font-bold text-red-500 mb-8 mt-4">Problem loading stream</h1>
         <div className="w-3/4 md:w-5/6 flex flex-col items-center justify-center">
           <p className="text-l text-center mb-5 w-auto rounded-xl bg-gray-800 text-white p-10">

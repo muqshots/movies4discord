@@ -3,7 +3,6 @@ import { withPlaiceholder } from "@plaiceholder/next";
 const config = withPlaiceholder({
   experimental: { externalDir: true },
   reactStrictMode: false,
-  swcMinify: true,
   images: {
     imageSizes: [16, 32, 48, 64], // This array is concatenated to deviceSizes.
     // imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // Next.js default

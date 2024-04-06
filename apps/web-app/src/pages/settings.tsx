@@ -1,15 +1,14 @@
 import ky from "ky";
 import { useState } from "react";
 import { prisma, Server } from "@movies4discord/db";
-import { GetServerSidePropsContext } from "next";
-import InferNextProps from "infer-next-props-type";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 
 const Settings = ({
   defaultServer,
   trakt
-}: InferNextProps<typeof getServerSideProps>) => {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [server, setServer] = useState<Server>(defaultServer);
   const [autoPlay, setAutoPlay] = useState(false)
 

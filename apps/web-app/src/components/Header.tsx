@@ -54,7 +54,12 @@ const Header = () => {
         className="mt-1 cursor-pointer md:hidden"
         onClick={() => setSidebar((s) => ({ ...s, mobileShown: true }))}
       >
-        <Image layout="fixed" src={logo} height={34} width={34} alt="logo" />
+        <Image 
+          src={logo}
+          height={34}
+          width={34}
+          alt="logo" 
+        />
       </div>
 
       <div className="relative mx-4 w-96">
@@ -80,7 +85,6 @@ const Header = () => {
           <div className="group flex flex-row gap-2">
             <Image
               src={session.user.image}
-              layout="fixed"
               width={54}
               height={54}
               alt={`${session.user.name} pfp`}

@@ -29,12 +29,12 @@ const handler = async (
   >
 ) => {
   const session = await getServerSession(_req, res, authOptions);
-  var check = null
+  let check = null
   if (!session && !_req.query.id) {
     res.status(401).json({ error: "Unauthorized..." });
     return;
   }
-  else if(_req.query.id){
+  else if (_req.query.id) {
     check = await prisma.user.findUnique({
       where:{
         id: _req.query.id as string

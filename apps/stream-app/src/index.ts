@@ -87,7 +87,8 @@ app.get("/", async (req, res) => {
   }
 
   try {
-    fs.stat(apiData.path, function (err, { size: fileSize }) {
+    fs.stat(apiData.path, function (err, stats) {
+      const fileSize = stats.size;
       if (err) {
         res
           .status(404)
