@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { Icon } from 'svelte-icons-pack';
 	import { BsTvFill } from 'svelte-icons-pack/bs';
+	import { BiSolidMovie, BiSolidBookBookmark, BiSolidHome, BiWifi } from 'svelte-icons-pack/bi';
 	import { FaBrandsDiscord, FaSolidMoneyBill1 } from 'svelte-icons-pack/fa';
-	import { TrOutlineDeviceRemote, TrFillClock  } from 'svelte-icons-pack/tr';
-	import { BiSolidMovie, BiSolidBookBookmark, BiSolidHome, BiWifi   } from 'svelte-icons-pack/bi';
+	import { TrOutlineDeviceRemote, TrFillClock } from 'svelte-icons-pack/tr';
 	import { page } from '$app/stores';
-    import {writable} from 'svelte/store'
-    import {sidebarState} from "$lib/stores/misc"
+	import { writable } from 'svelte/store';
+	import { sidebarState } from '$lib/stores/misc';
 	const SidebarItems = [
 		{
 			icon: BiSolidHome,
@@ -63,7 +63,6 @@
 			isCurrent: (asPath: string) => false
 		}
 	];
-
 </script>
 
 <div>
@@ -103,7 +102,10 @@
 									isCurrentPage ? 'bg-white text-black' : 'bg-graything'
 								} rounded-full p-2 transition-all duration-200 group-hover:scale-105 group-hover:bg-white group-hover:text-black`}
 							>
-								<Icon src={IconTag} className={`h-[1.125rem] w-[1.125rem] group-hover:fill-black ${isCurrentPage? "fill-black" : "fill-white"}`} />
+								<Icon
+									src={IconTag}
+									className={`h-[1.125rem] w-[1.125rem] group-hover:fill-black ${isCurrentPage ? 'fill-black' : 'fill-white'}`}
+								/>
 							</div>
 							<span
 								class={`${!$sidebarState && 'hidden'} ${
