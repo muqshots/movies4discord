@@ -6,9 +6,9 @@
   "scripts": {
     "withenv": "env-cmd --silent -f ../../.env -- ",
     "withenv:dev": "env-cmd --silent -f ../../.env.dev -- ",
-    "dev": "yarn withenv:dev nodemon --watch ./src/ -e ts --exec \"node --loader ts-node/esm ./src/index.ts\"",
+    "dev": "pnpm withenv:dev nodemon --watch ./src/ -e ts --exec \"node --loader ts-node/esm ./src/index.ts\"",
     "build": "tsc",
-    "start": "yarn withenv node ./dist/index.js",
+    "start": "pnpm withenv node ./dist/index.js",
     "clean": "rimraf ./dist"
   },
   "dependencies": {

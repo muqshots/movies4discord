@@ -6,23 +6,34 @@
     "type": "git",
     "url": "https://github.com/muqshots/movies4discord"
   },
-  "author": {
-    "name": "Muqshots",
-    "url": "https://github.com/muqshots"
-  },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
+  "contributors": [
+    {
+      "name": "Muqshots",
+      "url": "https://github.com/muqshots"
+    },
+    {
+      "name": "Razorback360",
+      "url": "https://github.com/Razorback360"
+    },
+    {
+      "name": "rhld16",
+      "url": "https://github.com/rhld16"
+    },
+    {
+      "name": "squidzter",
+      "url": "https://github.com/squidzter"
+    }
   ],
   "scripts": {
-    "dev": "yarn workspaces foreach -piv run dev",
-    "build": "yarn workspaces foreach -ptiv run build",
-    "start": "yarn workspaces foreach -piv run start",
-    "lint": "yarn workspaces foreach -ptv run lint",
-    "db": "yarn workspace @movies4discord/db run",
-    "clean": "rimraf '.cache/*' && yarn workspaces foreach -ptv run clean && rimraf '**/node_modules'",
-    "fix:all-files": "yarn workspaces foreach -ptv run fix:all-files",
-    "typecheck": "yarn workspaces foreach -ptv run typecheck",
+    "preinstall": "npx only-allow pnpm",
+    "dev": "pnpm -r --workspace-concurrency infinity --sort --stream dev",
+    "build": "pnpm -r --workspace-concurrency infinity --sort --stream build",
+    "start": "pnpm -r --workspace-concurrency infinity --sort --stream start",
+    "lint": "pnpm -r --workspace-concurrency infinity --sort lint",
+    "db": "pnpm --workspace-concurrency infinity --sort --filter @movies4discord/db run",
+    "clean": "rimraf '.cache/*' && pnpm -r --workspace-concurrency infinity --sort clean && rimraf '**/node_modules'",
+    "fix:all-files": "pnpm -r --workspace-concurrency infinity --sort fix:all-files",
+    "typecheck": "pnpm -r --workspace-concurrency infinity --sort typecheck",
     "nuke:node_modules": "rimraf '**/node_modules'",
     "docker:start": "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose up -d --build",
     "docker:dev": "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose up -f ./docker-compose-dev.yml -d --build"
@@ -34,8 +45,11 @@
   },
   "engines": {
     "node": "^14.13.1 || >=16.0.0",
-    "yarn": ">=1.22.0",
-    "npm": "please-use-yarn"
+    "npm": "please-use-pnpm",
+    "pnpm": "^8.15.6"
   },
-  "packageManager": "yarn@3.5.1"
+  "packageManager": "pnpm@8.15.6",
+  "dependencies": {
+    "@prisma/client": "4.16.0"
+  }
 }

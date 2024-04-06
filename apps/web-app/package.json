@@ -5,14 +5,14 @@
   "scripts": {
     "withenv": "env-cmd --silent -f ../../.env -- ",
     "withenv:dev": "env-cmd --silent -f ../../.env.dev -- ",
-    "dev": "yarn withenv:dev next",
-    "build": "NODE_OPTIONS='--tls-min-v1.2' yarn withenv next build",
-    "start": "NODE_OPTIONS='--tls-min-v1.2' yarn withenv next start",
+    "dev": "pnpm withenv:dev next",
+    "build": "NODE_OPTIONS='--tls-min-v1.2' pnpm withenv next build",
+    "start": "NODE_OPTIONS='--tls-min-v1.2' pnpm withenv next start",
     "clean": "rimraf --no-glob ./.next ./out ./coverage ./tsconfig.tsbuildinfo ./.eslintcache",
     "typecheck": "tsc --project ./tsconfig.json --noEmit",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "fix:all-files": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
-    "postinstall": "test -n \"$SKIP_POSTINSTALL\" || yarn workspace @movies4discord/db run generate"
+    "postinstall": "test -n \"$SKIP_POSTINSTALL\" || pnpm --filter @movies4discord/db generate"
   },
   "dependencies": {
     "@movies4discord/db": "workspace:*",
