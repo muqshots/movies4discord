@@ -6,11 +6,11 @@
 </script>
 
 <div>
-	<main>
+	<main class="bg-theme text-white scrollbar-hide">
 		<Sidebar />
 		<div class={`${$sidebarState ? 'md:ml-52' : 'md:ml-20'} ml-0 transition-all  duration-200`}>
 			<Header />
-			<div class="bg-theme mb-8">
+			<div class="mb-8">
 				<slot />
 			</div>
 		</div>

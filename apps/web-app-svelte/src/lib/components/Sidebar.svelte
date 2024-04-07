@@ -86,7 +86,7 @@
 					<div class={`${!$sidebarState && 'hidden'}`}>Movies4Discord</div>
 				{/if}
 				<div class={`mt-1 transition duration-200 ${$sidebarState && 'rotate-90'}`}>
-					<img src={'logo'} height={34} width={34} alt="logo" />
+					<img src={'/logo.png'} height={34} width={34} alt="logo" />
 				</div>
 			</div>
 			<div class="flex flex-col gap-6">
