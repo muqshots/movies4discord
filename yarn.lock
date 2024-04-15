@@ -37,6 +37,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@discord/embedded-app-sdk@npm:1.1.2":
+  version: 1.1.2
+  resolution: "@discord/embedded-app-sdk@npm:1.1.2"
+  dependencies:
+    "@types/lodash.transform": ^4.6.6
+    "@types/uuid": ^8.3.1
+    big-integer: 1.6.48
+    decimal.js-light: 2.5.0
+    eventemitter3: ^4.0.7
+    lodash.transform: ^4.6.0
+    rollup: ^4.8.0
+    uuid: ^8.3.2
+    zod: ^3.9.8
+  checksum: 65330bbd97acce104d5d543744e5e48ea8abfb36d114826537c6ccf46316129f768676757ab3480749af371a38bc5f1f78d427897c3357b76e4a6f972d3765c4
+  languageName: node
+  linkType: hard
+
 "@emnapi/runtime@npm:^1.1.0":
   version: 1.1.1
   resolution: "@emnapi/runtime@npm:1.1.1"
@@ -794,6 +811,118 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rollup/rollup-android-arm-eabi@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-android-arm-eabi@npm:4.14.3"
+  conditions: os=android & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-android-arm64@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-android-arm64@npm:4.14.3"
+  conditions: os=android & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-darwin-arm64@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-darwin-arm64@npm:4.14.3"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-darwin-x64@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-darwin-x64@npm:4.14.3"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-linux-arm-gnueabihf@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-linux-arm-gnueabihf@npm:4.14.3"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-linux-arm-musleabihf@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-linux-arm-musleabihf@npm:4.14.3"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-linux-arm64-gnu@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-linux-arm64-gnu@npm:4.14.3"
+  conditions: os=linux & cpu=arm64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-linux-arm64-musl@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-linux-arm64-musl@npm:4.14.3"
+  conditions: os=linux & cpu=arm64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-linux-powerpc64le-gnu@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-linux-powerpc64le-gnu@npm:4.14.3"
+  conditions: os=linux & cpu=ppc64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-linux-riscv64-gnu@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-linux-riscv64-gnu@npm:4.14.3"
+  conditions: os=linux & cpu=riscv64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-linux-s390x-gnu@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-linux-s390x-gnu@npm:4.14.3"
+  conditions: os=linux & cpu=s390x & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-linux-x64-gnu@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-linux-x64-gnu@npm:4.14.3"
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-linux-x64-musl@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-linux-x64-musl@npm:4.14.3"
+  conditions: os=linux & cpu=x64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-win32-arm64-msvc@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-win32-arm64-msvc@npm:4.14.3"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-win32-ia32-msvc@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-win32-ia32-msvc@npm:4.14.3"
+  conditions: os=win32 & cpu=ia32
+  languageName: node
+  linkType: hard
+
+"@rollup/rollup-win32-x64-msvc@npm:4.14.3":
+  version: 4.14.3
+  resolution: "@rollup/rollup-win32-x64-msvc@npm:4.14.3"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@rushstack/eslint-patch@npm:^1.3.3":
   version: 1.10.1
   resolution: "@rushstack/eslint-patch@npm:1.10.1"
@@ -911,6 +1040,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/estree@npm:1.0.5":
+  version: 1.0.5
+  resolution: "@types/estree@npm:1.0.5"
+  checksum: dd8b5bed28e6213b7acd0fb665a84e693554d850b0df423ac8076cc3ad5823a6bc26b0251d080bdc545af83179ede51dd3f6fa78cad2c46ed1f29624ddf3e41a
+  languageName: node
+  linkType: hard
+
 "@types/express-serve-static-core@npm:^4.17.33":
   version: 4.17.43
   resolution: "@types/express-serve-static-core@npm:4.17.43"
@@ -960,6 +1096,22 @@ __metadata:
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
   checksum: e60b153664572116dfea673c5bda7778dbff150498f44f998e34b5886d8afc47f16799280e4b6e241c0472aef1bc36add771c569c68fc5125fc2ae519a3eb9ac
+  languageName: node
+  linkType: hard
+
+"@types/lodash.transform@npm:^4.6.6":
+  version: 4.6.9
+  resolution: "@types/lodash.transform@npm:4.6.9"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 30d143bec3ddbf7f455e710519cf953e1efaef41da42fe5fab0becf64be3c7680fad24d6d3b0ea45092a751c5079436d01251cfc412991e776015ffffa061dc9
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
+  version: 4.17.0
+  resolution: "@types/lodash@npm:4.17.0"
+  checksum: 3f98c0b67a93994cbc3403d4fa9dbaf52b0b6bb7f07a764d73875c2dcd5ef91222621bd5bcf8eee7b417a74d175c2f7191b9f595f8603956fd06f0674c0cba93
   languageName: node
   linkType: hard
 
@@ -1067,6 +1219,13 @@ __metadata:
   version: 5.0.2
   resolution: "@types/throttle-debounce@npm:5.0.2"
   checksum: cf2bdd03e7c7348a4ee0046b53b163490fd669b83ad467df0e9fd135fd6e1bdc3c589b444e86b509d650db4c2657f20a3410fa3786f6696eea50313d477b7a74
+  languageName: node
+  linkType: hard
+
+"@types/uuid@npm:^8.3.1":
+  version: 8.3.4
+  resolution: "@types/uuid@npm:8.3.4"
+  checksum: 6f11f3ff70f30210edaa8071422d405e9c1d4e53abbe50fdce365150d3c698fe7bbff65c1e71ae080cbfb8fded860dbb5e174da96fdbbdfcaa3fb3daa474d20f
   languageName: node
   linkType: hard
 
@@ -1632,6 +1791,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"big-integer@npm:1.6.48":
+  version: 1.6.48
+  resolution: "big-integer@npm:1.6.48"
+  checksum: fc43ae12ebf2b2a58d6da92ef7069666d131fa993be4020cb1a11e384f6d8e7a69dced7f69d27b65a6aff2e6abb548fb823303bde138eab60b556100c17761f3
+  languageName: node
+  linkType: hard
+
 "binary-extensions@npm:^2.0.0":
   version: 2.3.0
   resolution: "binary-extensions@npm:2.3.0"
@@ -2076,6 +2242,13 @@ __metadata:
   dependencies:
     ms: ^2.1.1
   checksum: b3d8c5940799914d30314b7c3304a43305fd0715581a919dacb8b3176d024a782062368405b47491516d2091d6462d4d11f2f4974a405048094f8bfebfa3071c
+  languageName: node
+  linkType: hard
+
+"decimal.js-light@npm:2.5.0":
+  version: 2.5.0
+  resolution: "decimal.js-light@npm:2.5.0"
+  checksum: 89d4d301f72728b10ac5def610b9ccb072cd5fa1bf80c607236bbdd28a9ec9f806faad3159c5a0a82a80a81d84e39ae470f90b6bacecae2617525c8e58f7e201
   languageName: node
   linkType: hard
 
@@ -2794,6 +2967,13 @@ __metadata:
   version: 1.8.1
   resolution: "etag@npm:1.8.1"
   checksum: 571aeb3dbe0f2bbd4e4fadbdb44f325fc75335cd5f6f6b6a091e6a06a9f25ed5392f0863c5442acb0646787446e816f13cbfc6edce5b07658541dff573cab1ff
+  languageName: node
+  linkType: hard
+
+"eventemitter3@npm:^4.0.7":
+  version: 4.0.7
+  resolution: "eventemitter3@npm:4.0.7"
+  checksum: 1875311c42fcfe9c707b2712c32664a245629b42bb0a5a84439762dd0fd637fc54d078155ea83c2af9e0323c9ac13687e03cfba79b03af9f40c89b4960099374
   languageName: node
   linkType: hard
 
@@ -4005,6 +4185,13 @@ __metadata:
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
   checksum: ad580b4bdbb7ca1f7abf7e1bce63a9a0b98e370cf40194b03380a46b4ed799c9573029599caebc1b14e3f24b111aef72b96674a56cfa105e0f5ac70546cdc005
+  languageName: node
+  linkType: hard
+
+"lodash.transform@npm:^4.6.0":
+  version: 4.6.0
+  resolution: "lodash.transform@npm:4.6.0"
+  checksum: f9d0f583409212e4e94c08c0de1c9e71679e26658d2645be16ee6db55ee2572db5a8395c76f471c00c7d18f3a86c781f7ac51238a7cfa29e9cca253aa0b97149
   languageName: node
   linkType: hard
 
@@ -5464,6 +5651,69 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rollup@npm:^4.8.0":
+  version: 4.14.3
+  resolution: "rollup@npm:4.14.3"
+  dependencies:
+    "@rollup/rollup-android-arm-eabi": 4.14.3
+    "@rollup/rollup-android-arm64": 4.14.3
+    "@rollup/rollup-darwin-arm64": 4.14.3
+    "@rollup/rollup-darwin-x64": 4.14.3
+    "@rollup/rollup-linux-arm-gnueabihf": 4.14.3
+    "@rollup/rollup-linux-arm-musleabihf": 4.14.3
+    "@rollup/rollup-linux-arm64-gnu": 4.14.3
+    "@rollup/rollup-linux-arm64-musl": 4.14.3
+    "@rollup/rollup-linux-powerpc64le-gnu": 4.14.3
+    "@rollup/rollup-linux-riscv64-gnu": 4.14.3
+    "@rollup/rollup-linux-s390x-gnu": 4.14.3
+    "@rollup/rollup-linux-x64-gnu": 4.14.3
+    "@rollup/rollup-linux-x64-musl": 4.14.3
+    "@rollup/rollup-win32-arm64-msvc": 4.14.3
+    "@rollup/rollup-win32-ia32-msvc": 4.14.3
+    "@rollup/rollup-win32-x64-msvc": 4.14.3
+    "@types/estree": 1.0.5
+    fsevents: ~2.3.2
+  dependenciesMeta:
+    "@rollup/rollup-android-arm-eabi":
+      optional: true
+    "@rollup/rollup-android-arm64":
+      optional: true
+    "@rollup/rollup-darwin-arm64":
+      optional: true
+    "@rollup/rollup-darwin-x64":
+      optional: true
+    "@rollup/rollup-linux-arm-gnueabihf":
+      optional: true
+    "@rollup/rollup-linux-arm-musleabihf":
+      optional: true
+    "@rollup/rollup-linux-arm64-gnu":
+      optional: true
+    "@rollup/rollup-linux-arm64-musl":
+      optional: true
+    "@rollup/rollup-linux-powerpc64le-gnu":
+      optional: true
+    "@rollup/rollup-linux-riscv64-gnu":
+      optional: true
+    "@rollup/rollup-linux-s390x-gnu":
+      optional: true
+    "@rollup/rollup-linux-x64-gnu":
+      optional: true
+    "@rollup/rollup-linux-x64-musl":
+      optional: true
+    "@rollup/rollup-win32-arm64-msvc":
+      optional: true
+    "@rollup/rollup-win32-ia32-msvc":
+      optional: true
+    "@rollup/rollup-win32-x64-msvc":
+      optional: true
+    fsevents:
+      optional: true
+  bin:
+    rollup: dist/bin/rollup
+  checksum: f5077037e8514e330db1451a92bf6d9d15b8634698b2e60f56d8d7f30df11cdacfcd1b350a1598ed6516383b5ed2bf3e5a0685e72f81bb2fdb4e630491d09b67
+  languageName: node
+  linkType: hard
+
 "run-parallel@npm:^1.1.9":
   version: 1.2.0
   resolution: "run-parallel@npm:1.2.0"
@@ -6497,6 +6747,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "web-app@workspace:apps/web-app"
   dependencies:
+    "@discord/embedded-app-sdk": 1.1.2
     "@movies4discord/db": "workspace:*"
     "@movies4discord/interfaces": "workspace:*"
     "@next-auth/prisma-adapter": 1.0.7
@@ -6715,5 +6966,12 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: f77b3d8d00310def622123df93d4ee654fc6a0096182af8bd60679ddcdfb3474c56c6c7190817c84a2785648cdee9d721c0154eb45698c62176c322fb46fc700
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.9.8":
+  version: 3.22.4
+  resolution: "zod@npm:3.22.4"
+  checksum: 80bfd7f8039b24fddeb0718a2ec7c02aa9856e4838d6aa4864335a047b6b37a3273b191ef335bf0b2002e5c514ef261ffcda5a589fb084a48c336ffc4cdbab7f
   languageName: node
   linkType: hard

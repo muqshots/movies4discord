@@ -15,6 +15,7 @@
     "postinstall": "test -n \"$SKIP_POSTINSTALL\" || yarn workspace @movies4discord/db run generate"
   },
   "dependencies": {
+    "@discord/embedded-app-sdk": "1.1.2",
     "@movies4discord/db": "workspace:*",
     "@movies4discord/interfaces": "workspace:*",
     "@next-auth/prisma-adapter": "1.0.7",
