@@ -1,14 +1,12 @@
 import { MediaThumbnailProps } from "@/components/MediaThumbnail";
 import { CastMember, CrewMember, Movie, MovieDetails, SkyhookEpisode, TV, TVDetails } from "@movies4discord/interfaces";
-import { getPlaiceholder } from "plaiceholder";
-import { getImageUrl } from "./getImageUrl";
 
 export const formatMovieForThumbnail = async (
   movie: Movie | MovieDetails | CrewMember | CastMember,
   doPlaceholders: boolean,
   poster = false
 ): Promise<Omit<MediaThumbnailProps, "media_type">> => {
-  const imageUrl = getImageUrl(poster ? movie.poster_path : movie.backdrop_path);
+  const imageUrl = `https://image.tmdb.org/t/p/original/${poster ? movie.poster_path : movie.backdrop_path}`;
   return {
     id: movie.id,
     tvdbId: 0,
@@ -18,9 +16,9 @@ export const formatMovieForThumbnail = async (
     image: {
       src: imageUrl,
       b64:
-        (imageUrl && doPlaceholders)
-          ? (await getPlaiceholder(imageUrl)).base64
-          : null,
+        // (imageUrl && doPlaceholders)
+        //   ? (await getPlaiceholder(imageUrl)).base64: 
+          null,
     },
     release_date: movie.release_date || null,
     rating: movie.vote_average,
@@ -32,7 +30,7 @@ export const formatTVForThumbnail = async (
   doPlaceholders: boolean,
   poster = false
 ): Promise<Omit<MediaThumbnailProps, "media_type">> => {
-  const imageUrl = getImageUrl(poster ? tv.poster_path : tv.backdrop_path);
+  const imageUrl = `https://image.tmdb.org/t/p/original/${poster ? tv.poster_path : tv.backdrop_path}`;
   return {
     id: tv.id,
     tvdbId: 0,
@@ -42,9 +40,9 @@ export const formatTVForThumbnail = async (
     image: {
       src: imageUrl,
       b64:
-        (imageUrl && doPlaceholders)
-          ? (await getPlaiceholder(imageUrl)).base64
-          : null,
+        // (imageUrl && doPlaceholders)
+        //   ? (await getPlaiceholder(imageUrl)).base64: 
+          null,
     },
     release_date: tv.first_air_date || null,
     rating: tv.vote_average,
@@ -59,12 +57,12 @@ export const formatEpisodeforThumbnail = async (
 ): Promise<Omit<MediaThumbnailProps, "media_type">> => {
   const imageUrl = episode.image ?? null;
 
-  let plaiceholder = null;
-  try {
-    plaiceholder = (imageUrl && doPlaceholders) ? (await getPlaiceholder(imageUrl)).base64 : null
-  } catch (e) {
-    console.log(e);
-  }
+  // let plaiceholder = null;
+  // try {
+  //   plaiceholder = (imageUrl && doPlaceholders) ? (await getPlaiceholder(imageUrl)).base64 : null
+  // } catch (e) {
+  //   console.log(e);
+  // }
 
   return {
     id: tmdbId,
@@ -74,7 +72,8 @@ export const formatEpisodeforThumbnail = async (
     title: `S${episode.seasonNumber}E${episode.episodeNumber} - ${episode.title}`,
     image: {
       src: imageUrl,
-      b64: plaiceholder
+      b64: null
+      // b64: plaiceholder
     },
     release_date: episode.airDate || null,
     rating: parseFloat(episode.rating?.value ?? "0"),

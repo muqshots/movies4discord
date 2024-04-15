@@ -1,5 +1,9 @@
-<script>
+<script lang="ts">
 	import {sidebarState} from "$lib/stores/misc"
+	import type { PageData } from './$types';
+	import Recommendations from "$lib/components/sliders/Recommendations.svelte"
+
+	export let data: PageData;
 </script>
 
 <svelte:head>
@@ -20,5 +24,16 @@
 </svelte:head>
 
 <div class="mx-3 flex flex-col gap-8">
-	
-</div>
+	{#each data.sliders as slider}
+	<div class="relative mr-2 flex flex-col gap-4">
+		<span class="text-2xl font-light md:text-3xl">{slider.text}</span>
+		<hr />
+		<Recommendations media={slider.media} />
+	  </div>
+	{/each}
+	<!-- {data.sliders.map((slider, i) => (
+	  
+	))} -->
+
+	<!-- <ContinueWatching /> -->
+  </div>

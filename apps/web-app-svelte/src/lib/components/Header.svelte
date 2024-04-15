@@ -32,8 +32,10 @@
 		$hasTransparentNav ? 'shadow-lg shadow-white/20' : ''
 	} sticky top-0 z-30 flex h-20 flex-row items-center justify-between gap-2 px-6 transition-all duration-200 md:pl-0`}
 >
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div class="mt-1 cursor-pointer md:hidden" on:click={() => ($sidebarState = !$sidebarState)}>
-		<!-- <img layout="fixed" src={logo} height={34} width={34} alt="logo" /> -->
+		<img src="/logo.png" height={34} width={34} alt="logo" />
 	</div>
 
 	<div class="relative mx-4 w-96">

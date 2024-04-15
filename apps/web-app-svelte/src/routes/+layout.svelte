@@ -6,7 +6,7 @@
 </script>
 
 <div>
-	<main class="bg-theme text-white scrollbar-hide">
+	<main class="bg-theme text-white scrollbar-hide h-screen">
 		<Sidebar />
 		<div class={`${$sidebarState ? 'md:ml-52' : 'md:ml-20'} ml-0 transition-all  duration-200`}>
 			<Header />
