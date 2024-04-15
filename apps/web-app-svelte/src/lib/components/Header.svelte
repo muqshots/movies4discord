@@ -22,6 +22,8 @@
 		document.addEventListener('scroll', () => {
 			if (window.scrollY > transparentScroll) {
 				$hasTransparentNav = false;
+			} else {
+				$hasTransparentNav = true
 			}
 		});
 	});
@@ -29,7 +31,7 @@
 
 <div
 	class={`${$hasTransparentNav ? 'bg-transparent' : 'bg-darktheme'} ${
-		$hasTransparentNav ? 'shadow-lg shadow-white/20' : ''
+		$hasTransparentNav ? '' : 'shadow-lg shadow-white/20'
 	} sticky top-0 z-30 flex h-20 flex-row items-center justify-between gap-2 px-6 transition-all duration-200 md:pl-0`}
 >
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
