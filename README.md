@@ -1,5 +1,10 @@
 # Running a dev environment.
 
+Todolist just so it's all clear and laid out:
+
+- [ ] Automatically prompt for discord oauth authorization
+- [ ] Reroute streams to a baseurl elsewhere like /streams/aus
+
 1. Run a local postgresql database. (This assumes you already know how to setup and install)
 2. Copy .env.example file to .env.dev and fill all variables accordingly.
 3. Open cmd/terminal, cd to the directory of the cloned repository and run `yarn add`.
