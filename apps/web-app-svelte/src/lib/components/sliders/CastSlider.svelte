@@ -15,7 +15,7 @@
 			<a href={`/comrade/${p.id}`}>
 				<div class="snap-start">
 					<div class="flex flex-col gap-2">
-						<div class="rounded-lg">
+						<div class="rounded-lg w-[160px]">
 							<img
 								src={p.image || '/PortraitPlaceholder.png'}
 								width={160}
